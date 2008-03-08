@@ -12,6 +12,7 @@ import sys
 from PyQt4 import QtCore, QtGui
 from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
+from textwidget import TextWidget
 
 class Window(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -23,7 +24,9 @@ class Window(QtGui.QMainWindow):
         self.ocrWidget = QOcrWidget()
         self.ocrWidget.statusBar = self.statusBar()
         self.ocrWidget.language = "ita"
-        self.ocrWidget.textBrowser = self.ui.textBrowser
+        self.textBrowser = TextWidget()
+        self.ui.textBrowserDock.setWidget(self.textBrowser)
+        self.ocrWidget.textBrowser = self.textBrowser
 
         self.setCentralWidget(self.ocrWidget)
 
@@ -36,6 +39,7 @@ class Window(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.actionZoomIn,QtCore.SIGNAL("activated()"), self.ocrWidget.zoomIn)
         QtCore.QObject.connect(self.ui.actionZoomOut,QtCore.SIGNAL("activated()"), self.ocrWidget.zoomOut)
         QtCore.QObject.connect(self.ui.actionOcr,QtCore.SIGNAL("activated()"), self.ocrWidget.doOcr)
+        QtCore.QObject.connect(self.ui.actionSaveAs,QtCore.SIGNAL("activated()"), self.saveAs)
 
         QtCore.QObject.connect(self.ui.rbtn_ita,QtCore.SIGNAL("clicked()"), self.change_language_ita)
         QtCore.QObject.connect(self.ui.rbtn_deu,QtCore.SIGNAL("clicked()"), self.change_language_deu)
@@ -98,6 +102,17 @@ class Window(QtGui.QMainWindow):
             return False
         elif ret == QtGui.QMessageBox.Yes:
             return True
+
+
+    def saveAs(self):
+        fd = QtGui.QFileDialog(self)
+        fileName = unicode(fd.getSaveFileName())
+        if not fileName:
+            return
+
+        self.textBrowser.saveAs(fileName)
+
+
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
