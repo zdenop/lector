@@ -32,7 +32,7 @@ class Window(QtGui.QMainWindow):
 
         self.statusBar().showMessage(self.tr("Ready"))
         self.readSettings()
-        QtCore.QObject.connect(self.ui.actionOpen,QtCore.SIGNAL("activated()"), self.file_dialog)
+        QtCore.QObject.connect(self.ui.actionOpen,QtCore.SIGNAL("activated()"), self.openImage)
         QtCore.QObject.connect(self.ui.actionRotateRight,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateRight)
         QtCore.QObject.connect(self.ui.actionRotateLeft,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateLeft)
         QtCore.QObject.connect(self.ui.actionRotateFull,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateFull)
@@ -46,9 +46,12 @@ class Window(QtGui.QMainWindow):
         QtCore.QObject.connect(self.ui.rbtn_eng,QtCore.SIGNAL("clicked()"), self.change_language_eng)
 
 
-    def file_dialog(self):
-        fd = QtGui.QFileDialog(self)
-        self.ocrWidget.filename = unicode(fd.getOpenFileName())
+    def openImage(self):
+        #fd = QtGui.QFileDialog(self,QtCore.QString('Apri immagine'),QtCore.QString('/home/'))
+        self.ocrWidget.filename = unicode(QtGui.QFileDialog.getOpenFileName(self,
+                                            "Apri immagine", "/home",
+                                            "Immagini (*.png *.xpm *.jpg)"
+                                            ))
         self.ocrWidget.cambiaImmagine()
 
 
