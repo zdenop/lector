@@ -9,10 +9,12 @@
 
 
 import sys
+import os
 from PyQt4 import QtCore, QtGui
 from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
+
 
 class Window(QtGui.QMainWindow):
     def __init__(self, parent = None):
@@ -47,12 +49,14 @@ class Window(QtGui.QMainWindow):
 
 
     def openImage(self):
-        #fd = QtGui.QFileDialog(self,QtCore.QString('Apri immagine'),QtCore.QString('/home/'))
-        self.ocrWidget.filename = unicode(QtGui.QFileDialog.getOpenFileName(self,
-                                            "Apri immagine", "/home",
+        fn = unicode(QtGui.QFileDialog.getOpenFileName(self,
+                                            self.tr("Apri immagine"), self.curDir,
                                             "Immagini (*.png *.xpm *.jpg)"
                                             ))
-        self.ocrWidget.cambiaImmagine()
+        if fn:
+            self.ocrWidget.filename = fn
+            self.curDir = os.path.dirname(fn)
+            self.ocrWidget.cambiaImmagine()
 
 
     def change_language_ita(self):
@@ -70,6 +74,7 @@ class Window(QtGui.QMainWindow):
         settings = QtCore.QSettings("Davide Setti", "Lector");
         pos = settings.value("pos", QtCore.QVariant(QtCore.QPoint(50, 50))).toPoint()
         size = settings.value("size", QtCore.QVariant(QtCore.QSize(800, 500))).toSize()
+        self.curDir = settings.value("file_dialog_dir", QtCore.QVariant('~/')).toString()
         self.resize(size)
         self.move(pos)
         
@@ -87,6 +92,7 @@ class Window(QtGui.QMainWindow):
         settings = QtCore.QSettings("Davide Setti", "Lector")
         settings.setValue("pos", QtCore.QVariant(self.pos()))
         settings.setValue("size", QtCore.QVariant(self.size()))
+        settings.setValue("file_dialog_dir", QtCore.QVariant(self.curDir))
         #settings.setValue("textbrowser/pos", QtCore.QVariant(self.ui.textBrowserDock.pos()))
         #settings.setValue("textbrowser/size", QtCore.QVariant(self.ui.textBrowserDock.size()))
 
@@ -108,12 +114,13 @@ class Window(QtGui.QMainWindow):
 
 
     def saveAs(self):
-        fd = QtGui.QFileDialog(self)
-        fileName = unicode(fd.getSaveFileName())
-        if not fileName:
-            return
-
-        self.textBrowser.saveAs(fileName)
+        fn = unicode(QtGui.QFileDialog.getSaveFileName(self,
+                                            self.tr("Salva documento"), self.curDir,
+                                            "Documenti RTF (*.rtf)"
+                                            ))
+        if fn:
+            self.curDir = os.path.dirname(fn)
+            self.textBrowser.saveAs(fn)
 
 
 
