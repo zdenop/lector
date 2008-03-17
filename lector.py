@@ -10,15 +10,17 @@
 
 import sys
 import os
-from PyQt4 import QtCore, QtGui
+#from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
 from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
 
 
-class Window(QtGui.QMainWindow):
+class Window(QMainWindow):
     def __init__(self, parent = None):
-        QtGui.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
 
         self.ui = Ui_Lector()
         self.ui.setupUi(self)
@@ -34,24 +36,24 @@ class Window(QtGui.QMainWindow):
 
         self.statusBar().showMessage(self.tr("Ready"))
         self.readSettings()
-        QtCore.QObject.connect(self.ui.actionOpen,QtCore.SIGNAL("activated()"), self.openImage)
-        QtCore.QObject.connect(self.ui.actionRotateRight,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateRight)
-        QtCore.QObject.connect(self.ui.actionRotateLeft,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateLeft)
-        QtCore.QObject.connect(self.ui.actionRotateFull,QtCore.SIGNAL("activated()"), self.ocrWidget.rotateFull)
-        QtCore.QObject.connect(self.ui.actionZoomIn,QtCore.SIGNAL("activated()"), self.ocrWidget.zoomIn)
-        QtCore.QObject.connect(self.ui.actionZoomOut,QtCore.SIGNAL("activated()"), self.ocrWidget.zoomOut)
-        QtCore.QObject.connect(self.ui.actionOcr,QtCore.SIGNAL("activated()"), self.ocrWidget.doOcr)
-        QtCore.QObject.connect(self.ui.actionSaveAs,QtCore.SIGNAL("activated()"), self.saveAs)
+        QObject.connect(self.ui.actionOpen,SIGNAL("activated()"), self.openImage)
+        QObject.connect(self.ui.actionRotateRight,SIGNAL("activated()"), self.ocrWidget.rotateRight)
+        QObject.connect(self.ui.actionRotateLeft,SIGNAL("activated()"), self.ocrWidget.rotateLeft)
+        QObject.connect(self.ui.actionRotateFull,SIGNAL("activated()"), self.ocrWidget.rotateFull)
+        QObject.connect(self.ui.actionZoomIn,SIGNAL("activated()"), self.ocrWidget.zoomIn)
+        QObject.connect(self.ui.actionZoomOut,SIGNAL("activated()"), self.ocrWidget.zoomOut)
+        QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
+        QObject.connect(self.ui.actionSaveAs,SIGNAL("activated()"), self.saveAs)
 
-        QtCore.QObject.connect(self.ui.rbtn_ita,QtCore.SIGNAL("clicked()"), self.change_language_ita)
-        QtCore.QObject.connect(self.ui.rbtn_deu,QtCore.SIGNAL("clicked()"), self.change_language_deu)
-        QtCore.QObject.connect(self.ui.rbtn_eng,QtCore.SIGNAL("clicked()"), self.change_language_eng)
+        QObject.connect(self.ui.rbtn_ita,SIGNAL("clicked()"), self.change_language_ita)
+        QObject.connect(self.ui.rbtn_deu,SIGNAL("clicked()"), self.change_language_deu)
+        QObject.connect(self.ui.rbtn_eng,SIGNAL("clicked()"), self.change_language_eng)
 
 
     def openImage(self):
-        fn = unicode(QtGui.QFileDialog.getOpenFileName(self,
-                                            self.tr("Apri immagine"), self.curDir,
-                                            "Immagini (*.png *.xpm *.jpg)"
+        fn = unicode(QFileDialog.getOpenFileName(self,
+                                            self.tr("Open image"), self.curDir,
+                                            self.tr("Images (*.png *.xpm *.jpg)")
                                             ))
         if fn:
             self.ocrWidget.filename = fn
@@ -71,16 +73,16 @@ class Window(QtGui.QMainWindow):
         self.ocrWidget.language = "eng"
 
     def readSettings(self):
-        settings = QtCore.QSettings("Davide Setti", "Lector");
-        pos = settings.value("pos", QtCore.QVariant(QtCore.QPoint(50, 50))).toPoint()
-        size = settings.value("size", QtCore.QVariant(QtCore.QSize(800, 500))).toSize()
-        self.curDir = settings.value("file_dialog_dir", QtCore.QVariant('~/')).toString()
+        settings = QSettings("Davide Setti", "Lector");
+        pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
+        size = settings.value("size", QVariant(QSize(800, 500))).toSize()
+        self.curDir = settings.value("file_dialog_dir", QVariant('~/')).toString()
         self.resize(size)
         self.move(pos)
         
         #TODO: ridimensionamento della dock non funziona
         #pos = settings.value("textbrowser/pos").toPoint()
-        #size = settings.value("textbrowser/size", QtCore.QVariant(QtCore.QSize(200, 200))).toSize()
+        #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))).toSize()
         #print size.width()
         #print pos.x()
         #self.ui.textBrowser.resize(size)
@@ -89,12 +91,12 @@ class Window(QtGui.QMainWindow):
 
 
     def writeSettings(self):
-        settings = QtCore.QSettings("Davide Setti", "Lector")
-        settings.setValue("pos", QtCore.QVariant(self.pos()))
-        settings.setValue("size", QtCore.QVariant(self.size()))
-        settings.setValue("file_dialog_dir", QtCore.QVariant(self.curDir))
-        #settings.setValue("textbrowser/pos", QtCore.QVariant(self.ui.textBrowserDock.pos()))
-        #settings.setValue("textbrowser/size", QtCore.QVariant(self.ui.textBrowserDock.size()))
+        settings = QSettings("Davide Setti", "Lector")
+        settings.setValue("pos", QVariant(self.pos()))
+        settings.setValue("size", QVariant(self.size()))
+        settings.setValue("file_dialog_dir", QVariant(self.curDir))
+        #settings.setValue("textbrowser/pos", QVariant(self.ui.textBrowserDock.pos()))
+        #settings.setValue("textbrowser/size", QVariant(self.ui.textBrowserDock.size()))
 
     def closeEvent(self, event):
         if self.areYouSureToExit():
@@ -106,17 +108,17 @@ class Window(QtGui.QMainWindow):
     
     def areYouSureToExit(self):
         #if (textEdit->document()->isModified()) {
-        ret = QtGui.QMessageBox.warning(self, "Lector", "Sei sicuro di voler uscire?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
-        if ret == QtGui.QMessageBox.No:
+        ret = QMessageBox.warning(self, "Lector", self.tr("Are you sure you want to exit?"), QMessageBox.Yes | QMessageBox.No)
+        if ret == QMessageBox.No:
             return False
-        elif ret == QtGui.QMessageBox.Yes:
+        elif ret == QMessageBox.Yes:
             return True
 
 
     def saveAs(self):
-        fn = unicode(QtGui.QFileDialog.getSaveFileName(self,
-                                            self.tr("Salva documento"), self.curDir,
-                                            "Documenti RTF (*.rtf)"
+        fn = unicode(QFileDialog.getSaveFileName(self,
+                                            self.tr("Save document"), self.curDir,
+                                            self.tr("RTF document") + " (*.rtf)"
                                             ))
         if fn:
             self.curDir = os.path.dirname(fn)
@@ -125,8 +127,13 @@ class Window(QtGui.QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QtGui.QApplication(sys.argv)
-    QtCore.qsrand(QtCore.QTime(0,0,0).secsTo(QtCore.QTime.currentTime()))
+    app = QApplication(sys.argv)
+    qsrand(QTime(0,0,0).secsTo(QTime.currentTime()))
+
+    locale = QLocale.system().name()
+    qtTranslator = QTranslator()
+    if qtTranslator.load("lector_" + locale, 'ts'):
+        app.installTranslator(qtTranslator)
 
     window = Window()
 

@@ -29,7 +29,7 @@
     <addaction name="actionOpen" />
     <addaction name="actionSaveAs" />
     <addaction name="separator" />
-    <addaction name="actionClose" />
+    <addaction name="actionExit" />
    </widget>
    <addaction name="menuProva" />
   </widget>
@@ -81,14 +81,14 @@
         </font>
        </property>
        <property name="text" >
-        <string>Lingua</string>
+        <string>Language</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="rbtn_ita" >
        <property name="text" >
-        <string>Italiano</string>
+        <string>Italian</string>
        </property>
        <property name="checked" >
         <bool>true</bool>
@@ -98,14 +98,14 @@
      <item>
       <widget class="QRadioButton" name="rbtn_deu" >
        <property name="text" >
-        <string>Tedesco</string>
+        <string>German</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="rbtn_eng" >
        <property name="text" >
-        <string>Inglese</string>
+        <string>English</string>
        </property>
       </widget>
      </item>
@@ -136,7 +136,7 @@
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
    </property>
    <property name="windowTitle" >
-    <string>Testo</string>
+    <string>Text</string>
    </property>
    <attribute name="dockWidgetArea" >
     <number>2</number>
@@ -147,54 +147,54 @@
   </widget>
   <action name="actionOpen" >
    <property name="text" >
-    <string>Apri immagine</string>
+    <string>Open image</string>
    </property>
   </action>
-  <action name="actionClose" >
+  <action name="actionExit" >
    <property name="text" >
-    <string>Esci</string>
+    <string>Exit</string>
    </property>
   </action>
   <action name="actionRotateRight" >
    <property name="text" >
-    <string>Ruota a destra</string>
+    <string>Rotate right</string>
    </property>
   </action>
   <action name="actionRotateLeft" >
    <property name="text" >
-    <string>Ruota a sinistra</string>
+    <string>Rotate left</string>
    </property>
   </action>
   <action name="actionRotateFull" >
    <property name="text" >
-    <string>Capovolgi</string>
+    <string>Flip</string>
    </property>
   </action>
   <action name="actionZoomIn" >
    <property name="text" >
-    <string>Ingrandisci</string>
+    <string>Zoom in</string>
    </property>
   </action>
   <action name="actionZoomOut" >
    <property name="text" >
-    <string>Rimpicciolisci</string>
+    <string>Zoom out</string>
    </property>
   </action>
   <action name="actionOcr" >
    <property name="text" >
-    <string>Leggi</string>
+    <string>Read</string>
    </property>
   </action>
   <action name="actionSaveAs" >
    <property name="text" >
-    <string>Salva con nome</string>
+    <string>Save as</string>
    </property>
   </action>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>actionClose</sender>
+   <sender>actionExit</sender>
    <signal>activated()</signal>
    <receiver>Lector</receiver>
    <slot>close()</slot>
