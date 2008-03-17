@@ -10,4 +10,4 @@ INCLUDEPATH += .
 # Input
 SOURCES         = lector.py
 FORMS           += ui_lector.ui
-TRANSLATIONS    = lector_it.ts lector_en.ts
+TRANSLATIONS    =   ts/lector_it.ts
