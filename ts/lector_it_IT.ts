@@ -1,39 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="it">
 <context>
-    <name>@default</name>
-    <message>
-        <location filename="../lector.py" line="37"/>
-        <source>Ready</source>
-        <translation type="obsolete">Pronto</translation>
-    </message>
-    <message>
-        <location filename="../lector.py" line="55"/>
-        <source>Open image</source>
-        <translation type="obsolete">Apri immagine</translation>
-    </message>
-    <message>
-        <location filename="../lector.py" line="57"/>
-        <source>Images (*.png *.xpm *.jpg)</source>
-        <translation type="obsolete">Immagini (*.png *.xpm *.jpg)</translation>
-    </message>
-    <message>
-        <location filename="../lector.py" line="111"/>
-        <source>Are you sure you want to exit?</source>
-        <translation type="obsolete">Sei sicuro di voler uscire?</translation>
-    </message>
-    <message>
-        <location filename="../lector.py" line="120"/>
-        <source>Save document</source>
-        <translation type="obsolete">Salva documento</translation>
-    </message>
-    <message>
-        <location filename="../lector.py" line="121"/>
-        <source>RTF document</source>
-        <translation type="obsolete">Documento RTF</translation>
-    </message>
-</context>
-<context>
     <name>Lector</name>
     <message>
         <location filename="ui_lector.ui" line="13"/>
