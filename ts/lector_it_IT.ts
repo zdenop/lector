@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="it">
-<defaultcodec></defaultcodec>
+<context>
+    <name>@default</name>
+    <message>
+        <location filename="../lector.py" line="37"/>
+        <source>Ready</source>
+        <translation type="obsolete">Pronto</translation>
+    </message>
+    <message>
+        <location filename="../lector.py" line="55"/>
+        <source>Open image</source>
+        <translation type="obsolete">Apri immagine</translation>
+    </message>
+    <message>
+        <location filename="../lector.py" line="57"/>
+        <source>Images (*.png *.xpm *.jpg)</source>
+        <translation type="obsolete">Immagini (*.png *.xpm *.jpg)</translation>
+    </message>
+    <message>
+        <location filename="../lector.py" line="111"/>
+        <source>Are you sure you want to exit?</source>
+        <translation type="obsolete">Sei sicuro di voler uscire?</translation>
+    </message>
+    <message>
+        <location filename="../lector.py" line="120"/>
+        <source>Save document</source>
+        <translation type="obsolete">Salva documento</translation>
+    </message>
+    <message>
+        <location filename="../lector.py" line="121"/>
+        <source>RTF document</source>
+        <translation type="obsolete">Documento RTF</translation>
+    </message>
+</context>
 <context>
     <name>Lector</name>
     <message>
@@ -94,32 +126,32 @@
     <message>
         <location filename="lector.py" line="37"/>
         <source>Ready</source>
-        <translation>Pronto</translation>
+        <translation type="unfinished">Pronto</translation>
     </message>
     <message>
         <location filename="lector.py" line="55"/>
         <source>Open image</source>
-        <translation>Apri immagine</translation>
+        <translation type="unfinished">Apri immagine</translation>
     </message>
     <message>
         <location filename="lector.py" line="57"/>
         <source>Images (*.png *.xpm *.jpg)</source>
-        <translation>Immagini (*.png *.xpm *.jpg)</translation>
+        <translation type="unfinished">Immagini (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
         <location filename="lector.py" line="111"/>
         <source>Are you sure you want to exit?</source>
-        <translation>Sei sicuro di voler uscire?</translation>
+        <translation type="unfinished">Sei sicuro di voler uscire?</translation>
     </message>
     <message>
         <location filename="lector.py" line="120"/>
         <source>Save document</source>
-        <translation>Salva documento</translation>
+        <translation type="unfinished">Salva documento</translation>
     </message>
     <message>
         <location filename="lector.py" line="121"/>
         <source>RTF document</source>
-        <translation>Documento RTF</translation>
+        <translation type="unfinished">Documento RTF</translation>
     </message>
 </context>
 </TS>
