@@ -59,17 +59,15 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(rect)
+                    item = OcrArea(rect, self, self.areaResizeBorder)
                     self.scene().addItem(item)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
 
 
     def cambiaImmagine(self):
-        aItems = self.scene().items()
-        
         #delete old OcrArea
-        for item in aItems:
+        for item in self.scene().items():
             self.scene().removeItem(item)
         
         #open image
@@ -85,7 +83,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         ratio = min (vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
-        
+        self.areaResizeBorder = 5 / ratio
+
         #show image
         self.generateQtImage()
         self.resetCachedContent()
@@ -133,13 +132,21 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def zoomIn(self):
-        self.scale(1.2, 1.2)
+        self.scale(1.25, 1.25)
+
+        for item in self.scene().items():
+            item.resizeBorder *= 0.8
+        
         self.resetCachedContent()
         self.repaint()
 
 
     def zoomOut(self):
         self.scale(0.8, 0.8)
+
+        for item in self.scene().items():
+            item.resizeBorder *= 1.25
+        
         self.resetCachedContent()
         self.repaint()
 
@@ -185,7 +192,7 @@ class QOcrWidget(QtGui.QGraphicsView):
        
 
 class OcrArea(QtGui.QGraphicsRectItem):
-    def __init__(self, rect, parent = None):
+    def __init__(self, rect, parent = None, resizeBorder = 4):
         QtGui.QGraphicsRectItem.__init__(self, rect)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
@@ -196,28 +203,29 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
+        self.resizeBorder = resizeBorder
     
 
     def mousePressEvent(self, event):
         self.update()
 
         r = self.rect()
-        if event.pos().x() > (r.right() - 4) :
+        if event.pos().x() > (r.right() - self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sVal = "event.pos().x()"
             self.sEdge = "Right"
 
-        elif event.pos().x() < (r.left() + 4) :
+        elif event.pos().x() < (r.left() + self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sVal = "event.pos().x()"
             self.sEdge = "Left"
 
-        elif event.pos().y() < (r.top() + 4) :
+        elif event.pos().y() < (r.top() + self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sVal = "event.pos().y()"
             self.sEdge = "Top"
 
-        elif event.pos().y() > (r.bottom() - 4) :
+        elif event.pos().y() > (r.bottom() - self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sVal = "event.pos().y()"
             self.sEdge = "Bottom"
@@ -244,16 +252,16 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     def hoverMoveEvent(self, event):
         r = self.rect()
-        if event.pos().x() > (r.right() - 4) :
+        if event.pos().x() > (r.right() - self.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeHorCursor)
 
-        elif event.pos().x() < (r.left() + 4) :
+        elif event.pos().x() < (r.left() + self.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeHorCursor)
 
-        elif event.pos().y() < (r.top() + 4) :
+        elif event.pos().y() < (r.top() + self.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeVerCursor)
 
-        elif event.pos().y() > (r.bottom() - 4) :
+        elif event.pos().y() > (r.bottom() - self.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeVerCursor)
 
         else:
