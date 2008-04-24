@@ -49,6 +49,15 @@ class Window(QMainWindow):
         QObject.connect(self.ui.rbtn_deu,SIGNAL("clicked()"), self.change_language_deu)
         QObject.connect(self.ui.rbtn_eng,SIGNAL("clicked()"), self.change_language_eng)
 
+        #disable unusable actions until a file has been opened
+        self.ui.actionRotateRight.setEnabled(False)
+        self.ui.actionRotateLeft.setEnabled(False)
+        self.ui.actionRotateFull.setEnabled(False)
+        self.ui.actionZoomIn.setEnabled(False)
+        self.ui.actionZoomOut.setEnabled(False)
+        self.ui.actionOcr.setEnabled(False)
+        self.ui.actionSaveAs.setEnabled(False)
+
 
     def openImage(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
@@ -59,6 +68,14 @@ class Window(QMainWindow):
             self.ocrWidget.filename = fn
             self.curDir = os.path.dirname(fn)
             self.ocrWidget.cambiaImmagine()
+
+            self.ui.actionRotateRight.setEnabled(True)
+            self.ui.actionRotateLeft.setEnabled(True)
+            self.ui.actionRotateFull.setEnabled(True)
+            self.ui.actionZoomIn.setEnabled(True)
+            self.ui.actionZoomOut.setEnabled(True)
+            self.ui.actionOcr.setEnabled(True)
+            self.ui.actionSaveAs.setEnabled(True)
 
 
     def change_language_ita(self):
@@ -99,11 +116,11 @@ class Window(QMainWindow):
         #settings.setValue("textbrowser/size", QVariant(self.ui.textBrowserDock.size()))
 
     def closeEvent(self, event):
-        if self.areYouSureToExit():
-            self.writeSettings()
-            event.accept()
+        if (not self.ocrWidget.isModified) or self.areYouSureToExit():
+                self.writeSettings()
+                event.accept()
         else:
-            event.ignore()
+                event.ignore()
 
     
     def areYouSureToExit(self):

@@ -29,10 +29,11 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 
-        self.setMinimumSize(600, 400)
+        self.setMinimumSize(200, 200)
         self.first = True
         self.bMovingArea = False
         self.setCursor(QtCore.Qt.CrossCursor)
+        self.isModified = False
 
 
     def drawBackground(self, painter, rect):
@@ -62,6 +63,8 @@ class QOcrWidget(QtGui.QGraphicsView):
                     item = OcrArea(rect, self, self.areaBorder, self.areaResizeBorder)
                     self.scene().addItem(item)
 
+                    self.isModified = True
+
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
 
 
@@ -90,6 +93,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         #show image
         self.generateQtImage()
         self.resetCachedContent()
+        self.isModified = False
 
 
     def rotateRight(self):
