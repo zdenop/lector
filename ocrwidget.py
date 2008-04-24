@@ -185,7 +185,13 @@ class QOcrWidget(QtGui.QGraphicsView):
         for item in aItems:
             progress.setValue(i)
             rect = item.rect()
-            box = (int(rect.left()),int(rect.top()),int(rect.right()),int(rect.bottom()))
+            pos = item.scenePos()
+            box = (int(rect.left()+pos.x()),int(rect.top()+pos.y()),int(rect.right()+pos.x()),int(rect.bottom()+pos.y()))
+            print box
+
+            print item.scenePos().x()
+            print item.scenePos().y()
+
             region = self.im.crop(box)
             region.save("/tmp/prova.tif")
             
