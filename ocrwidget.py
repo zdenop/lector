@@ -59,7 +59,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(rect, self, self.areaResizeBorder)
+                    item = OcrArea(rect, self, self.areaBorder, self.areaResizeBorder)
                     self.scene().addItem(item)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
@@ -84,6 +84,8 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
         self.areaResizeBorder = 5 / ratio
+
+        self.areaBorder = 2 / ratio
 
         #show image
         self.generateQtImage()
@@ -135,7 +137,13 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scale(1.25, 1.25)
 
         for item in self.scene().items():
+            # resize area on which area is resizable
             item.resizeBorder *= 0.8
+            
+            # resize border
+            pen = item.pen()
+            pen.setWidthF(pen.widthF()*0.8)
+            item.setPen(pen)
         
         self.resetCachedContent()
         self.repaint()
@@ -145,7 +153,13 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scale(0.8, 0.8)
 
         for item in self.scene().items():
+            # resize area on which area is resizable
             item.resizeBorder *= 1.25
+            
+            # resize border
+            pen = item.pen()
+            pen.setWidthF(pen.widthF()*1.25)
+            item.setPen(pen)
         
         self.resetCachedContent()
         self.repaint()
@@ -192,14 +206,14 @@ class QOcrWidget(QtGui.QGraphicsView):
        
 
 class OcrArea(QtGui.QGraphicsRectItem):
-    def __init__(self, rect, parent = None, resizeBorder = 4):
+    def __init__(self, rect, parent = None, areaBorder = 2, resizeBorder = 5):
         QtGui.QGraphicsRectItem.__init__(self, rect)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-        pen = QtGui.QPen(QtCore.Qt.green, 2, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        pen = QtGui.QPen(QtCore.Qt.green, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
