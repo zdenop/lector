@@ -60,8 +60,11 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(rect, self, self.areaBorder, self.areaResizeBorder)
-                    self.scene().addItem(item)
+                    item = OcrArea(0, 0, diff.x(), diff.y(), None, self.scene(), self.areaBorder, self.areaResizeBorder)
+                    #item = OcrArea(rect, None, self.scene(), self.areaBorder, self.areaResizeBorder)
+                    item.setPos(self.pos1)
+                    #item.setRect(rect)
+                    #self.scene().addItem(item)
 
                     self.isModified = True
 
@@ -186,16 +189,17 @@ class QOcrWidget(QtGui.QGraphicsView):
             progress.setValue(i)
             rect = item.rect()
             pos = item.scenePos()
-            box = (int(rect.left()+pos.x()),int(rect.top()+pos.y()),int(rect.right()+pos.x()),int(rect.bottom()+pos.y()))
-            print box
-
-            print item.scenePos().x()
-            print item.scenePos().y()
-
-            region = self.im.crop(box)
-            region.save("/tmp/prova.tif")
             
-            command = "tesseract /tmp/prova.tif /tmp/out.%d -l %s" % (i, self.language)
+            #NOTE: there's a shift when one moves the box after the drawing.
+            # This is the reason for adding pos.x/y ()
+            box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
+            #box = (int(rect.left()),int(rect.top()),int(rect.right()),int(rect.bottom()))
+
+            print box
+            region = self.im.crop(box)
+            region.save("/tmp/out.tif")
+            
+            command = "tesseract /tmp/out.tif /tmp/out.%d -l %s" % (i, self.language)
             os.popen(command)
             
             s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
@@ -216,8 +220,8 @@ class QOcrWidget(QtGui.QGraphicsView):
        
 
 class OcrArea(QtGui.QGraphicsRectItem):
-    def __init__(self, rect, parent = None, areaBorder = 2, resizeBorder = 5):
-        QtGui.QGraphicsRectItem.__init__(self, rect)
+    def __init__(self, rect, parent = None, scene = None, areaBorder = 2, resizeBorder = 5):
+        QtGui.QGraphicsRectItem.__init__(self, rect, parent, scene)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
@@ -228,7 +232,28 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
         self.resizeBorder = resizeBorder
+
+        self.text = QtGui.QGraphicsTextItem("1", self)
+        print self.scenePos().x()
+        self.text.setPos(self.pos().x(),self.pos().y())
     
+    def __init__(self, x, y, w, h, parent = None, scene = None, areaBorder = 2, resizeBorder = 5):
+        QtGui.QGraphicsRectItem.__init__(self, x, y, w, h, parent, scene)
+
+        #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
+        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        pen = QtGui.QPen(QtCore.Qt.green, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        self.setPen(pen)
+        self.setAcceptsHoverEvents(True)
+        self.setCursor(QtCore.Qt.SizeAllCursor)
+        self.resizeBorder = resizeBorder
+
+        #self.text = QtGui.QGraphicsTextItem("1", self)
+        #print self.scenePos().x()
+        #self.text.setPos(self.pos().x(),self.pos().y())
+
 
     def mousePressEvent(self, event):
         self.update()
@@ -267,9 +292,31 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
         if hasattr(self, 'sEdge') and self.sEdge:
             r = self.rect()
-            s = "r.set%s(%s)" % (self.sEdge, self.sVal)
-            exec(s)
-            self.setRect(r)
+
+            if self.sEdge == 'Top':
+                diff = self.y() - event.scenePos().y()
+                self.setPos(self.x(), event.scenePos().y())
+                self.setRect(0,0,r.width(),r.height() + diff)
+            elif self.sEdge == 'Left':
+                diff = self.x() - event.scenePos().x()
+                self.setPos(event.scenePos().x(), self.y())
+                self.setRect(0,0,r.width()+diff,r.height())
+            elif self.sEdge == 'Bottom':
+                scenePos = event.scenePos()
+                pos = self.mapFromScene(scenePos)
+                self.setRect(0,0,r.width(),pos.y())
+            elif self.sEdge == 'Right':
+                scenePos = event.scenePos()
+                pos = self.mapFromScene(scenePos)
+                self.setRect(0,0,pos.x(),r.height())
+
+            #print r.x()
+            #print r.y()
+            #print r.width()
+            #print r.height()
+            #s = "r.set%s(%s)" % (self.sEdge, self.sVal)
+            #exec(s)
+            #self.setRect(r)
 
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
 
