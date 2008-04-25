@@ -62,11 +62,10 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(0, 0, diff.x(), diff.y(), None, self.scene(), self.areaBorder, self.areaResizeBorder)
-                    #item = OcrArea(rect, None, self.scene(), self.areaBorder, self.areaResizeBorder)
+                    item = OcrArea(0, 0, diff.x(), diff.y(), None, self.scene(),
+                            self.areaBorder, self.areaResizeBorder, len(self.areas) + 1,
+                            self.areaTextSize)
                     item.setPos(self.pos1)
-                    #item.setRect(rect)
-                    #self.scene().addItem(item)
 
                     self.areas.append(item)
 
@@ -96,6 +95,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.areaResizeBorder = 5 / ratio
         self.areaBorder = 2 / ratio
+        self.areaTextSize = 10 / ratio
 
         #show image
         self.generateQtImage()
@@ -148,8 +148,9 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scale(1.25, 1.25)
         self.areaResizeBorder *= 0.8
         self.areaBorder *= 0.8
+        self.areaTextSize *= 0.8
 
-        for item in self.scene().items():
+        for item in self.areas:
             # resize area on which area is resizable
             item.resizeBorder = self.areaResizeBorder
             
@@ -166,8 +167,9 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scale(0.8, 0.8)
         self.areaResizeBorder *= 1.25
         self.areaBorder *= 1.25
+        self.areaTextSize *= 1.25
 
-        for item in self.scene().items():
+        for item in self.areas:
             # resize area on which area is resizable
             item.resizeBorder = self.areaResizeBorder
             
@@ -198,12 +200,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             rect = item.rect()
             pos = item.scenePos()
             
-            #NOTE: there's a shift when one moves the box after the drawing.
-            # This is the reason for adding pos.x/y ()
             box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
-            #box = (int(rect.left()),int(rect.top()),int(rect.right()),int(rect.bottom()))
 
-            print box
             region = self.im.crop(box)
             region.save("/tmp/out.tif")
             
@@ -221,45 +219,40 @@ class QOcrWidget(QtGui.QGraphicsView):
         if event.key() == QtCore.Qt.Key_Delete:
             item = self.scene().focusItem()
             if item:
-                self.scene().removeItem(item)
+                idx = self.areas.index(item)
+
                 self.areas.remove(item)
+                self.scene().removeItem(item)
+                for i, item in enumerate(self.areas[idx:]):
+                    item.setIndex(i+idx+1)
 
         QtGui.QGraphicsView.keyReleaseEvent(self, event)
 
        
 
 class OcrArea(QtGui.QGraphicsRectItem):
-    def __init__(self, rect, parent = None, scene = None, areaBorder = 2, resizeBorder = 5):
-        QtGui.QGraphicsRectItem.__init__(self, rect, parent, scene)
-
-        #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-        pen = QtGui.QPen(QtCore.Qt.green, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-        self.setPen(pen)
-        self.setAcceptsHoverEvents(True)
-        self.setCursor(QtCore.Qt.SizeAllCursor)
-        self.resizeBorder = resizeBorder
-
-        self.text = QtGui.QGraphicsTextItem("1", self)
-        print self.scenePos().x()
-        self.text.setPos(self.pos().x(),self.pos().y())
     
-    def __init__(self, x, y, w, h, parent = None, scene = None, areaBorder = 2, resizeBorder = 5):
+    def __init__(self, x, y, w, h, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, x, y, w, h, parent, scene)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-        pen = QtGui.QPen(QtCore.Qt.green, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        pen = QtGui.QPen(QtCore.Qt.darkGreen, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
         self.resizeBorder = resizeBorder
 
-        #self.text = QtGui.QGraphicsTextItem("1", self)
+        ## set index label
+        self.text = QtGui.QGraphicsTextItem("%d" % index, self)
+
+        font = QtGui.QFont()
+        font.setPixelSize(textSize)
+        self.text.setFont(font)
+        self.text.setDefaultTextColor(QtCore.Qt.darkGreen)
+        self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
         #print self.scenePos().x()
         #self.text.setPos(self.pos().x(),self.pos().y())
 
@@ -290,11 +283,13 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
         QtGui.QGraphicsItem.mousePressEvent(self, event)
 
+
     def mouseReleaseEvent(self, event):
         self.update()
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.sEdge = ''
         QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
+
 
     def mouseMoveEvent(self, event):
         self.update()
@@ -319,13 +314,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
                 pos = self.mapFromScene(scenePos)
                 self.setRect(0,0,pos.x(),r.height())
 
-            #print r.x()
-            #print r.y()
-            #print r.width()
-            #print r.height()
-            #s = "r.set%s(%s)" % (self.sEdge, self.sVal)
-            #exec(s)
-            #self.setRect(r)
 
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
 
@@ -347,3 +335,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         else:
             self.setCursor(QtCore.Qt.SizeAllCursor)
 
+
+    def setIndex(self, idx):
+        self.text.setPlainText("%d" % idx)
