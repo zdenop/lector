@@ -34,6 +34,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.bMovingArea = False
         self.setCursor(QtCore.Qt.CrossCursor)
         self.isModified = False
+        
+        self.areas = []
 
 
     def drawBackground(self, painter, rect):
@@ -66,6 +68,8 @@ class QOcrWidget(QtGui.QGraphicsView):
                     #item.setRect(rect)
                     #self.scene().addItem(item)
 
+                    self.areas.append(item)
+
                     self.isModified = True
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
@@ -89,8 +93,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         ratio = min (vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
-        self.areaResizeBorder = 5 / ratio
 
+        self.areaResizeBorder = 5 / ratio
         self.areaBorder = 2 / ratio
 
         #show image
@@ -142,14 +146,16 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def zoomIn(self):
         self.scale(1.25, 1.25)
+        self.areaResizeBorder *= 0.8
+        self.areaBorder *= 0.8
 
         for item in self.scene().items():
             # resize area on which area is resizable
-            item.resizeBorder *= 0.8
+            item.resizeBorder = self.areaResizeBorder
             
             # resize border
             pen = item.pen()
-            pen.setWidthF(pen.widthF()*0.8)
+            pen.setWidthF(self.areaBorder)
             item.setPen(pen)
         
         self.resetCachedContent()
@@ -158,14 +164,16 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def zoomOut(self):
         self.scale(0.8, 0.8)
+        self.areaResizeBorder *= 1.25
+        self.areaBorder *= 1.25
 
         for item in self.scene().items():
             # resize area on which area is resizable
-            item.resizeBorder *= 1.25
+            item.resizeBorder = self.areaResizeBorder
             
             # resize border
             pen = item.pen()
-            pen.setWidthF(pen.widthF()*1.25)
+            pen.setWidthF(self.areaBorder)
             item.setPen(pen)
         
         self.resetCachedContent()
@@ -174,7 +182,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def doOcr(self):
         import codecs
-        aItems = self.scene().items()
+        aItems = self.areas
         numItems = len(aItems)
 
         self.textBrowser.clear()
@@ -214,6 +222,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             item = self.scene().focusItem()
             if item:
                 self.scene().removeItem(item)
+                self.areas.remove(item)
 
         QtGui.QGraphicsView.keyReleaseEvent(self, event)
 
