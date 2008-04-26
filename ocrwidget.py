@@ -62,7 +62,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(0, 0, diff.x(), diff.y(), None, self.scene(),
+                    item = OcrArea(0, 0, diff.x(), diff.y(), 2, None, self.scene(),
                             self.areaBorder, self.areaResizeBorder, len(self.areas) + 1,
                             self.areaTextSize)
                     item.setPos(self.pos1)
@@ -158,6 +158,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             pen = item.pen()
             pen.setWidthF(self.areaBorder)
             item.setPen(pen)
+            item.setTextSize(self.areaTextSize)
         
         self.resetCachedContent()
         self.repaint()
@@ -177,6 +178,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             pen = item.pen()
             pen.setWidthF(self.areaBorder)
             item.setPen(pen)
+            item.setTextSize(self.areaTextSize)
         
         self.resetCachedContent()
         self.repaint()
@@ -225,21 +227,32 @@ class QOcrWidget(QtGui.QGraphicsView):
                 self.scene().removeItem(item)
                 for i, item in enumerate(self.areas[idx:]):
                     item.setIndex(i+idx+1)
+        elif event.key() == QtCore.Qt.Key_Escape:
+            self.first = True
 
         QtGui.QGraphicsView.keyReleaseEvent(self, event)
 
        
 
+
 class OcrArea(QtGui.QGraphicsRectItem):
     
-    def __init__(self, x, y, w, h, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
+    def __init__(self, x, y, w, h, type, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, x, y, w, h, parent, scene)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
-        pen = QtGui.QPen(QtCore.Qt.darkGreen, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+
+        ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt)
+        self.type = type
+        if self.type == 1:
+            self.color = QtCore.Qt.darkGreen
+        else: ## TODO: else -> elif ... + else raise exception
+            self.color = QtCore.Qt.blue
+
+        pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
@@ -248,13 +261,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
         ## set index label
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)
 
-        font = QtGui.QFont()
-        font.setPixelSize(textSize)
-        self.text.setFont(font)
-        self.text.setDefaultTextColor(QtCore.Qt.darkGreen)
-        self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
-        #print self.scenePos().x()
-        #self.text.setPos(self.pos().x(),self.pos().y())
+        self.setTextSize(textSize)
+        self.text.setDefaultTextColor(self.color)
+        # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
+
 
 
     def mousePressEvent(self, event):
@@ -263,22 +273,18 @@ class OcrArea(QtGui.QGraphicsRectItem):
         r = self.rect()
         if event.pos().x() > (r.right() - self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-            self.sVal = "event.pos().x()"
             self.sEdge = "Right"
 
         elif event.pos().x() < (r.left() + self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-            self.sVal = "event.pos().x()"
             self.sEdge = "Left"
 
         elif event.pos().y() < (r.top() + self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-            self.sVal = "event.pos().y()"
             self.sEdge = "Top"
 
         elif event.pos().y() > (r.bottom() - self.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-            self.sVal = "event.pos().y()"
             self.sEdge = "Bottom"
 
         QtGui.QGraphicsItem.mousePressEvent(self, event)
@@ -314,7 +320,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
                 pos = self.mapFromScene(scenePos)
                 self.setRect(0,0,pos.x(),r.height())
 
-
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
 
 
@@ -338,3 +343,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     def setIndex(self, idx):
         self.text.setPlainText("%d" % idx)
+
+
+    def setTextSize(self, size):
+        font = QtGui.QFont()
+        font.setPointSizeF(size)
+        self.text.setFont(font)
+        print size
