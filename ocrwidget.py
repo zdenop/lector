@@ -17,12 +17,10 @@ from PyQt4 import QtCore, QtGui
 #import uno
 
 class QOcrWidget(QtGui.QGraphicsView):
-    def __init__(self):
+    def __init__(self, lang, areaType, statusBar):
         QtGui.QGraphicsView.__init__(self)
 
         scene = QtGui.QGraphicsScene(self)
-        #scene.setItemIndexMethod(QtGui.QGraphicsScene.NoIndex)
-        #scene.setSceneRect(0, 0, 400, 400)
         self.setScene(scene)
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
@@ -30,6 +28,11 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 
         self.setMinimumSize(200, 200)
+        
+        self.language = lang
+        self.statusBar = statusBar
+        self.areaType = 1
+        
         self.first = True
         self.bMovingArea = False
         self.setCursor(QtCore.Qt.CrossCursor)
@@ -62,7 +65,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     size = QtCore.QSizeF(diff.x(), diff.y())
                     rect = QtCore.QRectF(self.pos1, size)
 
-                    item = OcrArea(0, 0, diff.x(), diff.y(), 2, None, self.scene(),
+                    item = OcrArea(0, 0, diff.x(), diff.y(), self.areaType, None, self.scene(),
                             self.areaBorder, self.areaResizeBorder, len(self.areas) + 1,
                             self.areaTextSize)
                     item.setPos(self.pos1)
@@ -203,15 +206,20 @@ class QOcrWidget(QtGui.QGraphicsView):
             pos = item.scenePos()
             
             box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
+            filename = "/tmp/out.%d.tif" % i
 
             region = self.im.crop(box)
-            region.save("/tmp/out.tif")
+            region.save(filename)
             
-            command = "tesseract /tmp/out.tif /tmp/out.%d -l %s" % (i, self.language)
-            os.popen(command)
+            if item.type == 1:
+                command = "tesseract /tmp/out.tif /tmp/out.%d -l %s" % (i, self.language)
+                os.popen(command)
             
-            s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
-            self.textBrowser.append(s)
+                s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
+                self.textBrowser.append(s)
+            else:
+                s = "<img src='%s'>" % filename
+                self.textBrowser.append(s)
 
             i = i + 1
         
@@ -349,4 +357,3 @@ class OcrArea(QtGui.QGraphicsRectItem):
         font = QtGui.QFont()
         font.setPointSizeF(size)
         self.text.setFont(font)
-        print size
