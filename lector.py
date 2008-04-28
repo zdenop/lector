@@ -25,9 +25,7 @@ class Window(QMainWindow):
         self.ui = Ui_Lector()
         self.ui.setupUi(self)
 
-        self.ocrWidget = QOcrWidget()
-        self.ocrWidget.statusBar = self.statusBar()
-        self.ocrWidget.language = "ita"
+        self.ocrWidget = QOcrWidget("ita", 1, self.statusBar())
         self.textBrowser = TextWidget()
         self.ui.textBrowserDock.setWidget(self.textBrowser)
         self.ocrWidget.textBrowser = self.textBrowser
@@ -45,9 +43,13 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
         QObject.connect(self.ui.actionSaveAs,SIGNAL("activated()"), self.saveAs)
 
+        ## TODO: use only a function for this
         QObject.connect(self.ui.rbtn_ita,SIGNAL("clicked()"), self.change_language_ita)
         QObject.connect(self.ui.rbtn_deu,SIGNAL("clicked()"), self.change_language_deu)
         QObject.connect(self.ui.rbtn_eng,SIGNAL("clicked()"), self.change_language_eng)
+
+        QObject.connect(self.ui.rbtn_text,SIGNAL("clicked()"), self.change_ocr_area_text)
+        QObject.connect(self.ui.rbtn_image,SIGNAL("clicked()"), self.change_ocr_area_image)
 
         #disable unusable actions until a file has been opened
         self.ui.actionRotateRight.setEnabled(False)
@@ -89,6 +91,15 @@ class Window(QMainWindow):
     def change_language_eng(self):
         self.ocrWidget.language = "eng"
 
+
+    def change_ocr_area_text(self):
+        self.ocrWidget.areaType = 1
+
+
+    def change_ocr_area_image(self):
+        self.ocrWidget.areaType = 2
+
+
     def readSettings(self):
         settings = QSettings("Davide Setti", "Lector");
         pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
@@ -97,6 +108,12 @@ class Window(QMainWindow):
         self.resize(size)
         self.move(pos)
         
+        ## load saved language
+        lang = settings.value("rbtn/lang", QVariant(QString())).toString()
+        s = "self.ui.rbtn_%s.setChecked(True)" % lang
+        exec(s)
+        self.ocrWidget.language = lang
+
         #TODO: ridimensionamento della dock non funziona
         #pos = settings.value("textbrowser/pos").toPoint()
         #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))).toSize()
@@ -114,6 +131,11 @@ class Window(QMainWindow):
         settings.setValue("file_dialog_dir", QVariant(self.curDir))
         #settings.setValue("textbrowser/pos", QVariant(self.ui.textBrowserDock.pos()))
         #settings.setValue("textbrowser/size", QVariant(self.ui.textBrowserDock.size()))
+
+        ## save language
+        settings.setValue("rbtn/lang",
+                QVariant(self.ocrWidget.language))
+
 
     def closeEvent(self, event):
         if (not self.ocrWidget.isModified) or self.areYouSureToExit():

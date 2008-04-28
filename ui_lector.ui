@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>857</width>
-    <height>486</height>
+    <width>820</width>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,11 +18,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>857</width>
-     <height>25</height>
+     <width>820</width>
+     <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuProva" >
+   <widget class="QMenu" name="menuFile" >
     <property name="title" >
      <string>File</string>
     </property>
@@ -42,7 +42,7 @@
     <addaction name="actionZoomOut" />
     <addaction name="actionZoomIn" />
    </widget>
-   <addaction name="menuProva" />
+   <addaction name="menuFile" />
    <addaction name="menuView" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
@@ -78,74 +78,6 @@
    <addaction name="separator" />
    <addaction name="actionSaveAs" />
   </widget>
-  <widget class="QDockWidget" name="dockWidget" >
-   <property name="minimumSize" >
-    <size>
-     <width>80</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="windowTitle" >
-    <string/>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents" >
-    <layout class="QVBoxLayout" >
-     <item>
-      <widget class="QLabel" name="label" >
-       <property name="font" >
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text" >
-        <string>Language</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbtn_ita" >
-       <property name="text" >
-        <string>Italian</string>
-       </property>
-       <property name="checked" >
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbtn_deu" >
-       <property name="text" >
-        <string>German</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbtn_eng" >
-       <property name="text" >
-        <string>English</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>101</width>
-         <height>259</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="textBrowserDock" >
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
@@ -164,6 +96,115 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2" >
     <layout class="QVBoxLayout" />
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget" >
+   <property name="minimumSize" >
+    <size>
+     <width>80</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="windowTitle" >
+    <string/>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents" >
+    <layout class="QVBoxLayout" >
+     <item>
+      <widget class="QGroupBox" name="groupBox_language" >
+       <property name="title" >
+        <string>Language</string>
+       </property>
+       <property name="flat" >
+        <bool>true</bool>
+       </property>
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QRadioButton" name="rbtn_eng" >
+          <property name="text" >
+           <string>English</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn_deu" >
+          <property name="text" >
+           <string>German</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn_ita" >
+          <property name="text" >
+           <string>Italian</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" >
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_areaType" >
+       <property name="title" >
+        <string>New area</string>
+       </property>
+       <property name="flat" >
+        <bool>true</bool>
+       </property>
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QRadioButton" name="rbtn_text" >
+          <property name="text" >
+           <string>Text</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn_image" >
+          <property name="text" >
+           <string>Image</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" >
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <action name="actionOpen" >
@@ -247,7 +288,7 @@
     <string>Save &amp;as</string>
    </property>
    <property name="shortcut" >
-    <string>Ctrl+A</string>
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
