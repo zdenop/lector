@@ -63,18 +63,19 @@ class QOcrWidget(QtGui.QGraphicsView):
                     diff = pos2 - self.pos1
 
                     size = QtCore.QSizeF(diff.x(), diff.y())
-                    rect = QtCore.QRectF(self.pos1, size)
+                    pos = self.pos1
 
-                    item = OcrArea(0, 0, diff.x(), diff.y(), self.areaType, None, self.scene(),
-                            self.areaBorder, self.areaResizeBorder, len(self.areas) + 1,
-                            self.areaTextSize)
-                    item.setPos(self.pos1)
-
-                    self.areas.append(item)
-
-                    self.isModified = True
+                    self.createArea(pos, size, self.areaType)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
+
+
+    def createArea(self, pos, size, type):
+        item = OcrArea(pos, size, type, None, self.scene(), self.areaBorder,
+                self.areaResizeBorder, len(self.areas) + 1, self.areaTextSize)
+
+        self.areas.append(item)
+        self.isModified = True
 
 
     def cambiaImmagine(self):
@@ -245,9 +246,10 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 class OcrArea(QtGui.QGraphicsRectItem):
     
-    def __init__(self, x, y, w, h, type, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
-        QtGui.QGraphicsRectItem.__init__(self, x, y, w, h, parent, scene)
-
+    def __init__(self, pos, size, type, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
+        QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(), size.height(), parent, scene)
+        self.setPos(pos)
+        
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
