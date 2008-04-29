@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     locale = QLocale.system().name()
     qtTranslator = QTranslator()
-    if qtTranslator.load("lector_" + locale, 'ts'):
+    if qtTranslator.load("lector_" + locale, ':/translations/ts'):
         app.installTranslator(qtTranslator)
 
     window = Window()
