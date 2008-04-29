@@ -25,7 +25,7 @@ class Window(QMainWindow):
         self.ui = Ui_Lector()
         self.ui.setupUi(self)
 
-        self.ocrWidget = QOcrWidget("ita", 1, self.statusBar())
+        self.ocrWidget = QOcrWidget("eng", 1, self.statusBar())
         self.textBrowser = TextWidget()
         self.ui.textBrowserDock.setWidget(self.textBrowser)
         self.ocrWidget.textBrowser = self.textBrowser
@@ -110,9 +110,10 @@ class Window(QMainWindow):
         
         ## load saved language
         lang = settings.value("rbtn/lang", QVariant(QString())).toString()
-        s = "self.ui.rbtn_%s.setChecked(True)" % lang
-        exec(s)
-        self.ocrWidget.language = lang
+        if lang:
+            s = "self.ui.rbtn_%s.setChecked(True)" % lang
+            exec(s)
+            self.ocrWidget.language = lang
 
         #TODO: ridimensionamento della dock non funziona
         #pos = settings.value("textbrowser/pos").toPoint()
