@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>22</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -101,7 +101,7 @@
   <widget class="QDockWidget" name="dockWidget" >
    <property name="minimumSize" >
     <size>
-     <width>80</width>
+     <width>150</width>
      <height>0</height>
     </size>
    </property>
@@ -127,6 +127,9 @@
           <property name="text" >
            <string>English</string>
           </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -142,22 +145,9 @@
            <string>Italian</string>
           </property>
           <property name="checked" >
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" >
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>

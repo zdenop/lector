@@ -212,7 +212,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             region.save(filename)
             
             if item.type == 1:
-                command = "tesseract /tmp/out.tif /tmp/out.%d -l %s" % (i, self.language)
+                command = "tesseract %s /tmp/out.%d -l %s" % (filename, i, self.language)
                 os.popen(command)
             
                 s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
