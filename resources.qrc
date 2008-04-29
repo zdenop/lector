@@ -10,4 +10,7 @@
         <file>icons/viewmag+.png</file>
         <file>icons/viewmag-.png</file>
     </qresource>
+    <qresource prefix="/translations" >
+        <file>ts/lector_it_IT.qm</file>
+    </qresource>
 </RCC>
