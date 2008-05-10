@@ -19,37 +19,37 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="226"/>
+        <location filename="ui_lector.ui" line="216"/>
         <source>Exit</source>
         <translation>Esci</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="234"/>
+        <location filename="ui_lector.ui" line="224"/>
         <source>Rotate right</source>
         <translation>Ruota a destra</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="242"/>
+        <location filename="ui_lector.ui" line="232"/>
         <source>Rotate left</source>
         <translation>Ruota a sinistra</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="250"/>
+        <location filename="ui_lector.ui" line="240"/>
         <source>Flip</source>
         <translation>Ribalta</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="258"/>
+        <location filename="ui_lector.ui" line="248"/>
         <source>Zoom in</source>
         <translation>Ingrandisci</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="269"/>
+        <location filename="ui_lector.ui" line="259"/>
         <source>Zoom out</source>
         <translation>Rimpicciolisci</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="280"/>
+        <location filename="ui_lector.ui" line="270"/>
         <source>Read</source>
         <translation>Leggi</translation>
     </message>
@@ -59,12 +59,12 @@
         <translation>Lingua</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="142"/>
+        <location filename="ui_lector.ui" line="145"/>
         <source>Italian</source>
         <translation>Italiano</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="135"/>
+        <location filename="ui_lector.ui" line="138"/>
         <source>German</source>
         <translation>Tedesco</translation>
     </message>
@@ -74,17 +74,17 @@
         <translation>Inglese</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="177"/>
+        <location filename="ui_lector.ui" line="167"/>
         <source>Text</source>
         <translation>Testo</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="215"/>
+        <location filename="ui_lector.ui" line="205"/>
         <source>&amp;Open image</source>
         <translation>&amp;Apri immagine</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="218"/>
+        <location filename="ui_lector.ui" line="208"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
@@ -94,34 +94,52 @@
         <translation>Visualizza</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="261"/>
+        <location filename="ui_lector.ui" line="251"/>
         <source>Ctrl++</source>
         <translation>Ctrl++</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="272"/>
+        <location filename="ui_lector.ui" line="262"/>
         <source>Ctrl+-</source>
         <translation>Ctrl+-</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="288"/>
+        <location filename="ui_lector.ui" line="278"/>
         <source>Save &amp;as</source>
         <translation>Sa&amp;lva con nome</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="168"/>
+        <location filename="ui_lector.ui" line="158"/>
         <source>New area</source>
         <translation>Nuova area</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="187"/>
+        <location filename="ui_lector.ui" line="177"/>
         <source>Image</source>
         <translation>Immagine</translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="291"/>
+        <location filename="ui_lector.ui" line="281"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
+    </message>
+</context>
+<context>
+    <name>QOcrWidget</name>
+    <message>
+        <location filename="ocrwidget.py" line="412"/>
+        <source>Remove</source>
+        <translation>Elimina</translation>
+    </message>
+    <message>
+        <location filename="ocrwidget.py" line="415"/>
+        <source>Text</source>
+        <translation>Testo</translation>
+    </message>
+    <message>
+        <location filename="ocrwidget.py" line="416"/>
+        <source>Graphics</source>
+        <translation>Grafica</translation>
     </message>
 </context>
 <context>
@@ -142,17 +160,17 @@
         <translation>Immagini (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="150"/>
+        <location filename="lector.py" line="151"/>
         <source>Are you sure you want to exit?</source>
         <translation>Sei sicuro di voler uscire?</translation>
     </message>
     <message>
-        <location filename="lector.py" line="159"/>
+        <location filename="lector.py" line="160"/>
         <source>Save document</source>
         <translation>Salva documento</translation>
     </message>
     <message>
-        <location filename="lector.py" line="160"/>
+        <location filename="lector.py" line="161"/>
         <source>RTF document</source>
         <translation>Documento RTF</translation>
     </message>

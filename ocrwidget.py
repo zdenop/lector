@@ -12,16 +12,49 @@ import Image
 #import ImageQt
 import os
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QApplication as qa
 #import sys
 #sys.path.append('/usr/lib/ooo-2.0/program')
 #import uno
+
+class QOcrScene(QtGui.QGraphicsScene):
+    def __init__(self, parent, lang, areaType):
+        QtGui.QGraphicsScene.__init__(self)
+
+        self.language = lang
+        self.areaType = areaType
+        
+        self.first = True
+        
+        self.areas = []
+
+
+    def createArea(self, pos, size, type, areaBorder, areaResizeBorder, areaTextSize):
+        item = OcrArea(pos, size, type, None, self, areaBorder, areaResizeBorder,
+                len(self.areas) + 1, areaTextSize)
+
+        self.areas.append(item)
+        self.isModified = True
+
+
+    def removeArea(self, item):
+        if item:
+            idx = self.areas.index(item)
+
+            self.areas.remove(item)
+            self.removeItem(item)
+            for i, item in enumerate(self.areas[idx:]):
+                item.setIndex(i+idx+1)
+
+
 
 class QOcrWidget(QtGui.QGraphicsView):
     def __init__(self, lang, areaType, statusBar):
         QtGui.QGraphicsView.__init__(self)
 
-        scene = QtGui.QGraphicsScene(self)
-        self.setScene(scene)
+        self.ocrscene = QOcrScene(self, lang, areaType)
+        self.setScene(self.ocrscene)
+
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
         self.setRenderHint(QtGui.QPainter.Antialiasing)
         self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
@@ -31,15 +64,13 @@ class QOcrWidget(QtGui.QGraphicsView):
         
         self.language = lang
         self.statusBar = statusBar
-        self.areaType = 1
+        self.areaType = areaType
         
         self.first = True
         self.bMovingArea = False
         self.setCursor(QtCore.Qt.CrossCursor)
         self.isModified = False
         
-        self.areas = []
-
 
     def drawBackground(self, painter, rect):
         if hasattr(self, 'ocrImage') and self.ocrImage:
@@ -70,24 +101,17 @@ class QOcrWidget(QtGui.QGraphicsView):
                     pos.setX(min(self.pos1.x(), pos2.x()))
                     pos.setY(min(self.pos1.y(), pos2.y()))
 
-                    self.createArea(pos, size, self.areaType)
+                    self.scene().createArea(pos, size, self.areaType, self.areaBorder,
+                            self.areaResizeBorder, self.areaTextSize)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
-
-
-    def createArea(self, pos, size, type):
-        item = OcrArea(pos, size, type, None, self.scene(), self.areaBorder,
-                self.areaResizeBorder, len(self.areas) + 1, self.areaTextSize)
-
-        self.areas.append(item)
-        self.isModified = True
 
 
     def cambiaImmagine(self):
         #delete old OcrArea
         for item in self.scene().items():
             self.scene().removeItem(item)
-        self.areas = []
+        self.scene().areas = []
         
         #open image
         self.im = Image.open(self.filename)
@@ -160,7 +184,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaBorder *= 0.8
         self.areaTextSize *= 0.8
 
-        for item in self.areas:
+        for item in self.scene().areas:
             # resize area on which area is resizable
             item.resizeBorder = self.areaResizeBorder
             
@@ -180,7 +204,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaBorder *= 1.25
         self.areaTextSize *= 1.25
 
-        for item in self.areas:
+        for item in self.scene().areas:
             # resize area on which area is resizable
             item.resizeBorder = self.areaResizeBorder
             
@@ -196,7 +220,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def doOcr(self):
         import codecs
-        aItems = self.areas
+        aItems = self.scene().areas
         numItems = len(aItems)
 
         self.textBrowser.clear()
@@ -239,13 +263,7 @@ class QOcrWidget(QtGui.QGraphicsView):
     def keyReleaseEvent(self, event):
         if event.key() == QtCore.Qt.Key_Delete:
             item = self.scene().focusItem()
-            if item:
-                idx = self.areas.index(item)
-
-                self.areas.remove(item)
-                self.scene().removeItem(item)
-                for i, item in enumerate(self.areas[idx:]):
-                    item.setIndex(i+idx+1)
+            self.scene().removeArea(item)
         elif event.key() == QtCore.Qt.Key_Escape:
             self.first = True
 
@@ -264,13 +282,13 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        
+        ## set index label
+        self.text = QtGui.QGraphicsTextItem("%d" % index, self)
+        self.setTextSize(textSize)
 
         ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt)
-        self.type = type
-        if self.type == 1:
-            self.color = QtCore.Qt.darkGreen
-        else: ## TODO: else -> elif ... + else raise exception
-            self.color = QtCore.Qt.blue
+        self.setType(type)
 
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
@@ -278,11 +296,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setCursor(QtCore.Qt.SizeAllCursor)
         self.resizeBorder = resizeBorder
 
-        ## set index label
-        self.text = QtGui.QGraphicsTextItem("%d" % index, self)
-
-        self.setTextSize(textSize)
-        self.text.setDefaultTextColor(self.color)
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
 
 
@@ -392,3 +405,37 @@ class OcrArea(QtGui.QGraphicsRectItem):
         font = QtGui.QFont()
         font.setPointSizeF(size)
         self.text.setFont(font)
+
+
+    def contextMenuEvent(self, event):
+        menu = QtGui.QMenu()
+        removeAction = menu.addAction(qa.translate('QOcrWidget', "Remove"))
+        #Action = menu.addAction(self.scene().tr("Remove"))
+        menu.addSeparator()
+        textAction = menu.addAction(qa.translate('QOcrWidget', "Text"))
+        graphicsAction = menu.addAction(qa.translate('QOcrWidget', "Graphics"))
+        selectedAction = menu.exec_(event.screenPos())
+
+        if selectedAction == removeAction:
+            self.scene().removeArea(self)
+        elif selectedAction == textAction:
+            self.setType(1)
+        elif selectedAction == graphicsAction:
+            self.setType(2)
+
+
+    def setType(self, type):
+        self.type = type
+        
+        if self.type == 1:
+            self.color = QtCore.Qt.darkGreen
+        else: ## TODO: else -> elif ... + else raise exception
+            self.color = QtCore.Qt.blue
+        
+        self.text.setDefaultTextColor(self.color)
+
+        pen = self.pen()
+        pen.setColor(self.color)
+        self.setPen(pen)
+
+
