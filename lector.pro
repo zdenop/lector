@@ -8,6 +8,6 @@
 #INCLUDEPATH += .
 
 # Input
-SOURCES         += lector.py
+SOURCES         += lector.py ocrwidget.py textwidget.py
 FORMS           += ui_lector.ui
-TRANSLATIONS    =   ts/lector_it_IT.ts ts/qt_it_IT.ts
+TRANSLATIONS    =   ts/lector_it_IT.ts
