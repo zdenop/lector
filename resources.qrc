@@ -12,5 +12,6 @@
     </qresource>
     <qresource prefix="/translations" >
         <file>ts/lector_it_IT.qm</file>
+        <file>ts/qt_it_IT.qm</file>
     </qresource>
 </RCC>

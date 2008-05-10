@@ -171,8 +171,12 @@ if __name__ == "__main__":
     qsrand(QTime(0,0,0).secsTo(QTime.currentTime()))
 
     locale = QLocale.system().name()
+    lecTranslator = QTranslator()
+    if lecTranslator.load("lector_" + locale, ':/translations/ts'):
+        app.installTranslator(lecTranslator)
+
     qtTranslator = QTranslator()
-    if qtTranslator.load("lector_" + locale, ':/translations/ts'):
+    if qtTranslator.load("qt_" + locale, ':/translations/ts'):
         app.installTranslator(qtTranslator)
 
     window = Window()
