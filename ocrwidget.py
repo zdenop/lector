@@ -87,6 +87,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         #delete old OcrArea
         for item in self.scene().items():
             self.scene().removeItem(item)
+        self.areas = []
         
         #open image
         self.im = Image.open(self.filename)
@@ -215,15 +216,19 @@ class QOcrWidget(QtGui.QGraphicsView):
             filename = "/tmp/out.%d.tif" % i
 
             region = self.im.crop(box)
-            region.save(filename)
             
             if item.type == 1:
+                region.save(filename)
+
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i, self.language)
                 os.popen(command)
             
                 s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
                 self.textBrowser.append(s)
             else:
+                region = region.resize((region.size[0]/4,region.size[1]/4))
+                region.save(filename)
+
                 s = "<img src='%s'>" % filename
                 self.textBrowser.append(s)
 
