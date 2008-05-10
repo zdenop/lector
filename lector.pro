@@ -10,4 +10,4 @@
 # Input
 SOURCES         += lector.py
 FORMS           += ui_lector.ui
-TRANSLATIONS    =   ts/lector_it_IT.ts
+TRANSLATIONS    =   ts/lector_it_IT.ts ts/qt_it_IT.ts
