@@ -46,6 +46,16 @@ class QOcrScene(QtGui.QGraphicsScene):
             for i, item in enumerate(self.areas[idx:]):
                 item.setIndex(i+idx+1)
 
+    def updateAreas(self, areaBorder, areaResizeBorder, areaTextSize):    
+        for item in self.areas:
+            # reset the space on which item is resizable
+            item.resizeBorder = areaResizeBorder
+            
+            # resize border
+            pen = item.pen()
+            pen.setWidthF(areaBorder)
+            item.setPen(pen)
+            item.setTextSize(areaTextSize)
 
 
 class QOcrWidget(QtGui.QGraphicsView):
@@ -184,16 +194,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaBorder *= 0.8
         self.areaTextSize *= 0.8
 
-        for item in self.scene().areas:
-            # resize area on which area is resizable
-            item.resizeBorder = self.areaResizeBorder
-            
-            # resize border
-            pen = item.pen()
-            pen.setWidthF(self.areaBorder)
-            item.setPen(pen)
-            item.setTextSize(self.areaTextSize)
-        
+        self.scene().updateAreas(self.areaBorder, self.areaResizeBorder, self.areaTextSize)
+                
         self.resetCachedContent()
         self.repaint()
 
@@ -204,16 +206,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaBorder *= 1.25
         self.areaTextSize *= 1.25
 
-        for item in self.scene().areas:
-            # resize area on which area is resizable
-            item.resizeBorder = self.areaResizeBorder
-            
-            # resize border
-            pen = item.pen()
-            pen.setWidthF(self.areaBorder)
-            item.setPen(pen)
-            item.setTextSize(self.areaTextSize)
-        
+        self.scene().updateAreas(self.areaBorder, self.areaResizeBorder, self.areaTextSize)
+
         self.resetCachedContent()
         self.repaint()
 
@@ -287,7 +281,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)
         self.setTextSize(textSize)
 
-        ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt)
+        ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt) (enum?)
         self.setType(type)
 
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
