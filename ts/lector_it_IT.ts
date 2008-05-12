@@ -127,17 +127,17 @@
 <context>
     <name>QOcrWidget</name>
     <message>
-        <location filename="ocrwidget.py" line="412"/>
+        <location filename="ocrwidget.py" line="406"/>
         <source>Remove</source>
         <translation>Elimina</translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="415"/>
+        <location filename="ocrwidget.py" line="409"/>
         <source>Text</source>
         <translation>Testo</translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="416"/>
+        <location filename="ocrwidget.py" line="410"/>
         <source>Graphics</source>
         <translation>Grafica</translation>
     </message>
@@ -150,29 +150,44 @@
         <translation>Pronto</translation>
     </message>
     <message>
-        <location filename="lector.py" line="66"/>
+        <location filename="lector.py" line="81"/>
         <source>Open image</source>
         <translation>Apri immagine</translation>
     </message>
     <message>
-        <location filename="lector.py" line="68"/>
+        <location filename="lector.py" line="83"/>
         <source>Images (*.png *.xpm *.jpg)</source>
         <translation>Immagini (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="151"/>
+        <location filename="lector.py" line="171"/>
         <source>Are you sure you want to exit?</source>
         <translation>Sei sicuro di voler uscire?</translation>
     </message>
     <message>
-        <location filename="lector.py" line="160"/>
+        <location filename="lector.py" line="180"/>
         <source>Save document</source>
         <translation>Salva documento</translation>
     </message>
     <message>
-        <location filename="lector.py" line="161"/>
+        <location filename="lector.py" line="181"/>
         <source>RTF document</source>
         <translation>Documento RTF</translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="49"/>
+        <source>English</source>
+        <translation>Inglese</translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="50"/>
+        <source>Italian</source>
+        <translation>Italiano</translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="51"/>
+        <source>German</source>
+        <translation>Tedesco</translation>
     </message>
 </context>
 </TS>

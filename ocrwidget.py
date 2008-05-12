@@ -273,9 +273,9 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setPos(pos)
         
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsFocusable)
-        self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
+            QtGui.QGraphicsItem.ItemIsFocusable |
+            QtGui.QGraphicsItem.ItemIsSelectable)
         
         ## set index label
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)

@@ -33,7 +33,6 @@ class Window(QMainWindow):
         self.setCentralWidget(self.ocrWidget)
 
         self.statusBar().showMessage(self.tr("Ready"))
-        self.readSettings()
         QObject.connect(self.ui.actionOpen,SIGNAL("activated()"), self.openImage)
         QObject.connect(self.ui.actionRotateRight,SIGNAL("activated()"), self.ocrWidget.rotateRight)
         QObject.connect(self.ui.actionRotateLeft,SIGNAL("activated()"), self.ocrWidget.rotateLeft)
@@ -43,10 +42,22 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
         QObject.connect(self.ui.actionSaveAs,SIGNAL("activated()"), self.saveAs)
 
-        ## TODO: use only a function for this
-        QObject.connect(self.ui.rbtn_ita,SIGNAL("clicked()"), self.change_language_ita)
-        QObject.connect(self.ui.rbtn_deu,SIGNAL("clicked()"), self.change_language_deu)
-        QObject.connect(self.ui.rbtn_eng,SIGNAL("clicked()"), self.change_language_eng)
+        languages = ('eng', 'ita', 'deu')
+        languages_ext = {'eng': self.tr('English'),
+            'ita': self.tr('Italian'), 'deu': self.tr('German')}
+        self.rbtn_languages = {}
+
+        for lang in languages:
+            rbtn = QRadioButton(self.ui.groupBox_language)
+            rbtn.setObjectName("rbtn_%s" % lang)
+            rbtn.setText(languages_ext[lang])
+            
+            ##TODO:change this layout to a more human name
+            self.ui.vboxlayout2.addWidget(rbtn)
+
+            QObject.connect(rbtn, SIGNAL('clicked()'), self.changeLanguage)
+
+            self.rbtn_languages[lang] = rbtn
 
         QObject.connect(self.ui.rbtn_text,SIGNAL("clicked()"), self.change_ocr_area_text)
         QObject.connect(self.ui.rbtn_image,SIGNAL("clicked()"), self.change_ocr_area_image)
@@ -59,6 +70,9 @@ class Window(QMainWindow):
         self.ui.actionZoomOut.setEnabled(False)
         self.ui.actionOcr.setEnabled(False)
         self.ui.actionSaveAs.setEnabled(False)
+        
+        ## load saved settings
+        self.readSettings()
 
 
     def openImage(self):
@@ -80,16 +94,9 @@ class Window(QMainWindow):
             self.ui.actionSaveAs.setEnabled(True)
 
 
-    def change_language_ita(self):
-        self.ocrWidget.language = "ita"
-
-
-    def change_language_deu(self):
-        self.ocrWidget.language = "deu"
-
-
-    def change_language_eng(self):
-        self.ocrWidget.language = "eng"
+    def changeLanguage(self):
+        lang = self.sender().objectName()[5:]
+        self.ocrWidget.language = lang
 
 
     def change_ocr_area_text(self):
@@ -109,10 +116,9 @@ class Window(QMainWindow):
         self.move(pos)
         
         ## load saved language
-        lang = settings.value("rbtn/lang", QVariant(QString())).toString()
+        lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
         if lang:
-            s = "self.ui.rbtn_%s.setChecked(True)" % lang
-            exec(s)
+            self.rbtn_languages[lang].setChecked(True)
             self.ocrWidget.language = lang
 
         #TODO: ridimensionamento della dock non funziona
