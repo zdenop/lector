@@ -121,35 +121,7 @@
        <property name="flat" >
         <bool>true</bool>
        </property>
-       <layout class="QVBoxLayout" >
-        <item>
-         <widget class="QRadioButton" name="rbtn_eng" >
-          <property name="text" >
-           <string>English</string>
-          </property>
-          <property name="checked" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="rbtn_deu" >
-          <property name="text" >
-           <string>German</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="rbtn_ita" >
-          <property name="text" >
-           <string>Italian</string>
-          </property>
-          <property name="checked" >
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <layout class="QVBoxLayout" />
       </widget>
      </item>
      <item>
