@@ -52,7 +52,6 @@ class Window(QMainWindow):
         for uc in unicharsets:
             languages.append(uc[len(pTess):len(pTess)+3])
 
-        print languages
         languages_ext = {'eng': self.tr('English'),
             'ita': self.tr('Italian'), 'deu': self.tr('German')}
         self.rbtn_languages = {}
@@ -128,6 +127,7 @@ class Window(QMainWindow):
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
         if lang:
+            ## TODO: if the language is not installed anymore?
             self.rbtn_languages[lang].setChecked(True)
             self.ocrWidget.language = lang
 
