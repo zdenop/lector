@@ -16,10 +16,11 @@ from PyQt4.QtGui import *
 from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
-
+from subprocess import Popen, PIPE
 
 class Window(QMainWindow):
     def __init__(self, parent = None):
+        from glob import glob
         QMainWindow.__init__(self)
 
         self.ui = Ui_Lector()
@@ -42,7 +43,16 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
         QObject.connect(self.ui.actionSaveAs,SIGNAL("activated()"), self.saveAs)
 
-        languages = ('eng', 'ita', 'deu')
+        poTess = Popen('tesseract /tmp/prova /tmp/prova -l iamnottrue', stderr=PIPE, shell=True)
+        lTess = poTess.stderr.readline()
+        pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
+
+        languages = list()
+        unicharsets = glob(pTess+'*.unicharset')
+        for uc in unicharsets:
+            languages.append(uc[len(pTess):len(pTess)+3])
+
+        print languages
         languages_ext = {'eng': self.tr('English'),
             'ita': self.tr('Italian'), 'deu': self.tr('German')}
         self.rbtn_languages = {}
