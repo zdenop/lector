@@ -10,7 +10,6 @@
 
 import sys
 import os
-#from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from ui_lector import Ui_Lector
@@ -34,14 +33,12 @@ class Window(QMainWindow):
         self.setCentralWidget(self.ocrWidget)
 
         self.statusBar().showMessage(self.tr("Ready"))
-        QObject.connect(self.ui.actionOpen,SIGNAL("activated()"), self.openImage)
         QObject.connect(self.ui.actionRotateRight,SIGNAL("activated()"), self.ocrWidget.rotateRight)
         QObject.connect(self.ui.actionRotateLeft,SIGNAL("activated()"), self.ocrWidget.rotateLeft)
         QObject.connect(self.ui.actionRotateFull,SIGNAL("activated()"), self.ocrWidget.rotateFull)
         QObject.connect(self.ui.actionZoomIn,SIGNAL("activated()"), self.ocrWidget.zoomIn)
         QObject.connect(self.ui.actionZoomOut,SIGNAL("activated()"), self.ocrWidget.zoomOut)
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
-        QObject.connect(self.ui.actionSaveAs,SIGNAL("activated()"), self.saveAs)
 
         poTess = Popen('tesseract /tmp/prova /tmp/prova -l iamnottrue', stderr=PIPE, shell=True)
         lTess = poTess.stderr.readline()
@@ -68,9 +65,6 @@ class Window(QMainWindow):
 
             self.rbtn_languages[lang] = rbtn
 
-        QObject.connect(self.ui.rbtn_text,SIGNAL("clicked()"), self.change_ocr_area_text)
-        QObject.connect(self.ui.rbtn_image,SIGNAL("clicked()"), self.change_ocr_area_image)
-
         #disable unusable actions until a file has been opened
         self.ui.actionRotateRight.setEnabled(False)
         self.ui.actionRotateLeft.setEnabled(False)
@@ -84,7 +78,8 @@ class Window(QMainWindow):
         self.readSettings()
 
 
-    def openImage(self):
+    @pyqtSignature('')
+    def on_actionOpen_activated(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
                                             self.tr("Open image"), self.curDir,
                                             self.tr("Images (*.png *.xpm *.jpg)")
@@ -108,11 +103,13 @@ class Window(QMainWindow):
         self.ocrWidget.language = lang
 
 
-    def change_ocr_area_text(self):
+    @pyqtSignature('')
+    def on_rbtn_text_clicked(self):
         self.ocrWidget.areaType = 1
 
 
-    def change_ocr_area_image(self):
+    @pyqtSignature('')
+    def on_rbtn_image_clicked(self):
         self.ocrWidget.areaType = 2
 
 
@@ -171,7 +168,8 @@ class Window(QMainWindow):
             return True
 
 
-    def saveAs(self):
+    @pyqtSignature('')
+    def on_actionSaveAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                             self.tr("Save document"), self.curDir,
                                             self.tr("RTF document") + " (*.rtf)"
