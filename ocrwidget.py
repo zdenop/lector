@@ -29,8 +29,8 @@ class QOcrScene(QtGui.QGraphicsScene):
         self.areas = []
 
 
-    def createArea(self, pos, size, type, areaBorder, areaResizeBorder, areaTextSize):
-        item = OcrArea(pos, size, type, None, self, areaBorder, areaResizeBorder,
+    def createArea(self, pos, size, type, areaBorder, areaTextSize):
+        item = OcrArea(pos, size, type, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
 
         self.areas.append(item)
@@ -46,11 +46,9 @@ class QOcrScene(QtGui.QGraphicsScene):
             for i, item in enumerate(self.areas[idx:]):
                 item.setIndex(i+idx+1)
 
-    def updateAreas(self, areaBorder, areaResizeBorder, areaTextSize):    
+
+    def updateAreas(self, areaBorder, areaTextSize):    
         for item in self.areas:
-            # reset the space on which item is resizable
-            item.resizeBorder = areaResizeBorder
-            
             # resize border
             pen = item.pen()
             pen.setWidthF(areaBorder)
@@ -112,7 +110,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     pos.setY(min(self.pos1.y(), pos2.y()))
 
                     self.scene().createArea(pos, size, self.areaType, self.areaBorder,
-                            self.areaResizeBorder, self.areaTextSize)
+                            self.areaTextSize)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
 
@@ -137,7 +135,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
 
-        self.areaResizeBorder = 5 / ratio
+        OcrArea.resizeBorder = 5 / ratio
         self.areaBorder = 2 / ratio
         self.areaTextSize = 10 / ratio
 
@@ -190,11 +188,11 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def zoomIn(self):
         self.scale(1.25, 1.25)
-        self.areaResizeBorder *= 0.8
+        OcrArea.resizeBorder *= 0.8
         self.areaBorder *= 0.8
         self.areaTextSize *= 0.8
 
-        self.scene().updateAreas(self.areaBorder, self.areaResizeBorder, self.areaTextSize)
+        self.scene().updateAreas(self.areaBorder, self.areaTextSize)
                 
         self.resetCachedContent()
         self.repaint()
@@ -202,11 +200,11 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def zoomOut(self):
         self.scale(0.8, 0.8)
-        self.areaResizeBorder *= 1.25
+        OcrArea.resizeBorder *= 1.25
         self.areaBorder *= 1.25
         self.areaTextSize *= 1.25
 
-        self.scene().updateAreas(self.areaBorder, self.areaResizeBorder, self.areaTextSize)
+        self.scene().updateAreas(self.areaBorder, self.areaTextSize)
 
         self.resetCachedContent()
         self.repaint()
@@ -268,7 +266,10 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 class OcrArea(QtGui.QGraphicsRectItem):
     
-    def __init__(self, pos, size, type, parent = None, scene = None, areaBorder = 2, resizeBorder = 5, index = 0, textSize = 50):
+    ## static data
+    resizeborder = .0
+    
+    def __init__(self, pos, size, type, parent = None, scene = None, areaBorder = 2, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(), size.height(), parent, scene)
         self.setPos(pos)
         
@@ -282,35 +283,33 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setTextSize(textSize)
 
         ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt) (enum?)
-        self.setType(type)
+        self.type = type
 
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
-        self.resizeBorder = resizeBorder
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
-
 
 
     def mousePressEvent(self, event):
         self.update()
 
         r = self.rect()
-        if event.pos().x() > (r.right() - self.resizeBorder) :
+        if event.pos().x() > (r.right() - OcrArea.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sEdge = "Right"
 
-        elif event.pos().x() < (r.left() + self.resizeBorder) :
+        elif event.pos().x() < (r.left() + OcrArea.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sEdge = "Left"
 
-        elif event.pos().y() < (r.top() + self.resizeBorder) :
+        elif event.pos().y() < (r.top() + OcrArea.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sEdge = "Top"
 
-        elif event.pos().y() > (r.bottom() - self.resizeBorder) :
+        elif event.pos().y() > (r.bottom() - OcrArea.resizeBorder) :
             self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
             self.sEdge = "Bottom"
 
@@ -375,16 +374,16 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     def hoverMoveEvent(self, event):
         r = self.rect()
-        if event.pos().x() > (r.right() - self.resizeBorder) :
+        if event.pos().x() > (r.right() - OcrArea.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeHorCursor)
 
-        elif event.pos().x() < (r.left() + self.resizeBorder) :
+        elif event.pos().x() < (r.left() + OcrArea.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeHorCursor)
 
-        elif event.pos().y() < (r.top() + self.resizeBorder) :
+        elif event.pos().y() < (r.top() + OcrArea.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeVerCursor)
 
-        elif event.pos().y() > (r.bottom() - self.resizeBorder) :
+        elif event.pos().y() > (r.bottom() - OcrArea.resizeBorder) :
             self.setCursor(QtCore.Qt.SizeVerCursor)
 
         else:
@@ -413,15 +412,16 @@ class OcrArea(QtGui.QGraphicsRectItem):
         if selectedAction == removeAction:
             self.scene().removeArea(self)
         elif selectedAction == textAction:
-            self.setType(1)
+            self.type = 1
         elif selectedAction == graphicsAction:
-            self.setType(2)
+            self.type = 2
 
 
-    def setType(self, type):
-        self.type = type
+    ## type property
+    def _setType(self, type):
+        self.__type = type
         
-        if self.type == 1:
+        if self.__type == 1:
             self.color = QtCore.Qt.darkGreen
         else: ## TODO: else -> elif ... + else raise exception
             self.color = QtCore.Qt.blue
@@ -432,4 +432,8 @@ class OcrArea(QtGui.QGraphicsRectItem):
         pen.setColor(self.color)
         self.setPen(pen)
 
+    def _type(self):
+        return self.__type
+
+    type = property(fget=_type, fset=_setType)
 
