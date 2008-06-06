@@ -40,7 +40,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
 
-        # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
+        self.bottom = OcrAreaSide(pos, size.width(), self, scene)
 
 
     def mousePressEvent(self, event):
@@ -187,4 +187,46 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     type = property(fget=_type, fset=_setType)
 
+
+class OcrAreaSide(QtGui.QGraphicsRectItem):
+
+    def __init__(self, pos, width, parent, scene):
+        QtGui.QGraphicsRectItem.__init__(self, 0, 0, width, 30, parent, scene)
+        self.setPos(pos)
+        
+        self.parent = parent
+
+        #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
+        self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
+            QtGui.QGraphicsItem.ItemIsFocusable |
+            QtGui.QGraphicsItem.ItemIsSelectable)
+
+
+    def mousePressEvent(self, event):
+        self.oldPoint = event.scenePos()
+        QtGui.QGraphicsItem.mousePressEvent(self, event)
+
+        self.parent.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+        self.parent.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+
+
+    def mouseMoveEvent(self, event):
+        self.scaleParentItem(event.scenePos())
+        self.oldPoint = event.scenePos()
+
+
+    def scaleParentItem(self, newPoint):
+        height = self.parent.sceneBoundingRect().height()
+        width = self.parent.sceneBoundingRect().width()
+    
+        x = newPoint.x() - self.oldPoint.x()
+        y = newPoint.y() - self.oldPoint.y()
+    
+        x = x / width
+        y = y / height
+                        
+        if(((1 + x) < 0) or ((1 + y) < 0)):
+            return
+    
+        self.parent.scale(1 + x, 1 + y)
 
