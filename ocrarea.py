@@ -22,6 +22,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
     def __init__(self, pos, size, type, parent = None, scene = None, areaBorder = 2, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(), size.height(), parent, scene)
         self.setPos(pos)
+
+        ## to prevent disturbing resize-helper events
+        ## (see OcrAreaSide.mouseMoveEvent)
+        self.setZValue(10)
         
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
@@ -40,7 +44,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setAcceptsHoverEvents(True)
         self.setCursor(QtCore.Qt.SizeAllCursor)
 
-        self.bottom = OcrAreaSide(pos, size.width(), self, scene)
+        self.top = OcrAreaTop(size.width(), self, scene)
+        self.top.setZValue(1)
+        self.left = OcrAreaLeft(size.height(), self, scene)
+        self.left.setZValue(2)
 
 
     def mousePressEvent(self, event):
@@ -80,8 +87,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
             r = self.rect()
             scenePos = event.scenePos()
 
-            ## TODO: possibile scriverlo in modo piu` semplice tenendo dei punti fissi?
-            ## del tipo: blocco quel lato, mentre questo lo metto "sotto il cursore" (event.scenePos())
             if self.sEdge == 'Top':
                 diff = self.y() - scenePos.y()
                 if r.height() - diff > 0:
@@ -120,24 +125,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
                     self.sEdge = "Left"
 
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
-
-
-    def hoverMoveEvent(self, event):
-        r = self.rect()
-        if event.pos().x() > (r.right() - OcrArea.resizeBorder) :
-            self.setCursor(QtCore.Qt.SizeHorCursor)
-
-        elif event.pos().x() < (r.left() + OcrArea.resizeBorder) :
-            self.setCursor(QtCore.Qt.SizeHorCursor)
-
-        elif event.pos().y() < (r.top() + OcrArea.resizeBorder) :
-            self.setCursor(QtCore.Qt.SizeVerCursor)
-
-        elif event.pos().y() > (r.bottom() - OcrArea.resizeBorder) :
-            self.setCursor(QtCore.Qt.SizeVerCursor)
-
-        else:
-            self.setCursor(QtCore.Qt.SizeAllCursor)
 
 
     def setIndex(self, idx):
@@ -187,16 +174,30 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     type = property(fget=_type, fset=_setType)
 
+    
+    #def itemChange(self, change, value):
+    #    if (change == QtGui.QGraphicsItem.ItemMatrixChange):
+    #        print 'dp'
+    #    print change
+    #    return QtGui.QGraphicsItem.itemChange(self, change, value)
+
+
+    def sizeChange(self):
+        ## TODO: reimplementare setRect e mettere questo li` dentro
+        r = self.rect()
+        self.top.setRect(0,0,r.width()+30,30)
+        self.left.setRect(0,0,30,r.height()+30)
+
 
 class OcrAreaSide(QtGui.QGraphicsRectItem):
 
-    def __init__(self, pos, width, parent, scene):
+    def __init__(self, width, parent, scene):
         QtGui.QGraphicsRectItem.__init__(self, 0, 0, width, 30, parent, scene)
-        self.setPos(pos)
+        self.setPos(0, -15)
         
         self.parent = parent
 
-        #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
+        self.setAcceptsHoverEvents(True)
         self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
             QtGui.QGraphicsItem.ItemIsFocusable |
             QtGui.QGraphicsItem.ItemIsSelectable)
@@ -207,26 +208,85 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
         QtGui.QGraphicsItem.mousePressEvent(self, event)
 
         self.parent.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-        self.parent.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
+        self.parent.setSelected(True)
+
+        items = self.scene().items(event.scenePos())
+
+        for item in items:
+            if self.zValue() > item.zValue():
+                item.mousePressEvent(event)
+        
 
 
     def mouseMoveEvent(self, event):
         self.scaleParentItem(event.scenePos())
         self.oldPoint = event.scenePos()
+        items = self.scene().selectedItems()
+
+        for item in items:
+            if self.zValue() > item.zValue():
+                item.mouseMoveEvent(event)
 
 
     def scaleParentItem(self, newPoint):
-        height = self.parent.sceneBoundingRect().height()
-        width = self.parent.sceneBoundingRect().width()
+        pass
+
+
+    def mouseReleaseEvent(self, event):
+        self.parent.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
+
     
-        x = newPoint.x() - self.oldPoint.x()
-        y = newPoint.y() - self.oldPoint.y()
-    
-        x = x / width
-        y = y / height
-                        
-        if(((1 + x) < 0) or ((1 + y) < 0)):
-            return
-    
-        self.parent.scale(1 + x, 1 + y)
+
+class OcrAreaTop(OcrAreaSide):
+
+    def __init__(self, width, parent, scene):
+        QtGui.QGraphicsRectItem.__init__(self, 0, 0, width+30, 30, parent, scene)
+        self.setPos(-15, -15)
+        
+        self.parent = parent
+
+        self.setAcceptsHoverEvents(True)
+        self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
+            QtGui.QGraphicsItem.ItemIsFocusable |
+            QtGui.QGraphicsItem.ItemIsSelectable)
+
+
+    def hoverMoveEvent(self, event):
+        self.setCursor(QtCore.Qt.SizeVerCursor)
+
+
+    def scaleParentItem(self, newPoint):
+        diff = - newPoint.y() + self.oldPoint.y()
+        r = self.parent.rect()
+
+        self.parent.setPos(self.parent.x(), self.parent.y() - diff)
+        self.parent.setRect(0,0,r.width(),r.height() + diff)
+        self.parent.sizeChange()
+
+
+class OcrAreaLeft(OcrAreaSide):
+
+    def __init__(self, height, parent, scene):
+        QtGui.QGraphicsRectItem.__init__(self, 0, 0, 30, height+30, parent, scene)
+        self.setPos(-15, -15)
+        
+        self.parent = parent
+
+        self.setAcceptsHoverEvents(True)
+        self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
+            QtGui.QGraphicsItem.ItemIsFocusable |
+            QtGui.QGraphicsItem.ItemIsSelectable)
+
+
+    def hoverMoveEvent(self, event):
+        self.setCursor(QtCore.Qt.SizeHorCursor)
+
+
+    def scaleParentItem(self, newPoint):
+        diff = - newPoint.x() + self.oldPoint.x()
+        r = self.parent.rect()
+
+        self.parent.setPos(self.parent.x() - diff, self.parent.y())
+        self.parent.setRect(0,0,r.width() + diff,r.height())
+        self.parent.sizeChange()
 
