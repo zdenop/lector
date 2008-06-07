@@ -50,12 +50,18 @@ class Window(QMainWindow):
             languages.append(uc[len(pTess):len(pTess)+3])
 
         languages_ext = {'eng': self.tr('English'),
-            'ita': self.tr('Italian'), 'deu': self.tr('German')}
+            'ita': self.tr('Italian'), 'deu': self.tr('German'),
+            'nld': self.tr('Dutch'), 'fra': self.tr('French'),
+            'spa': self.tr('Spanish')}
         self.rbtn_languages = {}
 
         for lang in languages:
+            if not lang in languages_ext:
+                continue
             rbtn = QRadioButton(self.ui.groupBox_language)
             rbtn.setObjectName("rbtn_%s" % lang)
+            print lang
+            print languages_ext[lang]
             rbtn.setText(languages_ext[lang])
             
             ##TODO:change this layout to a more human name

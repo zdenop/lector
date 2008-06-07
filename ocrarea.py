@@ -202,7 +202,6 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
             QtGui.QGraphicsItem.ItemIsFocusable |
             QtGui.QGraphicsItem.ItemIsSelectable)
 
-
     def mousePressEvent(self, event):
         self.oldPoint = event.scenePos()
         QtGui.QGraphicsItem.mousePressEvent(self, event)
@@ -235,7 +234,12 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
     def mouseReleaseEvent(self, event):
         self.parent.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
 
-    
+   
+    def paint(self, painter, option, widget):
+        pen = QtGui.QPen(QtCore.Qt.transparent, 0, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        painter.setPen(pen)
+        painter.drawRect(self.rect())
+
 
 class OcrAreaTop(OcrAreaSide):
 
@@ -279,6 +283,7 @@ class OcrAreaLeft(OcrAreaSide):
 
 
     def hoverMoveEvent(self, event):
+        #items = self.scene().items(event.scenePos())
         self.setCursor(QtCore.Qt.SizeHorCursor)
 
 
