@@ -166,7 +166,6 @@ class Window(QMainWindow):
 
     
     def areYouSureToExit(self):
-        #if (textEdit->document()->isModified()) {
         ret = QMessageBox.warning(self, "Lector", self.tr("Are you sure you want to exit?"), QMessageBox.Yes | QMessageBox.No)
         if ret == QMessageBox.No:
             return False
