@@ -60,8 +60,6 @@ class Window(QMainWindow):
                 continue
             rbtn = QRadioButton(self.ui.groupBox_language)
             rbtn.setObjectName("rbtn_%s" % lang)
-            print lang
-            print languages_ext[lang]
             rbtn.setText(languages_ext[lang])
             
             ##TODO:change this layout to a more human name

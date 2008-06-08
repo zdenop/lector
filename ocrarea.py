@@ -48,8 +48,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.top.setZValue(1)
         self.left = OcrAreaLeft(size.height(), self, scene)
         self.left.setZValue(2)
-        self.right = OcrAreaRight(size.height(), size.width(), self, scene)
+        self.right = OcrAreaRight(size.width(), size.height(), self, scene)
         self.right.setZValue(3)
+        self.bottom = OcrAreaBottom(size.width(), size.height(), self, scene)
+        self.bottom.setZValue(4)
 
 
     def mousePressEvent(self, event):
@@ -187,10 +189,12 @@ class OcrArea(QtGui.QGraphicsRectItem):
     def sizeChange(self):
         ## TODO: reimplementare setRect e mettere questo li` dentro
         r = self.rect()
-        self.top.setRect(0,0,r.width()+30,30)
-        self.left.setRect(0,0,30,r.height()+30)
-        self.right.setRect(0,0,30,r.height()+30)
-        self.right.setPos(r.width()-15,-15)
+        self.top.setRect( 0, 0, r.width()+30, 30 )
+        self.left.setRect( 0, 0, 30, r.height()+30 )
+        self.right.setRect( 0, 0, 30, r.height()+30 )
+        self.right.setPos( r.width()-15, -15 )
+        self.bottom.setRect( 0, 0, r.width()+30, 30 )
+        self.bottom.setPos( -15, r.height()-15 )
 
 
 class OcrAreaSide(QtGui.QGraphicsRectItem):
@@ -240,10 +244,10 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
         self.parent.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
 
    
-    #def paint(self, painter, option, widget):
-    #    pen = QtGui.QPen(QtCore.Qt.transparent, 0, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
-    #    painter.setPen(pen)
-    #    painter.drawRect(self.rect())
+    def paint(self, painter, option, widget):
+        pen = QtGui.QPen(QtCore.Qt.green, 0, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        painter.setPen(pen)
+        painter.drawRect(self.rect())
 
 
 class OcrAreaTop(OcrAreaSide):
@@ -275,6 +279,9 @@ class OcrAreaLeft(OcrAreaSide):
 
     def hoverMoveEvent(self, event):
         items = self.scene().items(event.scenePos())
+        ## TODO: cambiare controllando lo zvalue o simili per vedere che non si tratti di un altra area
+        if not len(items):
+            return
         for item in items:
             if type(item) is OcrAreaTop:
                 self.setCursor(QtCore.Qt.SizeFDiagCursor)
@@ -296,12 +303,15 @@ class OcrAreaLeft(OcrAreaSide):
 
 class OcrAreaRight(OcrAreaSide):
 
-    def __init__(self, height, parentWidth, parent, scene):
-        OcrAreaSide.__init__(self, parentWidth - 15, -15, 30, height+30, parent, scene)
+    def __init__(self, width, height, parent, scene):
+        OcrAreaSide.__init__(self, width - 15, -15, 30, height+30, parent, scene)
 
 
     def hoverMoveEvent(self, event):
         items = self.scene().items(event.scenePos())
+        ## TODO: cambiare controllando lo zvalue o simili per vedere che non si tratti di un altra area
+        if not len(items):
+            return
         for item in items:
             if type(item) is OcrAreaTop:
                 self.setCursor(QtCore.Qt.SizeBDiagCursor)
@@ -315,5 +325,35 @@ class OcrAreaRight(OcrAreaSide):
         r = self.parent.rect()
 
         self.parent.setRect(0,0,r.width() - diff,r.height())
+        self.parent.sizeChange()
+
+
+class OcrAreaBottom(OcrAreaSide):
+
+    def __init__(self, width, height, parent, scene):
+        OcrAreaSide.__init__(self, - 15, height - 15, width + 30, 30, parent, scene)
+
+
+    def hoverMoveEvent(self, event):
+        items = self.scene().items(event.scenePos())
+        ## TODO: cambiare controllando lo zvalue o simili per vedere che non si tratti di un altra area
+        if not len(items):
+            return
+        for item in items:
+            if type(item) is OcrAreaLeft:
+                self.setCursor(QtCore.Qt.SizeBDiagCursor)
+                return
+            elif type(item) is OcrAreaRight:
+                self.setCursor(QtCore.Qt.SizeFDiagCursor)
+                return
+        self.setCursor(QtCore.Qt.SizeVerCursor)
+        
+
+
+    def resizeParentItem(self, newPoint):
+        diff = - newPoint.y() + self.oldPoint.y()
+        r = self.parent.rect()
+
+        self.parent.setRect(0,0,r.width(),r.height() - diff)
         self.parent.sizeChange()
 
