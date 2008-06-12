@@ -16,10 +16,10 @@ from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
 from subprocess import Popen, PIPE
+from glob import glob
 
 class Window(QMainWindow):
     def __init__(self, parent = None):
-        from glob import glob
         QMainWindow.__init__(self)
 
         self.ui = Ui_Lector()
@@ -40,30 +40,7 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionZoomOut,SIGNAL("activated()"), self.ocrWidget.zoomOut)
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
 
-        poTess = Popen('tesseract /tmp/prova /tmp/prova -l iamnottrue', stderr=PIPE, shell=True)
-        lTess = poTess.stderr.readline()
-        pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
-
-        languages = list()
-        unicharsets = glob(pTess+'*.unicharset')
-        for uc in unicharsets:
-            languages.append(uc[len(pTess):len(pTess)+3])
-
-        languages_ext = {'eng': self.tr('English'),
-            'ita': self.tr('Italian'), 'deu': self.tr('German')}
-        self.rbtn_languages = {}
-
-        for lang in languages:
-            rbtn = QRadioButton(self.ui.groupBox_language)
-            rbtn.setObjectName("rbtn_%s" % lang)
-            rbtn.setText(languages_ext[lang])
-            
-            ##TODO:change this layout to a more human name
-            self.ui.vboxlayout2.addWidget(rbtn)
-
-            QObject.connect(rbtn, SIGNAL('clicked()'), self.changeLanguage)
-
-            self.rbtn_languages[lang] = rbtn
+        self.findInstalledLanguages()
 
         #disable unusable actions until a file has been opened
         self.ui.actionRotateRight.setEnabled(False)
@@ -76,6 +53,40 @@ class Window(QMainWindow):
         
         ## load saved settings
         self.readSettings()
+
+    
+    def findInstalledLanguages(self):
+        self.rbtn_languages = {}
+        try:
+            Popen('tesseract', shell=False, stderr=PIPE)
+        except OSError, e:
+            print self.tr('Tesseract is not installed')
+            QMessageBox.critical(self, self.tr('Tesseract is not installed'), self.tr('This program needs tesseract, but it\'s not installed on this system\nLector will be started, but it won\'t be able to do OCR!'))
+            return
+
+        poTess = Popen('tesseract /tmp/prova /tmp/prova -l iamnottrue', stderr=PIPE, shell=True)
+        lTess = poTess.stderr.readline()
+        pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
+
+        languages = list()
+        unicharsets = glob(pTess+'*.unicharset')
+        for uc in unicharsets:
+            languages.append(uc[len(pTess):len(pTess)+3])
+
+        languages_ext = {'eng': self.tr('English'),
+            'ita': self.tr('Italian'), 'deu': self.tr('German')}
+
+        for lang in languages:
+            rbtn = QRadioButton(self.ui.groupBox_language)
+            rbtn.setObjectName("rbtn_%s" % lang)
+            rbtn.setText(languages_ext[lang])
+            
+            ##TODO:change this layout to a more human name
+            self.ui.vboxlayout2.addWidget(rbtn)
+
+            QObject.connect(rbtn, SIGNAL('clicked()'), self.changeLanguage)
+
+            self.rbtn_languages[lang] = rbtn
 
 
     @pyqtSignature('')
@@ -123,7 +134,7 @@ class Window(QMainWindow):
         
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
-        if lang:
+        if lang and lang in self.rbtn_languages:
             ## TODO: if the language is not installed anymore?
             self.rbtn_languages[lang].setChecked(True)
             self.ocrWidget.language = lang
