@@ -27,7 +27,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
             QtGui.QGraphicsItem.ItemIsFocusable |
             QtGui.QGraphicsItem.ItemIsSelectable)
-        
 
         self.top = OcrAreaTop(size.width(), self, scene)
         self.left = OcrAreaLeft(size.height(), self, scene)
@@ -76,7 +75,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu()
         removeAction = menu.addAction(qa.translate('QOcrWidget', "Remove"))
-        #Action = menu.addAction(self.scene().tr("Remove"))
         menu.addSeparator()
         textAction = menu.addAction(qa.translate('QOcrWidget', "Text"))
         graphicsAction = menu.addAction(qa.translate('QOcrWidget', "Graphics"))
@@ -111,13 +109,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
     type = property(fget=_type, fset=_setType)
 
     
-    #def itemChange(self, change, value):
-    #    if (change == QtGui.QGraphicsItem.ItemMatrixChange):
-    #        print 'dp'
-    #    print change
-    #    return QtGui.QGraphicsItem.itemChange(self, change, value)
-
-
     def sizeChange(self):
         ## TODO: reimplementare setRect e mettere questo li` dentro
         r = self.rect()
@@ -181,7 +172,7 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
 
    
     def paint(self, painter, option, widget):
-        pen = QtGui.QPen(QtCore.Qt.green, 0, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        pen = QtGui.QPen(QtCore.Qt.transparent, 0, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         painter.setPen(pen)
         painter.drawRect(self.rect())
 
@@ -215,16 +206,15 @@ class OcrAreaLeft(OcrAreaSide):
 
     def hoverMoveEvent(self, event):
         items = self.scene().items(event.scenePos())
-        ## TODO: cambiare controllando lo zvalue o simili per vedere che non si tratti di un altra area
-        if not len(items):
-            return
+        
+        selfdecine = round(self.zValue()/10)
         for item in items:
-            if type(item) is OcrAreaTop:
+            itemdecine = round(item.zValue()/10)
+            if type(item) is OcrAreaTop and itemdecine == selfdecine:
                 self.setCursor(QtCore.Qt.SizeFDiagCursor)
                 return
         self.setCursor(QtCore.Qt.SizeHorCursor)
         
-
 
     def resizeParentItem(self, newPoint):
         diff = - newPoint.x() + self.oldPoint.x()
@@ -254,7 +244,6 @@ class OcrAreaRight(OcrAreaSide):
                 return
         self.setCursor(QtCore.Qt.SizeHorCursor)
         
-
 
     def resizeParentItem(self, newPoint):
         diff = - newPoint.x() + self.oldPoint.x()
