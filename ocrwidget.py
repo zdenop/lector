@@ -57,6 +57,46 @@ class QOcrScene(QtGui.QGraphicsScene):
             item.setTextSize(areaTextSize)
 
 
+    def loadImage(self, filename):
+        #delete old OcrArea
+        for item in self.items():
+            self.removeItem(item)
+        self.areas = []
+        
+        #open image
+        self.im = Image.open(filename)
+
+        #set scene size and view scale
+        self.setSceneSize()
+        
+        self.createQtImage()
+
+
+    def setSceneSize(self):
+        iw = float(self.im.size[0])
+        ih = float(self.im.size[1])
+        self.setSceneRect(0, 0, int(iw), int(ih))
+
+
+    def createQtImage(self):
+        s = self.im.convert("RGB").tostring("jpeg","RGB")
+
+        self.ocrImage = QtGui.QImage()
+        self.ocrImage.loadFromData(QtCore.QByteArray(s))
+
+        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
+        #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
+        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
+
+
+    def rotate(self, angle):
+        self.im = self.im.rotate(angle)
+        
+        self.setSceneSize()
+        self.createQtImage()
+
+
+
 class QOcrWidget(QtGui.QGraphicsView):
     def __init__(self, lang, areaType, statusBar):
         QtGui.QGraphicsView.__init__(self)
@@ -82,9 +122,9 @@ class QOcrWidget(QtGui.QGraphicsView):
         
 
     def drawBackground(self, painter, rect):
-        if hasattr(self, 'ocrImage') and self.ocrImage:
+        if hasattr(self.scene(), 'ocrImage') and self.scene().ocrImage:
             sceneRect = self.sceneRect()
-            painter.drawImage(sceneRect, self.ocrImage)
+            painter.drawImage(sceneRect, self.scene().ocrImage)
             #self.statusBar.showMessage(self.tr("Disegno bag"))
 
 
@@ -117,21 +157,12 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def cambiaImmagine(self):
-        #delete old OcrArea
-        for item in self.scene().items():
-            self.scene().removeItem(item)
-        self.scene().areas = []
-        
-        #open image
-        self.im = Image.open(self.filename)
-
-        #set scene size and view scale
-        self.setSceneSize()
+        self.scene().loadImage(self.filename)
 
         vw = float(self.width())
         vh = float(self.height())
-        iw = float(self.im.size[0])
-        ih = float(self.im.size[1])
+        iw = float(self.scene().im.size[0])
+        ih = float(self.scene().im.size[1])
         ratio = min (vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
@@ -141,50 +172,23 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaTextSize = 10 / ratio
 
         #show image
-        self.generateQtImage()
         self.resetCachedContent()
         self.isModified = False
 
 
     def rotateRight(self):
-        self.im = self.im.rotate(-90)
-
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().rotate(-90)
         self.resetCachedContent()
-        
+                        
         
     def rotateLeft(self):
-        self.im = self.im.rotate(90)
-
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().rotate(90)
         self.resetCachedContent()
         
 
     def rotateFull(self):
-        self.im = self.im.rotate(180)
-
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().rotate(180)
         self.resetCachedContent()
-
-
-    def generateQtImage(self):
-        s = self.im.convert("RGB").tostring("jpeg","RGB")
-
-        self.ocrImage = QtGui.QImage()
-        self.ocrImage.loadFromData(QtCore.QByteArray(s))
-
-        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
-        #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
-        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
-
-
-    def setSceneSize(self):
-        iw = float(self.im.size[0])
-        ih = float(self.im.size[1])
-        self.scene().setSceneRect(0, 0, int(iw), int(ih))
 
 
     def zoomIn(self):

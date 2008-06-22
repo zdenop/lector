@@ -119,6 +119,9 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.bottom.setRect( 0, 0, r.width()+30, 30 )
         self.bottom.setPos( -15, r.height()-15 )
 
+    
+    def scale(self, value):
+        print 'scale'
 
 class OcrAreaSide(QtGui.QGraphicsRectItem):
 
@@ -150,7 +153,6 @@ class OcrAreaSide(QtGui.QGraphicsRectItem):
             itemdecine = round(item.zValue()/10)
             if itemdecine == selfdecine and item.zValue() % 10 and self.zValue() > item.zValue():
                 item.mousePressEvent(event)
-        
 
 
     def mouseMoveEvent(self, event):
