@@ -34,8 +34,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.bottom = OcrAreaBottom(size.width(), size.height(), self, scene)
 
         ## set index label
-        ##TODO: set once!
-        self.text = QtGui.QGraphicsTextItem("%d" % index, self)
+        self.text = QtGui.QGraphicsTextItem(self)
         self.setIndex(index)
         self.setTextSize(textSize)
 

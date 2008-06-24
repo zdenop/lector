@@ -25,8 +25,6 @@ class QOcrScene(QtGui.QGraphicsScene):
         self.language = lang
         self.areaType = areaType
         
-        self.first = True
-        
         self.areas = []
 
 
