@@ -13,7 +13,7 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from ui_lector import Ui_Lector
-from ocrwidget import QOcrWidget
+from qocrwidget import QOcrWidget
 from textwidget import TextWidget
 from subprocess import Popen, PIPE
 
