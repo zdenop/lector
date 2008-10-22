@@ -74,7 +74,7 @@ class Window(QMainWindow):
             languages.append(uc[len(pTess):len(pTess)+3])
 
         languages_ext = {'eng': self.tr('English'),
-            'ita': self.tr('Italian'), 'deu': self.tr('German')}
+            'ita': self.tr('Italian'), 'deu': self.tr('German'), 'spa': self.tr('Spanish')}
 
         for lang in languages:
             rbtn = QRadioButton(self.ui.groupBox_language)
