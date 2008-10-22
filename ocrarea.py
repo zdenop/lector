@@ -38,7 +38,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
-        #self.setCursor(QtCore.Qt.SizeAllCursor)
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
 
