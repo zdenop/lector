@@ -39,9 +39,9 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaType = areaType
         
         self.first = True
-        self.bMovingArea = False
         self.setCursor(QtCore.Qt.CrossCursor)
         self.isModified = False
+        self.bResizing = False
         
 
     def drawBackground(self, painter, rect):
@@ -61,24 +61,60 @@ class QOcrWidget(QtGui.QGraphicsView):
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
 
-        ret = self.scene().areaAt(sp)
+        if self.bResizing:
+            item = self.resizingArea
+            r = item.rect()
 
-        edge = ret % 100
-        print ret
-        print edge
-        cursors = {0:QtCore.Qt.SizeAllCursor,
-            1: QtCore.Qt.SizeVerCursor,
-            2: QtCore.Qt.SizeVerCursor,
-            4: QtCore.Qt.SizeHorCursor,
-            8: QtCore.Qt.SizeHorCursor}
+            if self.resizingEdge == 2:
+                item.setRect(0,0, r.width(), self.resizingAreaRect.height() + sp.y() - self.resizingStartingPos.y())
+            
+        else:
+            ret = self.scene().areaAt(sp)
 
-        self.setCursor(cursors[edge])
+            edge = ret % 100
+            iArea = ret / 100
+            cursors = {0:QtCore.Qt.SizeAllCursor,
+                1: QtCore.Qt.SizeVerCursor,
+                2: QtCore.Qt.SizeVerCursor,
+                4: QtCore.Qt.SizeHorCursor,
+                5: QtCore.Qt.SizeFDiagCursor,
+                6: QtCore.Qt.SizeBDiagCursor,
+                8: QtCore.Qt.SizeHorCursor,
+                9: QtCore.Qt.SizeBDiagCursor,
+                10: QtCore.Qt.SizeFDiagCursor}
+
+            if iArea:
+                self.setCursor(cursors[edge])
+            else: # mouse not over an area
+                self.setCursor(QtCore.Qt.CrossCursor)
 
         QtGui.QGraphicsView.mouseMoveEvent(self,event)
 
 
+    def mousePressEvent(self, event):
+        sp = self.mapToScene(event.pos())
+
+        ret = self.scene().areaAt(sp)
+
+        edge = ret % 100
+        iArea = ret / 100 - 1
+        
+        if edge:
+            self.bResizing = True
+            self.resizingEdge = edge
+            self.resizingArea = self.scene().areas[iArea]
+            self.resizingStartingPos = sp
+            self.resizingAreaRect = self.resizingArea.rect()
+            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+
+        QtGui.QGraphicsView.mousePressEvent(self,event)
+
+
     def mouseReleaseEvent(self, event):
-        self.bMovingArea = False
+        if self.bResizing:
+            self.bResizing = False
+            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
+
         if self.itemAt(event.pos()):
             pass
         else:
