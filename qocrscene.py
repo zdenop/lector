@@ -57,7 +57,9 @@ class QOcrScene(QtGui.QGraphicsScene):
 
     def areaAt(self, pos):
         edge = 0
-        for item in self.areas:
+        onArea = 0
+        for i in range(len(self.areas)):
+            item = self.areas[i]
             r = item.rect()
 
             #diffs between the cursor and item's edges
@@ -81,7 +83,16 @@ class QOcrScene(QtGui.QGraphicsScene):
                 edge += 8
                 print 'right'
             
-            if edge: break
+            if not onArea:
+                if (item.y() + r.height() > pos.y()) and (item.y() < pos.y()) and (item.x() + r.width() > pos.x()) and (item.x() < pos.x()):
+                    onArea = i + 1
+
+            if edge:
+                edge += (i+1)*100
+                break
+
+        if not edge:
+            edge = (onArea) * 100
 
         return edge
 
