@@ -64,8 +64,15 @@ class QOcrWidget(QtGui.QGraphicsView):
         ret = self.scene().areaAt(sp)
 
         edge = ret % 100
+        print ret
         print edge
-        #self.setCursor(QtCore.Qt.SizeVerCursor)
+        cursors = {0:QtCore.Qt.SizeAllCursor,
+            1: QtCore.Qt.SizeVerCursor,
+            2: QtCore.Qt.SizeVerCursor,
+            4: QtCore.Qt.SizeHorCursor,
+            8: QtCore.Qt.SizeHorCursor}
+
+        self.setCursor(cursors[edge])
 
         QtGui.QGraphicsView.mouseMoveEvent(self,event)
 
