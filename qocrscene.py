@@ -62,6 +62,10 @@ class QOcrScene(QtGui.QGraphicsScene):
             item = self.areas[i]
             r = item.rect()
 
+            # this is not very clean... it checks that the mouse is over an area + its resize borders. The only diffs are not enough: they give true also if (i.e) the mouse is horizontally in line with the top border, but far away from the area
+            if not ((item.y() + r.height() + OcrArea.resizeBorder > pos.y()) and (item.y() - OcrArea.resizeBorder < pos.y()) and (item.x() + r.width() + OcrArea.resizeBorder > pos.x()) and (item.x() - OcrArea.resizeBorder < pos.x())):
+                continue
+
             #diffs between the cursor and item's edges
             dyt = abs(item.y() - pos.y())
             dyb = abs(item.y() + r.height() - pos.y())
@@ -72,16 +76,12 @@ class QOcrScene(QtGui.QGraphicsScene):
 
             if (dyt < OcrArea.resizeBorder):
                 edge += 1
-                print 'top'
             if (dyb < OcrArea.resizeBorder):
                 edge += 2
-                print 'bottom'
             if (dxl < OcrArea.resizeBorder):
                 edge += 4
-                print 'left'
             if (dxr < OcrArea.resizeBorder):
                 edge += 8
-                print 'right'
             
             if not onArea:
                 if (item.y() + r.height() > pos.y()) and (item.y() < pos.y()) and (item.x() + r.width() > pos.x()) and (item.x() < pos.x()):

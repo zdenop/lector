@@ -61,14 +61,51 @@ class QOcrWidget(QtGui.QGraphicsView):
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
 
-        if self.bResizing:
+        if self.bResizing: #if we're resizing an area
             item = self.resizingArea
             r = item.rect()
-
-            if self.resizingEdge == 2:
-                item.setRect(0,0, r.width(), self.resizingAreaRect.height() + sp.y() - self.resizingStartingPos.y())
+            pos = item.pos()
             
-        else:
+            newWidth = r.width()
+            newHeight = r.height()
+            newX = pos.x()
+            newY = pos.y()
+
+            if self.resizingEdge & 1: #bit mask: top is moving
+                #max ensures that y >= 0
+                newY = max(0, self.resizingAreaPos.y() + sp.y() - self.resizingStartingPos.y())
+                newHeight = self.resizingAreaRect.height() + self.resizingAreaPos.y() - newY
+                
+            elif self.resizingEdge & 2: #bit mask: bottom is moving
+                newHeight = self.resizingAreaRect.height() + sp.y() - self.resizingStartingPos.y()
+                
+                #force area to be inside the scene
+                if newY + newHeight > self.scene().height():
+                    newHeight = self.scene().height() - newY
+
+            if self.resizingEdge & 4: #bit mask: right is moving
+                newX = max(0, self.resizingAreaPos.x() + sp.x() - self.resizingStartingPos.x())
+                newWidth = self.resizingAreaRect.width() + self.resizingAreaPos.x() - newX
+            elif self.resizingEdge & 8: #bit mask: right is moving
+                newWidth = self.resizingAreaRect.width() + sp.x() - self.resizingStartingPos.x() 
+                
+                #force area to be inside the scene
+                if newX + newWidth > self.scene().width():
+                    newWidth = self.scene().width() - newX
+            
+            #check that height >= OcrArea.resizeBorder
+            if newHeight < 2*OcrArea.resizeBorder:
+                newHeight = r.height()
+                newY = pos.y()
+            #check that width >= OcrArea.resizeBorder
+            if newWidth < 2*OcrArea.resizeBorder:
+                newWidth = r.width()
+                newX = pos.x()
+
+            item.setRect(0,0, newWidth, newHeight)
+            item.setPos(newX, newY)
+            
+        else: # if not resizing
             ret = self.scene().areaAt(sp)
 
             edge = ret % 100
@@ -105,6 +142,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingArea = self.scene().areas[iArea]
             self.resizingStartingPos = sp
             self.resizingAreaRect = self.resizingArea.rect()
+            self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
 
         QtGui.QGraphicsView.mousePressEvent(self,event)

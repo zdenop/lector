@@ -42,36 +42,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
 
 
-    #def mousePressEvent(self, event):
-    #    self.update()
-
-    #    r = self.rect()
-    #    if event.pos().x() > (r.right() - OcrArea.resizeBorder) :
-    #        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-    #        self.sEdge = "Right"
-
-    #    elif event.pos().x() < (r.left() + OcrArea.resizeBorder) :
-    #        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-    #        self.sEdge = "Left"
-
-    #    elif event.pos().y() < (r.top() + OcrArea.resizeBorder) :
-    #        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-    #        self.sEdge = "Top"
-
-    #    elif event.pos().y() > (r.bottom() - OcrArea.resizeBorder) :
-    #        self.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-    #        self.sEdge = "Bottom"
-
-    #    QtGui.QGraphicsItem.mousePressEvent(self, event)
-
-
-    #def mouseReleaseEvent(self, event):
-    #    self.update()
-    #    self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
-    #    self.sEdge = ''
-    #    QtGui.QGraphicsItem.mouseReleaseEvent(self, event)
-
-
     def mouseMoveEvent(self, event):
         self.update()
 
@@ -119,24 +89,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
     #                self.sEdge = "Left"
 
         QtGui.QGraphicsItem.mouseMoveEvent(self, event)
-
-
-    #def hoverMoveEvent(self, event):
-    #    r = self.rect()
-    #    if event.pos().x() > (r.right() - OcrArea.resizeBorder) :
-    #        self.setCursor(QtCore.Qt.SizeHorCursor)
-
-    #    elif event.pos().x() < (r.left() + OcrArea.resizeBorder) :
-    #        self.setCursor(QtCore.Qt.SizeHorCursor)
-
-    #    elif event.pos().y() < (r.top() + OcrArea.resizeBorder) :
-    #        self.setCursor(QtCore.Qt.SizeVerCursor)
-
-    #    elif event.pos().y() > (r.bottom() - OcrArea.resizeBorder) :
-    #        self.setCursor(QtCore.Qt.SizeVerCursor)
-
-    #    else:
-    #        self.setCursor(QtCore.Qt.SizeAllCursor)
 
 
     def setIndex(self, idx):
