@@ -42,55 +42,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
 
 
-    def mouseMoveEvent(self, event):
-        self.update()
-
-    #    if hasattr(self, 'sEdge') and self.sEdge:
-    #        r = self.rect()
-    #        scenePos = event.scenePos()
-
-    #        ## TODO: possibile scriverlo in modo piu` semplice tenendo dei punti fissi?
-    #        ## del tipo: blocco quel lato, mentre questo lo metto "sotto il cursore" (event.scenePos())
-    #        if self.sEdge == 'Top':
-    #            diff = self.y() - scenePos.y()
-    #            if r.height() - diff > 0:
-    #                self.setPos(self.x(), scenePos.y())
-    #                self.setRect(0,0,r.width(),r.height() + diff)
-    #            else:
-    #                self.sEdge = "Bottom"
-    #                self.setPos(self.x(), self.y()+r.height())
-    #                self.setRect(0,0, r.width(), diff - r.height())
-
-    #        elif self.sEdge == 'Left':
-    #            diff = self.x() - scenePos.x()
-    #            if r.width() - diff > 0:
-    #                self.setPos(scenePos.x(), self.y())
-    #                self.setRect(0,0,r.width()+diff,r.height())
-    #            else:
-    #                self.sEdge = "Right"
-    #                self.setPos(self.x()+r.width(), self.y())
-    #                self.setRect(0,0, diff - r.width(), r.height())
-
-    #        elif self.sEdge == 'Bottom':
-    #            if r.height() > 0:
-    #                pos = self.mapFromScene(scenePos)
-    #                self.setRect(0,0,r.width(),pos.y())
-    #            else:
-    #                self.setRect(0,0, r.width(), abs(scenePos.y()-self.y()))
-    #                self.setPos(self.x(), scenePos.y())
-    #                self.sEdge = "Top"
-    #        elif self.sEdge == 'Right':
-    #            if r.width() > 0:
-    #                pos = self.mapFromScene(scenePos)
-    #                self.setRect(0,0,pos.x(),r.height())
-    #            else:
-    #                self.setRect(0,0, abs(scenePos.x()-self.x()), r.height())
-    #                self.setPos(scenePos.x(), self.y())
-    #                self.sEdge = "Left"
-
-        QtGui.QGraphicsItem.mouseMoveEvent(self, event)
-
-
     def setIndex(self, idx):
         self.text.setPlainText("%d" % idx)
 
