@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-""" Lector: ocrarea.py
+""" Lector: qocrscene.py
 
     Copyright (C) 2008 Davide Setti
 
@@ -34,6 +34,8 @@ class QOcrScene(QtGui.QGraphicsScene):
 
         self.areas.append(item)
         self.isModified = True
+
+        return item
 
 
     def removeArea(self, item):

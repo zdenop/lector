@@ -38,7 +38,6 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.statusBar = statusBar
         self.areaType = areaType
         
-        self.first = True
         self.setCursor(QtCore.Qt.CrossCursor)
         self.isModified = False
         self.bResizing = False
@@ -135,11 +134,24 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         edge = ret % 100
         iArea = ret / 100 - 1
-        
+       
         if edge:
             self.bResizing = True
             self.resizingEdge = edge
             self.resizingArea = self.scene().areas[iArea]
+            self.resizingStartingPos = sp
+            self.resizingAreaRect = self.resizingArea.rect()
+            self.resizingAreaPos = self.resizingArea.pos()
+            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+        elif iArea == -1: ##create new area
+            size = QtCore.QSizeF(0, 0)
+            newArea = self.scene().createArea(sp,
+                size, self.areaType, self.areaBorder,
+                self.areaTextSize)
+            
+            self.bResizing = True
+            self.resizingEdge = 10
+            self.resizingArea = newArea
             self.resizingStartingPos = sp
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
@@ -151,30 +163,10 @@ class QOcrWidget(QtGui.QGraphicsView):
     def mouseReleaseEvent(self, event):
         if self.bResizing:
             self.bResizing = False
+            r = self.resizingArea.rect()
+            self.resizingArea.setRect(0,0,max(r.width(), 2*OcrArea.resizeBorder),
+                max(r.height(), 2*OcrArea.resizeBorder))
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
-
-        if self.itemAt(event.pos()):
-            pass
-        else:
-            if event.button() == QtCore.Qt.LeftButton:
-                if self.first == True:
-                    self.pos1 = self.mapToScene(event.pos())
-                    self.first = False
-                else:
-                    pos2 = self.mapToScene(event.pos())
-                    self.first = True
-                    diff = pos2 - self.pos1
-
-                    ## use correct size and pos, also if the clicked points
-                    ## are in a strange order
-                    size = QtCore.QSizeF(abs(diff.x()), abs(diff.y()))
-
-                    pos = QtCore.QPointF()
-                    pos.setX(min(self.pos1.x(), pos2.x()))
-                    pos.setY(min(self.pos1.y(), pos2.y()))
-
-                    self.scene().createArea(pos, size, self.areaType, self.areaBorder,
-                            self.areaTextSize)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
 
@@ -321,8 +313,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         if event.key() == QtCore.Qt.Key_Delete:
             item = self.scene().focusItem()
             self.scene().removeArea(item)
-        elif event.key() == QtCore.Qt.Key_Escape:
-            self.first = True
+        #elif event.key() == QtCore.Qt.Key_Escape:
+        #    self.first = True
 
         QtGui.QGraphicsView.keyReleaseEvent(self, event)
 
