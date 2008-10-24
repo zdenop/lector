@@ -118,7 +118,7 @@ class Window(QMainWindow):
 
 
     def readSettings(self):
-        settings = QSettings("Davide Setti", "Lector");
+        settings = QSettings("Davide Setti", "Lector")
         pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
         size = settings.value("size", QVariant(QSize(800, 500))).toSize()
         self.curDir = settings.value("file_dialog_dir", QVariant('~/')).toString()
@@ -127,8 +127,7 @@ class Window(QMainWindow):
         
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
-        if lang:
-            ## TODO: if the language is not installed anymore?
+        if lang and self.rbtn_languages.has_key(lang):
             self.rbtn_languages[lang].setChecked(True)
             self.ocrWidget.language = lang
 
