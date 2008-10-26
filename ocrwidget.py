@@ -180,6 +180,10 @@ class QOcrWidget(QtGui.QGraphicsView):
         #open image
         self.im = Image.open(self.filename)
 
+        self.prepareDimensions()
+
+
+    def prepareDimensions(self):
         #set scene size and view scale
         self.setSceneSize()
 
@@ -226,6 +230,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def generateQtImage(self):
+        ## TODO: check if it's necessary to convert to RGB (maybe only for grayscale images)
         s = self.im.convert("RGB").tostring("jpeg","RGB")
 
         self.ocrImage = QtGui.QImage()
