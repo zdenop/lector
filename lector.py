@@ -7,16 +7,20 @@
     This program is released under the GNU GPLv2
 """
 
-
+## Standard
 import sys
 import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from subprocess import Popen, PIPE
+from glob import glob
+import sane
+
+## Lector
 from ui_lector import Ui_Lector
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
-from subprocess import Popen, PIPE
-from glob import glob
+from scannerselect import ScannerSelect
 
 class Window(QMainWindow):
     def __init__(self, parent = None):
@@ -80,6 +84,20 @@ class Window(QMainWindow):
         
         ## load saved settings
         self.readSettings()
+
+        ##SANE
+        sane.init()
+        sane_list = sane.get_devices()
+        scanner_desc_list = []
+        for scanner in sane_list:
+            scanner_desc_list.append(scanner[2])
+
+        ss = ScannerSelect()
+
+        idx = ss.getSelectedIndex(self.tr('Select scanner'), scanner_desc_list, 0)
+        print idx
+    
+        
 
 
     @pyqtSignature('')
