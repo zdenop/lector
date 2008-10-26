@@ -74,6 +74,7 @@
    <addaction name="actionZoomIn" />
    <addaction name="actionZoomOut" />
    <addaction name="separator" />
+   <addaction name="actionScan" />
    <addaction name="actionOcr" />
    <addaction name="separator" />
    <addaction name="actionSaveAs" />
@@ -86,7 +87,7 @@
     </sizepolicy>
    </property>
    <property name="features" >
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle" >
     <string>Text</string>
@@ -155,7 +156,7 @@
           <property name="orientation" >
            <enum>Qt::Vertical</enum>
           </property>
-          <property name="sizeHint" >
+          <property name="sizeHint" stdset="0" >
            <size>
             <width>20</width>
             <height>40</height>
@@ -171,7 +172,8 @@
   </widget>
   <action name="actionOpen" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/fileopen.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/fileopen.png</normaloff>:/icons/icons/fileopen.png</iconset>
    </property>
    <property name="text" >
     <string>&amp;Open image</string>
@@ -182,7 +184,8 @@
   </action>
   <action name="actionExit" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/exit.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/exit.png</normaloff>:/icons/icons/exit.png</iconset>
    </property>
    <property name="text" >
     <string>Exit</string>
@@ -190,7 +193,8 @@
   </action>
   <action name="actionRotateRight" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/rotate_cw.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/rotate_cw.png</normaloff>:/icons/icons/rotate_cw.png</iconset>
    </property>
    <property name="text" >
     <string>Rotate right</string>
@@ -198,7 +202,8 @@
   </action>
   <action name="actionRotateLeft" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/rotate_ccw.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/rotate_ccw.png</normaloff>:/icons/icons/rotate_ccw.png</iconset>
    </property>
    <property name="text" >
     <string>Rotate left</string>
@@ -206,7 +211,8 @@
   </action>
   <action name="actionRotateFull" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/rotate.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/rotate.png</normaloff>:/icons/icons/rotate.png</iconset>
    </property>
    <property name="text" >
     <string>Flip</string>
@@ -214,7 +220,8 @@
   </action>
   <action name="actionZoomIn" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/viewmag+.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/viewmag+.png</normaloff>:/icons/icons/viewmag+.png</iconset>
    </property>
    <property name="text" >
     <string>Zoom in</string>
@@ -225,7 +232,8 @@
   </action>
   <action name="actionZoomOut" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/viewmag-.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/viewmag-.png</normaloff>:/icons/icons/viewmag-.png</iconset>
    </property>
    <property name="text" >
     <string>Zoom out</string>
@@ -236,7 +244,8 @@
   </action>
   <action name="actionOcr" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/player_play.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/player_play.png</normaloff>:/icons/icons/player_play.png</iconset>
    </property>
    <property name="text" >
     <string>Read</string>
@@ -244,13 +253,19 @@
   </action>
   <action name="actionSaveAs" >
    <property name="icon" >
-    <iconset resource="resources.qrc" >:/icons/icons/filesave.png</iconset>
+    <iconset resource="resources.qrc" >
+     <normaloff>:/icons/icons/filesave.png</normaloff>:/icons/icons/filesave.png</iconset>
    </property>
    <property name="text" >
     <string>Save &amp;as</string>
    </property>
    <property name="shortcut" >
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionScan" >
+   <property name="text" >
+    <string>Scan</string>
    </property>
   </action>
  </widget>

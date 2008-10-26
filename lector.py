@@ -111,13 +111,41 @@ class Window(QMainWindow):
             self.curDir = os.path.dirname(fn)
             self.ocrWidget.cambiaImmagine()
 
-            self.ui.actionRotateRight.setEnabled(True)
-            self.ui.actionRotateLeft.setEnabled(True)
-            self.ui.actionRotateFull.setEnabled(True)
-            self.ui.actionZoomIn.setEnabled(True)
-            self.ui.actionZoomOut.setEnabled(True)
-            self.ui.actionOcr.setEnabled(True)
-            self.ui.actionSaveAs.setEnabled(True)
+            self.enableActions()
+
+
+
+    def enableActions(self):
+        self.ui.actionRotateRight.setEnabled(True)
+        self.ui.actionRotateLeft.setEnabled(True)
+        self.ui.actionRotateFull.setEnabled(True)
+        self.ui.actionZoomIn.setEnabled(True)
+        self.ui.actionZoomOut.setEnabled(True)
+        self.ui.actionOcr.setEnabled(True)
+        self.ui.actionSaveAs.setEnabled(True)
+
+
+    @pyqtSignature('')
+    def on_actionScan_activated(self):
+        s = sane.open(sane.get_devices()[0][0])
+
+        s.mode = 'color'
+        
+        ## BOTTOM RIGHT POS
+        s.br_x=300.
+        s.br_y=300.
+        s.resolution = 600
+
+        #print 'Device parameters:', s.get_parameters()
+
+        # Initiate the scan
+        s.start()
+
+        # Get an Image object
+        self.ocrWidget.im = s.snap()
+        self.ocrWidget.prepareDimensions()
+
+        self.enableActions()
 
 
     def changeLanguage(self):
