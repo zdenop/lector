@@ -14,4 +14,4 @@ up_translation:
 all: ui translation res
 
 clean:
-	rm -f ui_lector.py resources_rc.py ts/qt_it_IT.qm ts/lector_it_IT.qm *.pyc
+	rm -f ui_lector.py resources_rc.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
