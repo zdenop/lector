@@ -74,14 +74,8 @@ class Window(QMainWindow):
             self.rbtn_languages[lang] = rbtn
 
         #disable unusable actions until a file has been opened
-        self.ui.actionRotateRight.setEnabled(False)
-        self.ui.actionRotateLeft.setEnabled(False)
-        self.ui.actionRotateFull.setEnabled(False)
-        self.ui.actionZoomIn.setEnabled(False)
-        self.ui.actionZoomOut.setEnabled(False)
-        self.ui.actionOcr.setEnabled(False)
-        self.ui.actionSaveAs.setEnabled(False)
-        
+        self.enableActions(False)
+
         ## load saved settings
         self.readSettings()
 
@@ -95,8 +89,10 @@ class Window(QMainWindow):
         ss = ScannerSelect()
 
         idx = ss.getSelectedIndex(self.tr('Select scanner'), scanner_desc_list, 0)
-        print idx
-    
+        if idx > -1:
+            self.selectedScanner = sane.get_devices()[idx][0]
+        else:
+            self.ui.actionScan.setEnabled(False)
         
 
 
@@ -111,23 +107,24 @@ class Window(QMainWindow):
             self.curDir = os.path.dirname(fn)
             self.ocrWidget.cambiaImmagine()
 
-            self.enableActions()
+            self.enableActions(True)
 
 
 
-    def enableActions(self):
-        self.ui.actionRotateRight.setEnabled(True)
-        self.ui.actionRotateLeft.setEnabled(True)
-        self.ui.actionRotateFull.setEnabled(True)
-        self.ui.actionZoomIn.setEnabled(True)
-        self.ui.actionZoomOut.setEnabled(True)
-        self.ui.actionOcr.setEnabled(True)
-        self.ui.actionSaveAs.setEnabled(True)
+    def enableActions(self, enable=True):
+        self.ui.actionRotateRight.setEnabled(enable)
+        self.ui.actionRotateLeft.setEnabled(enable)
+        self.ui.actionRotateFull.setEnabled(enable)
+        self.ui.actionZoomIn.setEnabled(enable)
+        self.ui.actionZoomOut.setEnabled(enable)
+        self.ui.actionOcr.setEnabled(enable)
+        self.ui.actionSaveDocumentAs.setEnabled(enable)
+        self.ui.actionSaveImageAs.setEnabled(enable)
 
 
     @pyqtSignature('')
     def on_actionScan_activated(self):
-        s = sane.open(sane.get_devices()[0][0])
+        s = sane.open(self.selectedScanner)
 
         s.mode = 'color'
         
