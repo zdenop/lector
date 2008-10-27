@@ -1,8 +1,10 @@
 ui:
 	pyuic4 ui_lector.ui > ui_lector.py
 
-res:
+resources:
 	pyrcc4 -o resources_rc.py resources.qrc
+
+res: resources
 
 translation:
 	lrelease-qt4 ts/qt_it_IT.ts

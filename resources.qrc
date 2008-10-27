@@ -9,6 +9,7 @@
         <file>icons/rotate_cw.png</file>
         <file>icons/viewmag+.png</file>
         <file>icons/viewmag-.png</file>
+        <file>icons/scanner.png</file>
     </qresource>
     <qresource prefix="/translations" >
         <file>ts/lector_it_IT.qm</file>
