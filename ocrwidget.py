@@ -39,7 +39,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaType = areaType
         
         self.setCursor(QtCore.Qt.CrossCursor)
-        self.isModified = False
+        self.scene().isModified = False
         self.bResizing = False
         
 
@@ -202,7 +202,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         #show image
         self.generateQtImage()
         self.resetCachedContent()
-        self.isModified = False
+        self.scene().isModified = False
 
 
     def rotateRight(self):

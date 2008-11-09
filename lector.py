@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: set foldlevel=1:
 
 """ Lector: lector.py
 
@@ -7,7 +8,7 @@
     This program is released under the GNU GPLv2
 """
 
-## Standard
+## System
 import sys
 import os
 from PyQt4.QtCore import *
@@ -177,11 +178,8 @@ class Window(QMainWindow):
         #TODO: ridimensionamento della dock non funziona
         #pos = settings.value("textbrowser/pos").toPoint()
         #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))).toSize()
-        #print size.width()
-        #print pos.x()
         #self.ui.textBrowser.resize(size)
         #self.ui.textBrowser.move(pos)
-        #print self.ui.textBrowserDock.size().width()
 
 
     def writeSettings(self):
@@ -198,11 +196,11 @@ class Window(QMainWindow):
 
 
     def closeEvent(self, event):
-        if (not self.ocrWidget.isModified) or self.areYouSureToExit():
-                self.writeSettings()
-                event.accept()
+        if (not self.ocrWidget.scene().isModified) or self.areYouSureToExit():
+            self.writeSettings()
+            event.accept()
         else:
-                event.ignore()
+            event.ignore()
 
     
     def areYouSureToExit(self):
@@ -215,7 +213,7 @@ class Window(QMainWindow):
 
 
     @pyqtSignature('')
-    def on_actionSaveAs_activated(self):
+    def on_actionSaveDocumentAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                             self.tr("Save document"), self.curDir,
                                             self.tr("RTF document") + " (*.rtf)"
@@ -224,6 +222,19 @@ class Window(QMainWindow):
             self.curDir = os.path.dirname(fn)
             self.textBrowser.saveAs(fn)
 
+    
+    @pyqtSignature('')
+    def on_actionSaveImageAs_activated(self):
+        fn = unicode(QFileDialog.getSaveFileName(self,
+                                            self.tr("Save image"), self.curDir,
+                                            self.tr("PNG document") + " (*.png)"
+                                            ))
+        if fn:
+            self.curDir = os.path.dirname(fn)
+            ## TODO: move this to the Scene?
+            ## TODO: if jpeg pil converts it??
+            self.ocrWidget.im.save(fn)
+            #self.textBrowser.saveAs(fn)
 
 
 if __name__ == "__main__":
