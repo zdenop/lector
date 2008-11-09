@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# vim: set foldlevel=1:
 
 """ Lector: ocrarea.py
 
