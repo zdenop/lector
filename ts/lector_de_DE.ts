@@ -21,17 +21,17 @@
     <message>
         <location filename="ui_lector.ui" line="211"/>
         <source>Rotate right</source>
-        <translation></translation>
+        <translation>Recht drehen</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="223"/>
         <source>Rotate left</source>
-        <translation></translation>
+        <translation>Links drehen</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="235"/>
         <source>Flip</source>
-        <translation></translation>
+        <translation>Umkippen</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="247"/>
@@ -46,7 +46,7 @@
     <message>
         <location filename="ui_lector.ui" line="271"/>
         <source>Read</source>
-        <translation></translation>
+        <translation>Bild&amp;lesen</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="131"/>
@@ -91,7 +91,7 @@
     <message>
         <location filename="ui_lector.ui" line="142"/>
         <source>New area</source>
-        <translation>Neu </translation>
+        <translation>Neu Fläche</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="161"/>
@@ -116,7 +116,7 @@
     <message>
         <location filename="ui_lector.ui" line="43"/>
         <source>&amp;Edit</source>
-        <translation>&amp;</translation>
+        <translation>&amp;Ändern</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="214"/>
@@ -154,7 +154,7 @@
     <message>
         <location filename="ocrwidget.py" line="406"/>
         <source>Remove</source>
-        <translation type="obsolete"></translation>
+        <translation type="obsolete">Auslöschen</translation>
     </message>
     <message>
         <location filename="ocrwidget.py" line="409"/>
@@ -164,7 +164,7 @@
     <message>
         <location filename="ocrwidget.py" line="410"/>
         <source>Graphics</source>
-        <translation type="obsolete"></translation>
+        <translation type="obsolete">Graphik</translation>
     </message>
 </context>
 <context>
@@ -187,7 +187,7 @@
     <message>
         <location filename="lector.py" line="210"/>
         <source>Are you sure you want to exit?</source>
-        <translation></translation>
+        <translation>Bist du sicher zu beenden?</translation>
     </message>
     <message>
         <location filename="lector.py" line="220"/>
