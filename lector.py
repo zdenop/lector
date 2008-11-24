@@ -9,21 +9,23 @@
 """
 
 ## System
-import sys
-import os
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from subprocess import Popen, PIPE
-from glob import glob
-import sane
+import  sys
+import  os
+from    PyQt4.QtCore  import *
+from    PyQt4.QtGui   import *
+from    subprocess    import Popen, PIPE
+from    glob          import glob
+import  sane
 
 ## Lector
-from ui_lector import Ui_Lector
-from ocrwidget import QOcrWidget
-from textwidget import TextWidget
-from scannerselect import ScannerSelect
+from    ui_lector     import Ui_Lector
+from    ocrwidget     import QOcrWidget
+from    textwidget    import TextWidget
+from    scannerselect import ScannerSelect
 
 class Window(QMainWindow):
+    ## Overloaded constructor
+    ## 
     def __init__(self, parent = None):
         QMainWindow.__init__(self)
 
@@ -45,7 +47,7 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionZoomOut,SIGNAL("activated()"), self.ocrWidget.zoomOut)
         QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
 
-        poTess = Popen('tesseract /tmp/prova /tmp/prova -l iamnottrue', stderr=PIPE, shell=True)
+        poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE, shell=True)
         lTess = poTess.stderr.readline()
         pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
 
