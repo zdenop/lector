@@ -178,7 +178,7 @@
         <string>Change selected area type</string>
        </property>
        <property name="title" >
-        <string>Change area</string>
+        <string>Edit area</string>
        </property>
        <property name="flat" >
         <bool>true</bool>

@@ -159,7 +159,7 @@
     </message>
     <message>
         <location filename="ui_lector.ui" line="181"/>
-        <source>Change area</source>
+        <source>Edit area</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
