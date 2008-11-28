@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>820</width>
-    <height>491</height>
+    <height>572</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -118,6 +118,9 @@
      <height>0</height>
     </size>
    </property>
+   <property name="features" >
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
    <property name="windowTitle" >
     <string/>
    </property>
@@ -145,7 +148,10 @@
        <property name="flat" >
         <bool>true</bool>
        </property>
-       <layout class="QVBoxLayout" >
+       <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
         <item>
          <widget class="QRadioButton" name="rbtn_text" >
           <property name="text" >
@@ -163,21 +169,53 @@
           </property>
          </widget>
         </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox" >
+       <property name="toolTip" >
+        <string>Change selected area type</string>
+       </property>
+       <property name="title" >
+        <string>Change area</string>
+       </property>
+       <property name="flat" >
+        <bool>true</bool>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout" >
+        <property name="leftMargin" >
+         <number>0</number>
+        </property>
         <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Vertical</enum>
+         <widget class="QRadioButton" name="rbtn_areato_text" >
+          <property name="text" >
+           <string>Text</string>
           </property>
-          <property name="sizeHint" stdset="0" >
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rbtn_areato_image" >
+          <property name="text" >
+           <string>Image</string>
           </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>171</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </widget>
