@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="it">
+<defaultcodec></defaultcodec>
 <context>
     <name>Lector</name>
     <message>
@@ -150,12 +151,17 @@
     <message>
         <location filename="ui_lector.ui" line="178"/>
         <source>Change selected area type</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia il tipo dell&apos;area selezionata</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="181"/>
         <source>Change area</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Cambia </translation>
+    </message>
+    <message>
+        <location filename="ui_lector.ui" line="181"/>
+        <source>Edit area</source>
+        <translation>Modifica area</translation>
     </message>
 </context>
 <context>
@@ -246,12 +252,12 @@
     <message>
         <location filename="lector.py" line="232"/>
         <source>Save image</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva immagine</translation>
     </message>
     <message>
         <location filename="lector.py" line="233"/>
         <source>PNG document</source>
-        <translation type="unfinished"></translation>
+        <translation>documento PNG</translation>
     </message>
 </context>
 </TS>
