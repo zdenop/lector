@@ -135,7 +135,7 @@ class Window(QMainWindow):
         ## BOTTOM RIGHT POS
         s.br_x=300.
         s.br_y=300.
-        s.resolution = 600
+        s.resolution = 300
 
         #print 'Device parameters:', s.get_parameters()
 
@@ -143,7 +143,7 @@ class Window(QMainWindow):
         s.start()
 
         # Get an Image object
-        self.ocrWidget.im = s.snap()
+        self.ocrWidget.scene().im = s.snap()
         self.ocrWidget.prepareDimensions()
 
         self.enableActions()
