@@ -24,7 +24,7 @@ from    textwidget    import TextWidget
 from    scannerselect import ScannerSelect
 
 class Window(QMainWindow):
-    ## Overloaded constructor
+    ## Override constructor
     ## 
     def __init__(self, parent = None):
         QMainWindow.__init__(self)
@@ -56,7 +56,8 @@ class Window(QMainWindow):
         for uc in unicharsets:
             languages.append(uc[len(pTess):len(pTess)+3])
 
-        languages_ext = {'eng': self.tr('English'),
+        languages_ext = {
+            'eng': self.tr('English'),
             'ita': self.tr('Italian'), 'deu': self.tr('German'),
             'nld': self.tr('Dutch'), 'fra': self.tr('French'),
             'spa': self.tr('Spanish')}
@@ -239,6 +240,7 @@ class Window(QMainWindow):
             #self.textBrowser.saveAs(fn)
 
 
+## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     qsrand(QTime(0,0,0).secsTo(QTime.currentTime()))
