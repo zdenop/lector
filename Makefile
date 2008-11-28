@@ -1,3 +1,5 @@
+all: ui translation res
+
 ui:
 	pyuic4 ui_lector.ui > ui_lector.py
 
@@ -12,8 +14,6 @@ translation:
 
 up_translation:
 	pylupdate4 lector.pro
-
-all: ui translation res
 
 clean:
 	rm -f ui_lector.py resources_rc.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
