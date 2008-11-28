@@ -145,7 +145,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def mouseReleaseEvent(self, event):
-        if self.bResizing: ## stop resizinge
+        if self.bResizing: ## stop resizing
             self.bResizing = False
             r = self.resizingArea.rect()
 
