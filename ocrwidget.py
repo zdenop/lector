@@ -9,7 +9,6 @@
 
 import sys
 import Image
-#import ImageQt
 import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
@@ -43,20 +42,6 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.bResizing = False
         
 
-    def drawBackground(self, painter, rect):
-        ## TODO: set the background to gray
-        #painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
-        
-        #brushBg = painter.background()
-        #brushBg.setColor(QtCore.Qt.darkGreen)
-        #painter.setBackground(brushBg)
-        
-        if hasattr(self, 'ocrImage') and self.ocrImage:
-            sceneRect = self.sceneRect()
-            painter.drawImage(sceneRect, self.ocrImage)
-            #self.statusBar.showMessage(self.tr("Disegno bag"))
-
-
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
 
@@ -67,8 +52,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             
             newWidth = r.width()
             newHeight = r.height()
-            newX = pos.x()
-            newY = pos.y()
+            newX, newY = pos.x(), pos.y()
 
             if self.resizingEdge & 1: #bit mask: top is moving
                 #max ensures that y >= 0
@@ -161,12 +145,16 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def mouseReleaseEvent(self, event):
-        if self.bResizing:
+        if self.bResizing: ## stop resizinge
             self.bResizing = False
             r = self.resizingArea.rect()
-            self.resizingArea.setRect(0,0,max(r.width(), 2*OcrArea.resizeBorder),
-                max(r.height(), 2*OcrArea.resizeBorder))
-            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, True)
+
+            ## set min size
+            self.resizingArea.setRect(0,0,max(r.width(),
+                2*OcrArea.resizeBorder), max(r.height(),
+                2*OcrArea.resizeBorder))
+            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable,
+                True)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
 
@@ -178,19 +166,19 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scene().areas = []
         
         #open image
-        self.im = Image.open(self.filename)
+        self.scene().im = Image.open(self.filename)
 
         self.prepareDimensions()
 
 
     def prepareDimensions(self):
         #set scene size and view scale
-        self.setSceneSize()
+        self.scene().setSize()
 
         vw = float(self.width())
         vh = float(self.height())
-        iw = float(self.im.size[0])
-        ih = float(self.im.size[1])
+        iw = float(self.scene().im.size[0])
+        ih = float(self.scene().im.size[1])
         ratio = min (vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
@@ -200,51 +188,33 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaTextSize = 10 / ratio
 
         #show image
-        self.generateQtImage()
+        self.scene().generateQtImage()
         self.resetCachedContent()
         self.scene().isModified = False
 
 
     def rotateRight(self):
-        self.im = self.im.rotate(-90)
+        self.scene().im = self.scene().im.rotate(-90)
 
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().setSize()
+        self.scene().generateQtImage()
         self.resetCachedContent()
         
         
     def rotateLeft(self):
-        self.im = self.im.rotate(90)
+        self.scene().im = self.scene().im.rotate(90)
 
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().setSize()
+        self.scene().generateQtImage()
         self.resetCachedContent()
         
 
     def rotateFull(self):
-        self.im = self.im.rotate(180)
+        self.scene().im = self.scene().im.rotate(180)
 
-        self.setSceneSize()
-        self.generateQtImage()
+        self.scene().setSize()
+        self.scene().generateQtImage()
         self.resetCachedContent()
-
-
-    def generateQtImage(self):
-        ## TODO: check if it's necessary to convert to RGB (maybe only for grayscale images)
-        s = self.im.convert("RGB").tostring("jpeg","RGB")
-
-        self.ocrImage = QtGui.QImage()
-        self.ocrImage.loadFromData(QtCore.QByteArray(s))
-
-        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
-        #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
-        #print "%d %d %d" % (self.ocrImage.width(), self.ocrImage.height(), self.ocrImage.depth())
-
-
-    def setSceneSize(self):
-        iw = float(self.im.size[0])
-        ih = float(self.im.size[1])
-        self.scene().setSceneRect(0, 0, int(iw), int(ih))
 
 
     def zoomIn(self):
@@ -292,7 +262,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
             filename = "/tmp/out.%d.tif" % i
 
-            region = self.im.crop(box)
+            region = self.scene().im.crop(box)
             
             if item.type == 1:
                 region.save(filename)

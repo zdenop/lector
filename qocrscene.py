@@ -9,7 +9,6 @@
 
 import sys
 import Image
-#import ImageQt
 import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
@@ -44,17 +43,20 @@ class QOcrScene(QtGui.QGraphicsScene):
 
             self.areas.remove(item)
             self.removeItem(item)
+            
             for i, item in enumerate(self.areas[idx:]):
-                item.setIndex(i+idx+1)
+                item.setIndex(i+idx-1)
 
 
     def updateAreas(self, areaBorder, areaTextSize):    
-        for item in self.areas:
+        def resizeBorderAndText(item):
             # resize border
             pen = item.pen()
             pen.setWidthF(areaBorder)
             item.setPen(pen)
             item.setTextSize(areaTextSize)
+
+        map(resizeBorderAndText, self.areas)
 
 
     def areaAt(self, pos):
@@ -98,4 +100,34 @@ class QOcrScene(QtGui.QGraphicsScene):
 
         return edge
 
+
+    def generateQtImage(self):
+        ## TODO: check if it's necessary to convert to RGB (maybe only for grayscale images)
+        s = self.im.convert("RGB").tostring("jpeg","RGB")
+
+        self.ocrImage = QtGui.QImage()
+        self.ocrImage.loadFromData(QtCore.QByteArray(s))
+
+        #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
+
+    
+    def drawBackground(self, painter, rect):
+        ## TODO: set the background to gray
+        #painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
+        
+        #brushBg = painter.background()
+        #brushBg.setColor(QtCore.Qt.darkGreen)
+        #painter.setBackground(brushBg)
+        
+        if not (hasattr(self, 'ocrImage') and self.ocrImage): return
+
+        sceneRect = self.sceneRect()
+        painter.drawImage(sceneRect, self.ocrImage)
+        #self.statusBar.showMessage(self.tr("Disegno bag"))
+
+    
+    def setSize(self):
+        iw = float(self.im.size[0])
+        ih = float(self.im.size[1])
+        self.setSceneRect(0, 0, int(iw), int(ih))
 
