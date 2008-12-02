@@ -59,7 +59,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
         #Action = menu.addAction(self.scene().tr("Remove"))
         menu.addSeparator()
         textAction = menu.addAction(qa.translate('QOcrWidget', "Text"))
-        textAction.setChecked(True)
         graphicsAction = menu.addAction(qa.translate('QOcrWidget', "Graphics"))
 
         ## verification of the type of the selection and
