@@ -158,11 +158,18 @@ class Window(QMainWindow):
     def on_rbtn_text_clicked(self):
         self.ocrWidget.areaType = 1
 
-
     @pyqtSignature('')
     def on_rbtn_image_clicked(self):
-        self.ocrWidget.areaType = 2
+         self.ocrWidget.areaType = 2
 
+    # clicking the change box type events
+    @pyqtSignature('')
+    def on_rbtn_areato_text_clicked(self):
+       self.OcrArea.type = 2
+
+    @pyqtSignature('')
+    def on_rbtn_areato_image_clicked(self):
+       self.OcrArea.type = 1
 
     def readSettings(self):
         settings = QSettings("Davide Setti", "Lector")

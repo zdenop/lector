@@ -42,7 +42,6 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
 
-
     def setIndex(self, idx):
         self.text.setPlainText("%d" % idx)
 
@@ -80,7 +79,13 @@ class OcrArea(QtGui.QGraphicsRectItem):
         elif selectedAction == graphicsAction:
             self.type = 2
 
-
+    # when the area is selected the signal "isClicked()"
+    # is arrized
+    def mousePressEvent(self, event):
+        newEvent = QtCore.QObject()
+        newEvent.emit(QtCore.SIGNAL("siClicked()"))
+        QtGui.QGraphicsRectItem.mousePressEvent(self,event)
+ 
     ## type property
     def _setType(self, type):
         self.__type = type
