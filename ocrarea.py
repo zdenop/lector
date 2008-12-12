@@ -13,6 +13,7 @@ import Image
 import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
+from PyQt4.QtCore import pyqtSignature
 
 
 class OcrArea(QtGui.QGraphicsRectItem):
@@ -41,6 +42,8 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.setAcceptsHoverEvents(True)
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
+        # needed for the emission of a signal
+        self.newEvent = QtCore.QObject()
 
     def setIndex(self, idx):
         self.text.setPlainText("%d" % idx)
@@ -79,11 +82,27 @@ class OcrArea(QtGui.QGraphicsRectItem):
         elif selectedAction == graphicsAction:
             self.type = 2
 
+    # clicking the change box type events
+    # from image type to text
+    # or from text type to image
+    @pyqtSignature('')
+    def on_rbtn_areato_text_clicked(self):
+        print self.type
+        if (self.type == 2):
+            self.type = 1
+        print self.type
+    
+    @pyqtSignature('')
+    def on_rbtn_areato_image_clicked(self):
+        area = self.type
+        if (self.type == 1):
+            self.type = 2
+
+
     # when the area is selected the signal "isClicked()"
     # is arrized
     def mousePressEvent(self, event):
-        newEvent = QtCore.QObject()
-        newEvent.emit(QtCore.SIGNAL("siClicked()"))
+        self.newEvent.emit(QtCore.SIGNAL("siClicked()"))
         QtGui.QGraphicsRectItem.mousePressEvent(self,event)
  
     ## type property

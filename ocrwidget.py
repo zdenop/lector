@@ -120,7 +120,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         edge = ret % 100
         iArea = ret / 100 - 1
 
-       
+        # resizing the area if it exists
         if edge:
             self.bResizing = True
             self.resizingEdge = edge
@@ -129,15 +129,12 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-           
-        elif iArea == -1: ##create new area
+        # creation of a new area 
+        elif iArea == -1:
             size = QtCore.QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
                 self.areaTextSize)
-            # grabbing the signal isClicked() and connecting the slot getType when
-            # an area is selected
-            QtCore.QObject.connect(self, QtCore.SIGNAL("isClicked()"), self.getType)
 
             self.bResizing = True
             self.resizingEdge = 10
@@ -148,17 +145,6 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
 
         QtGui.QGraphicsView.mousePressEvent(self,event)
-
-    # when selecting a selected area, it's possibile to
-    # view its type in the "change area"
-    # and to change it (only with the left button)
-    def getType(self):
-        area = self.sender();
-
-        if (area.type == 1):
-            self.rbtn_areato_text.setChecked(True)
-        elif (area.type == 2):
-            self.rbtn_areato_image.setChecked(True)
 
     def mouseReleaseEvent(self, event):
         if self.bResizing: ## stop resizing
