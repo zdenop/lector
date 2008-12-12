@@ -31,11 +31,14 @@ class QOcrScene(QtGui.QGraphicsScene):
         item = OcrArea(pos, size, type, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
 
+        # grabbing the signal isClicked() and connecting the slot getType when
+        # an area is selected
+        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"), self.getType)
+
         self.areas.append(item)
         self.isModified = True
 
         return item
-
 
     def removeArea(self, item):
         if item:
@@ -99,6 +102,17 @@ class QOcrScene(QtGui.QGraphicsScene):
             edge = (onArea) * 100
 
         return edge
+
+    # when selecting a selected area, it's possibile to
+    # view its type in the "change area"
+    # and to change it (only with the left button)
+    def getType(self):
+        area = self.sender();
+
+        if (area.type == 1): 
+            self.rbtn_areato_text.setChecked(True)
+        elif (area.type == 2): 
+            self.rbtn_areato_image.setChecked(True)
 
 
     def generateQtImage(self):
