@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-""" Lector: radioselect.py
+""" Lector: scannerselect.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2008-2010 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
