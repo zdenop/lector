@@ -3,7 +3,7 @@
 
 """ Lector: lector.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2008-2010 Davide Setti
 
     This program is released under the GNU GPLv2
 """
@@ -22,8 +22,12 @@ from    ui_lector     import Ui_Lector
 from    ocrwidget     import QOcrWidget
 from    textwidget    import TextWidget
 from    scannerselect import ScannerSelect
+from    scannerthread import ScannerThread
 
-class Window(QMainWindow):
+            
+class Window(QMainWindow):    
+
+
     ## Override constructor
     ## 
     def __init__(self, parent = None):
@@ -40,12 +44,18 @@ class Window(QMainWindow):
         self.setCentralWidget(self.ocrWidget)
 
         self.statusBar().showMessage(self.tr("Ready"))
-        QObject.connect(self.ui.actionRotateRight,SIGNAL("activated()"), self.ocrWidget.rotateRight)
-        QObject.connect(self.ui.actionRotateLeft,SIGNAL("activated()"), self.ocrWidget.rotateLeft)
-        QObject.connect(self.ui.actionRotateFull,SIGNAL("activated()"), self.ocrWidget.rotateFull)
-        QObject.connect(self.ui.actionZoomIn,SIGNAL("activated()"), self.ocrWidget.zoomIn)
-        QObject.connect(self.ui.actionZoomOut,SIGNAL("activated()"), self.ocrWidget.zoomOut)
-        QObject.connect(self.ui.actionOcr,SIGNAL("activated()"), self.ocrWidget.doOcr)
+        QObject.connect(self.ui.actionRotateRight,
+            SIGNAL("activated()"), self.ocrWidget.rotateRight)
+        QObject.connect(self.ui.actionRotateLeft,
+            SIGNAL("activated()"), self.ocrWidget.rotateLeft)
+        QObject.connect(self.ui.actionRotateFull,
+            SIGNAL("activated()"), self.ocrWidget.rotateFull)
+        QObject.connect(self.ui.actionZoomIn,
+            SIGNAL("activated()"), self.ocrWidget.zoomIn)
+        QObject.connect(self.ui.actionZoomOut,
+            SIGNAL("activated()"), self.ocrWidget.zoomOut)
+        QObject.connect(self.ui.actionOcr,
+            SIGNAL("activated()"), self.ocrWidget.doOcr)
 
         poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE, shell=True)
         lTess = poTess.stderr.readline()
@@ -86,26 +96,29 @@ class Window(QMainWindow):
         ##SANE
         sane.init()
         sane_list = sane.get_devices()
-        scanner_desc_list = []
-        for scanner in sane_list:
-            scanner_desc_list.append(scanner[2])
+        scanner_desc_list = [scanner[2] for scanner in sane_list]
 
         ss = ScannerSelect()
 
         idx = ss.getSelectedIndex(self.tr('Select scanner'), scanner_desc_list, 0)
         if idx > -1:
             self.selectedScanner = sane.get_devices()[idx][0]
+            self.thread = ScannerThread(self, self.selectedScanner)
+            
+            QObject.connect(self.thread, SIGNAL("scannedImage(const QImage &)"), self.on_scannedImage)
         else:
             self.ui.actionScan.setEnabled(False)
         
 
+    def on_scannedImage(self, im):
+        print im
 
     @pyqtSignature('')
     def on_actionOpen_activated(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
-                                            self.tr("Open image"), self.curDir,
-                                            self.tr("Images (*.png *.xpm *.jpg)")
-                                            ))
+                self.tr("Open image"), self.curDir,
+                self.tr("Images (*.png *.xpm *.jpg)")
+            ))
         if fn:
             self.ocrWidget.filename = fn
             self.curDir = os.path.dirname(fn)
@@ -128,26 +141,11 @@ class Window(QMainWindow):
 
     @pyqtSignature('')
     def on_actionScan_activated(self):
-        s = sane.open(self.selectedScanner)
-
-        s.mode = 'color'
-        
-        ## BOTTOM RIGHT POS
-        s.br_x=300.
-        s.br_y=300.
-        s.resolution = 300
-
-        #print 'Device parameters:', s.get_parameters()
-
-        # Initiate the scan
-        s.start()
-
-        # Get an Image object
-        self.ocrWidget.scene().im = s.snap()
+        self.thread.run()
+        self.thread.wait()
+        self.ocrWidget.scene().im = self.thread.im
         self.ocrWidget.prepareDimensions()
-
         self.enableActions()
-
 
     def changeLanguage(self):
         lang = self.sender().objectName()[5:]
