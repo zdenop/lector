@@ -21,8 +21,10 @@ class OcrArea(QtGui.QGraphicsRectItem):
     ## static data
     resizeborder = .0
     
-    def __init__(self, pos, size, type, parent = None, scene = None, areaBorder = 2, index = 0, textSize = 50):
-        QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(), size.height(), parent, scene)
+    def __init__(self, pos, size, type, parent = None, scene = None,
+                 areaBorder = 2, index = 0, textSize = 50):
+        QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(),
+                                         size.height(), parent, scene)
         self.setPos(pos)
         
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
@@ -37,7 +39,8 @@ class OcrArea(QtGui.QGraphicsRectItem):
         ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt) (enum?)
         self.type = type
 
-        pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine, QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine,
+                         QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
 

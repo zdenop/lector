@@ -33,7 +33,8 @@ class QOcrScene(QtGui.QGraphicsScene):
 
         # grabbing the signal isClicked() and connecting the slot getType when
         # an area is selected
-        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"), self.getType)
+        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"),
+                               self.getType)
 
         self.areas.append(item)
         self.isModified = True
@@ -70,7 +71,10 @@ class QOcrScene(QtGui.QGraphicsScene):
             r = item.rect()
 
             # this is not very clean... it checks that the mouse is over an area + its resize borders. The only diffs are not enough: they give true also if (i.e) the mouse is horizontally in line with the top border, but far away from the area
-            if not ((item.y() + r.height() + OcrArea.resizeBorder > pos.y()) and (item.y() - OcrArea.resizeBorder < pos.y()) and (item.x() + r.width() + OcrArea.resizeBorder > pos.x()) and (item.x() - OcrArea.resizeBorder < pos.x())):
+            if not ((item.y() + r.height() + OcrArea.resizeBorder > pos.y())
+                    and (item.y() - OcrArea.resizeBorder < pos.y()) and (
+                        item.x() + r.width() + OcrArea.resizeBorder > pos.x())
+                    and (item.x() - OcrArea.resizeBorder < pos.x())):
                 continue
 
             #diffs between the cursor and item's edges
@@ -91,7 +95,9 @@ class QOcrScene(QtGui.QGraphicsScene):
                 edge += 8
             
             if not onArea:
-                if (item.y() + r.height() > pos.y()) and (item.y() < pos.y()) and (item.x() + r.width() > pos.x()) and (item.x() < pos.x()):
+                if ((item.y() + r.height() > pos.y()) and (item.y() < pos.y())
+                    and (item.x() + r.width() > pos.x()) and (
+                        item.x() < pos.x())):
                     onArea = i + 1
 
             if edge:

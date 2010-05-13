@@ -250,7 +250,8 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.textBrowser.clear()
 
-        progress = QtGui.QProgressDialog("Sto leggendo le immagini...", "Annulla", 0, numItems)
+        progress = QtGui.QProgressDialog("Sto leggendo le immagini...",
+                                         "Annulla", 0, numItems)
         progress.setWindowModality(QtCore.Qt.WindowModal)
         progress.setMinimumDuration(0)
         progress.setValue(0)
@@ -269,7 +270,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             if item.type == 1:
                 region.save(filename)
 
-                command = "tesseract %s /tmp/out.%d -l %s" % (filename, i, self.language)
+                command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
+                                                              self.language)
                 os.popen(command)
             
                 s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
