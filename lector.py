@@ -25,9 +25,7 @@ from    scannerselect import ScannerSelect
 from    scannerthread import ScannerThread
 
             
-class Window(QMainWindow):    
-
-
+class Window(QMainWindow):
     ## Override constructor
     ## 
     def __init__(self, parent = None):
@@ -57,14 +55,13 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,
             SIGNAL("activated()"), self.ocrWidget.doOcr)
 
-        poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE, shell=True)
+        poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE,
+            shell=True)
         lTess = poTess.stderr.readline()
         pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
 
-        languages = list()
         unicharsets = glob(pTess+'*.unicharset')
-        for uc in unicharsets:
-            languages.append(uc[len(pTess):len(pTess)+3])
+        languages = [uc[len(pTess):len(pTess)+3] for uc in unicharsets]
 
         languages_ext = {
             'eng': self.tr('English'),
@@ -74,11 +71,14 @@ class Window(QMainWindow):
         self.rbtn_languages = {}
 
         for lang in languages:
-            if not lang in languages_ext:
+            try:
+                lang_ext = languages_ext[lang]
+            except KeyError:
                 continue
+            
             rbtn = QRadioButton(self.ui.groupBox_language)
             rbtn.setObjectName("rbtn_%s" % lang)
-            rbtn.setText(languages_ext[lang])
+            rbtn.setText(lang_ext)
             
             ##TODO:change this layout to a more human name
             self.ui.vboxlayout2.addWidget(rbtn)
@@ -100,12 +100,14 @@ class Window(QMainWindow):
 
         ss = ScannerSelect()
 
-        idx = ss.getSelectedIndex(self.tr('Select scanner'), scanner_desc_list, 0)
+        idx = ss.getSelectedIndex(self.tr('Select scanner'),
+                                  scanner_desc_list, 0)
         if idx > -1:
             self.selectedScanner = sane.get_devices()[idx][0]
             self.thread = ScannerThread(self, self.selectedScanner)
             
-            QObject.connect(self.thread, SIGNAL("scannedImage(const QImage &)"), self.on_scannedImage)
+            QObject.connect(self.thread, SIGNAL("scannedImage(const QImage &)"),
+                            self.on_scannedImage)
         else:
             self.ui.actionScan.setEnabled(False)
         
@@ -129,14 +131,15 @@ class Window(QMainWindow):
 
 
     def enableActions(self, enable=True):
-        self.ui.actionRotateRight.setEnabled(enable)
-        self.ui.actionRotateLeft.setEnabled(enable)
-        self.ui.actionRotateFull.setEnabled(enable)
-        self.ui.actionZoomIn.setEnabled(enable)
-        self.ui.actionZoomOut.setEnabled(enable)
-        self.ui.actionOcr.setEnabled(enable)
-        self.ui.actionSaveDocumentAs.setEnabled(enable)
-        self.ui.actionSaveImageAs.setEnabled(enable)
+        for action in (self.ui.actionRotateRight,
+                       self.ui.actionRotateLeft,
+                       self.ui.actionRotateFull,
+                       self.ui.actionZoomIn,
+                       self.ui.actionZoomOut,
+                       self.ui.actionOcr,
+                       self.ui.actionSaveDocumentAs,
+                       self.ui.actionSaveImageAs,):
+            action.setEnabled(enable)
 
 
     @pyqtSignature('')
@@ -164,7 +167,8 @@ class Window(QMainWindow):
         settings = QSettings("Davide Setti", "Lector")
         pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
         size = settings.value("size", QVariant(QSize(800, 500))).toSize()
-        self.curDir = settings.value("file_dialog_dir", QVariant('~/')).toString()
+        self.curDir = settings.value("file_dialog_dir", QVariant('~/')
+                                     ).toString()
         self.resize(size)
         self.move(pos)
         
@@ -190,8 +194,7 @@ class Window(QMainWindow):
         #settings.setValue("textbrowser/size", QVariant(self.ui.textBrowserDock.size()))
 
         ## save language
-        settings.setValue("rbtn/lang",
-                QVariant(self.ocrWidget.language))
+        settings.setValue("rbtn/lang", QVariant(self.ocrWidget.language))
 
 
     def closeEvent(self, event):
@@ -204,7 +207,9 @@ class Window(QMainWindow):
     
     def areYouSureToExit(self):
         #if (textEdit->document()->isModified()) {
-        ret = QMessageBox.warning(self, "Lector", self.tr("Are you sure you want to exit?"), QMessageBox.Yes | QMessageBox.No)
+        ret = QMessageBox.warning(self, "Lector",
+                                  self.tr("Are you sure you want to exit?"),
+                                  QMessageBox.Yes | QMessageBox.No)
         if ret == QMessageBox.No:
             return False
         elif ret == QMessageBox.Yes:
@@ -214,9 +219,9 @@ class Window(QMainWindow):
     @pyqtSignature('')
     def on_actionSaveDocumentAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
-                                            self.tr("Save document"), self.curDir,
-                                            self.tr("RTF document") + " (*.rtf)"
-                                            ))
+                                        self.tr("Save document"), self.curDir,
+                                        self.tr("RTF document") + " (*.rtf)"
+                                        ))
         if fn:
             self.curDir = os.path.dirname(fn)
             self.textBrowser.saveAs(fn)
