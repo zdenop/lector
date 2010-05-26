@@ -6,7 +6,7 @@
 """ 
 
 ## PyQt
-from PyQt4.QtCore import QThread
+from PyQt4.QtCore import QThread, SIGNAL
 
 ## sane
 import sane
@@ -34,5 +34,4 @@ class ScannerThread(QThread):
 
         # Get an Image object
         self.im = s.snap()
-        #self.emit(SIGNAL("scannedImage(const QImage &)"),
-        #    im)
+        self.emit(SIGNAL("scannedImage()"))
