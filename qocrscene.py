@@ -122,14 +122,9 @@ class QOcrScene(QtGui.QGraphicsScene):
 
 
     def generateQtImage(self):
-        ## TODO: check if it's necessary to convert to RGB (maybe only for grayscale images)
-        s = self.im.convert("RGB").tostring("jpeg","RGB")
+        from utils import pilImage2Qt
 
-        self.ocrImage = QtGui.QImage()
-        self.ocrImage.loadFromData(QtCore.QByteArray(s))
-
-        #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
-
+        self.ocrImage = pilImage2Qt(self.im)
     
     def drawBackground(self, painter, rect):
         ## TODO: set the background to gray

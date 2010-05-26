@@ -106,14 +106,18 @@ class Window(QMainWindow):
             self.selectedScanner = sane.get_devices()[idx][0]
             self.thread = ScannerThread(self, self.selectedScanner)
             
-            QObject.connect(self.thread, SIGNAL("scannedImage(const QImage &)"),
+            QObject.connect(self.thread, SIGNAL("scannedImage()"),
                             self.on_scannedImage)
         else:
             self.ui.actionScan.setEnabled(False)
         
 
-    def on_scannedImage(self, im):
-        print im
+    def on_scannedImage(self):
+        print "scanned"
+        im = self.thread.im
+        self.ocrWidget.scene().im = im
+        self.ocrWidget.prepareDimensions()
+        self.enableActions()
 
     @pyqtSignature('')
     def on_actionOpen_activated(self):
@@ -145,10 +149,8 @@ class Window(QMainWindow):
     @pyqtSignature('')
     def on_actionScan_activated(self):
         self.thread.run()
-        self.thread.wait()
-        self.ocrWidget.scene().im = self.thread.im
-        self.ocrWidget.prepareDimensions()
-        self.enableActions()
+        ##TODO: check thread end before the submission of a new task
+        #self.thread.wait()
 
     def changeLanguage(self):
         lang = self.sender().objectName()[5:]
