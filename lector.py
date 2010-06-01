@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# vim: set foldlevel=1:
 
 """ Lector: lector.py
 
@@ -11,8 +10,10 @@
 ## System
 import  sys
 import  os
-from    PyQt4.QtCore  import *
-from    PyQt4.QtGui   import *
+from    PyQt4.QtCore  import SIGNAL, QObject, QSettings, QVariant, QPoint, \
+        QSize, QString, QTime, qsrand, pyqtSignature, QLocale, QTranslator
+from    PyQt4.QtGui   import QMainWindow, QRadioButton, QFileDialog, \
+            QMessageBox, QApplication
 from    subprocess    import Popen, PIPE
 from    glob          import glob
 import  sane
@@ -55,6 +56,7 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,
             SIGNAL("activated()"), self.ocrWidget.doOcr)
 
+        ## TODO: check if tesseract is installed
         poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE,
             shell=True)
         lTess = poTess.stderr.readline()
@@ -65,8 +67,10 @@ class Window(QMainWindow):
 
         languages_ext = {
             'eng': self.tr('English'),
-            'ita': self.tr('Italian'), 'deu': self.tr('German'),
-            'nld': self.tr('Dutch'), 'fra': self.tr('French'),
+            'ita': self.tr('Italian'),
+            'deu': self.tr('German'),
+            'nld': self.tr('Dutch'),
+            'fra': self.tr('French'),
             'spa': self.tr('Spanish')}
         self.rbtn_languages = {}
 
@@ -102,18 +106,17 @@ class Window(QMainWindow):
 
         idx = ss.getSelectedIndex(self.tr('Select scanner'),
                                   scanner_desc_list, 0)
-        if idx > -1:
+        try:
             self.selectedScanner = sane.get_devices()[idx][0]
             self.thread = ScannerThread(self, self.selectedScanner)
             
             QObject.connect(self.thread, SIGNAL("scannedImage()"),
                             self.on_scannedImage)
-        else:
+        except KeyError:
             self.ui.actionScan.setEnabled(False)
         
 
     def on_scannedImage(self):
-        print "scanned"
         im = self.thread.im
         self.ocrWidget.scene().im = im
         self.ocrWidget.prepareDimensions()
@@ -125,12 +128,13 @@ class Window(QMainWindow):
                 self.tr("Open image"), self.curDir,
                 self.tr("Images (*.png *.xpm *.jpg)")
             ))
-        if fn:
-            self.ocrWidget.filename = fn
-            self.curDir = os.path.dirname(fn)
-            self.ocrWidget.cambiaImmagine()
+        if not fn: return
 
-            self.enableActions(True)
+        self.ocrWidget.filename = fn
+        self.curDir = os.path.dirname(fn)
+        self.ocrWidget.cambiaImmagine()
+
+        self.enableActions(True)
 
 
 
@@ -176,13 +180,16 @@ class Window(QMainWindow):
         
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
-        if lang and self.rbtn_languages.has_key(lang):
+        try:
             self.rbtn_languages[lang].setChecked(True)
             self.ocrWidget.language = lang
+        except KeyError:
+            pass
 
         #TODO: ridimensionamento della dock non funziona
         #pos = settings.value("textbrowser/pos").toPoint()
-        #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))).toSize()
+        #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))
+        #        ).toSize()
         #self.ui.textBrowser.resize(size)
         #self.ui.textBrowser.move(pos)
 
@@ -192,8 +199,10 @@ class Window(QMainWindow):
         settings.setValue("pos", QVariant(self.pos()))
         settings.setValue("size", QVariant(self.size()))
         settings.setValue("file_dialog_dir", QVariant(self.curDir))
-        #settings.setValue("textbrowser/pos", QVariant(self.ui.textBrowserDock.pos()))
-        #settings.setValue("textbrowser/size", QVariant(self.ui.textBrowserDock.size()))
+        #settings.setValue("textbrowser/pos", QVariant(
+        #            self.ui.textBrowserDock.pos()))
+        #settings.setValue("textbrowser/size", QVariant(
+        #            self.ui.textBrowserDock.size()))
 
         ## save language
         settings.setValue("rbtn/lang", QVariant(self.ocrWidget.language))
@@ -208,7 +217,6 @@ class Window(QMainWindow):
 
     
     def areYouSureToExit(self):
-        #if (textEdit->document()->isModified()) {
         ret = QMessageBox.warning(self, "Lector",
                                   self.tr("Are you sure you want to exit?"),
                                   QMessageBox.Yes | QMessageBox.No)
@@ -224,9 +232,10 @@ class Window(QMainWindow):
                                         self.tr("Save document"), self.curDir,
                                         self.tr("RTF document") + " (*.rtf)"
                                         ))
-        if fn:
-            self.curDir = os.path.dirname(fn)
-            self.textBrowser.saveAs(fn)
+        if not fn: return
+
+        self.curDir = os.path.dirname(fn)
+        self.textBrowser.saveAs(fn)
 
     
     @pyqtSignature('')
@@ -235,18 +244,19 @@ class Window(QMainWindow):
                                             self.tr("Save image"), self.curDir,
                                             self.tr("PNG document") + " (*.png)"
                                             ))
-        if fn:
-            self.curDir = os.path.dirname(fn)
-            ## TODO: move this to the Scene?
-            ## TODO: if jpeg pil converts it??
-            self.ocrWidget.im.save(fn)
-            #self.textBrowser.saveAs(fn)
+        if not fn: return
+
+        self.curDir = os.path.dirname(fn)
+        ## TODO: move this to the Scene?
+        ## TODO: if jpeg pil converts it??
+        self.ocrWidget.im.save(fn)
+        #self.textBrowser.saveAs(fn)
 
 
 ## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    qsrand(QTime(0,0,0).secsTo(QTime.currentTime()))
+    qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
