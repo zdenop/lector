@@ -13,9 +13,9 @@ import sane
 
 class ScannerThread(QThread):
     def __init__(self, parent=None, selectedScanner=None):
-        QThread.__init__(self,parent)
+        QThread.__init__(self, parent)
         self.selectedScanner = selectedScanner
-    
+        self.im = None
         
     def run(self):
         s = sane.open(self.selectedScanner)
@@ -23,8 +23,8 @@ class ScannerThread(QThread):
         s.mode = 'color'
         
         ## BOTTOM RIGHT POS
-        s.br_x=300.
-        s.br_y=300.
+        s.br_x = 300.
+        s.br_y = 300.
         s.resolution = 300
 
         #print 'Device parameters:', s.get_parameters()

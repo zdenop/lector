@@ -7,7 +7,8 @@
     This program is released under the GNU GPLv2
 """
 
-from PyQt4 import QtCore, QtGui
+from __future__ import with_statement
+from PyQt4 import QtGui
 
 
 class TextWidget(QtGui.QTextBrowser):
@@ -21,15 +22,15 @@ class TextWidget(QtGui.QTextBrowser):
         from os import popen
         from shutil import move
 
+        ## TODO: replace with Qt's temp files
         fileTmp = '/tmp/prova.html'
         s = self.document().toHtml('utf-8').toUtf8()
-        fd = open(fileTmp, 'w')
-        fd.write(s)
-        fd.close()
+        with open(fileTmp, 'w') as fd:
+            fd.write(s)
 
         cmd = "abiword --to=rtf %s" % (fileTmp, )
         popen(cmd)
 
         fileTmpRtf = fileTmp.split('.')[0] + '.rtf'
-        print fileTmpRtf
         move(fileTmpRtf, filename)
+
