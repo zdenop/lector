@@ -7,11 +7,7 @@
     This program is released under the GNU GPLv2
 """ 
 
-import sys
-import Image
-import os
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QApplication as qa
 from ocrarea import OcrArea
 
 
@@ -27,8 +23,8 @@ class QOcrScene(QtGui.QGraphicsScene):
         self.areas = []
 
 
-    def createArea(self, pos, size, type, areaBorder, areaTextSize):
-        item = OcrArea(pos, size, type, None, self, areaBorder,
+    def createArea(self, pos, size, type_, areaBorder, areaTextSize):
+        item = OcrArea(pos, size, type_, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
 
         # grabbing the signal isClicked() and connecting the slot getType when
@@ -70,7 +66,10 @@ class QOcrScene(QtGui.QGraphicsScene):
             item = self.areas[i]
             r = item.rect()
 
-            # this is not very clean... it checks that the mouse is over an area + its resize borders. The only diffs are not enough: they give true also if (i.e) the mouse is horizontally in line with the top border, but far away from the area
+            # this is not very clean... it checks that the mouse is over an
+            # area + its resize borders. The only diffs are not enough: they
+            # give true also if (i.e) the mouse is horizontally in line with
+            # the top border, but far away from the area
             if not ((item.y() + r.height() + OcrArea.resizeBorder > pos.y())
                     and (item.y() - OcrArea.resizeBorder < pos.y()) and (
                         item.x() + r.width() + OcrArea.resizeBorder > pos.x())
@@ -113,7 +112,7 @@ class QOcrScene(QtGui.QGraphicsScene):
     # view its type in the "change area"
     # and to change it (only with the left button)
     def getType(self):
-        area = self.sender();
+        area = self.sender()
 
         if (area.type == 1): 
             self.rbtn_areato_text.setChecked(True)
@@ -126,7 +125,7 @@ class QOcrScene(QtGui.QGraphicsScene):
 
         self.ocrImage = pilImage2Qt(self.im)
     
-    def drawBackground(self, painter, rect):
+    def drawBackground(self, painter, _):
         ## TODO: set the background to gray
         #painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
         

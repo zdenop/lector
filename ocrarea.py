@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# vim: set foldlevel=1:
 
 """ Lector: ocrarea.py
 
@@ -8,9 +7,6 @@
     This program is released under the GNU GPLv2
 """ 
 
-import sys
-import Image
-import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
 from PyQt4.QtCore import pyqtSignature
@@ -21,7 +17,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
     ## static data
     resizeborder = .0
     
-    def __init__(self, pos, size, type, parent = None, scene = None,
+    def __init__(self, pos, size, type_, parent = None, scene = None,
                  areaBorder = 2, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(),
                                          size.height(), parent, scene)
@@ -36,8 +32,9 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)
         self.setTextSize(textSize)
 
-        ## TODO: come creare delle costanti per il tipo? (come le costanti nelle Qt) (enum?)
-        self.type = type
+        ## TODO: come creare delle costanti per il tipo?
+        ## (come le costanti nelle Qt) (enum?)
+        self.type = type_
 
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine,
                          QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
@@ -68,8 +65,8 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
         ## verification of the type of the selection and
         ## setting a check box near the type that is in use
-        textAction.setCheckable(True);
-        graphicsAction.setCheckable(True);
+        textAction.setCheckable(True)
+        graphicsAction.setCheckable(True)
 
         if self.type == 1:
             textAction.setChecked(True)
@@ -90,14 +87,11 @@ class OcrArea(QtGui.QGraphicsRectItem):
     # or from text type to image
     @pyqtSignature('')
     def on_rbtn_areato_text_clicked(self):
-        print self.type
         if (self.type == 2):
             self.type = 1
-        print self.type
     
     @pyqtSignature('')
     def on_rbtn_areato_image_clicked(self):
-        area = self.type
         if (self.type == 1):
             self.type = 2
 
@@ -106,11 +100,11 @@ class OcrArea(QtGui.QGraphicsRectItem):
     # is arrized
     def mousePressEvent(self, event):
         self.newEvent.emit(QtCore.SIGNAL("siClicked()"))
-        QtGui.QGraphicsRectItem.mousePressEvent(self,event)
+        QtGui.QGraphicsRectItem.mousePressEvent(self, event)
  
     ## type property
-    def _setType(self, type):
-        self.__type = type
+    def _setType(self, type_):
+        self.__type = type_
         
         if self.__type == 1:
             self.color = QtCore.Qt.darkGreen
