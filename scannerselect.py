@@ -7,7 +7,8 @@
     This program is released under the GNU GPLv2
 """ 
 
-from PyQt4.QtGui import QDialog, QVBoxLayout, QGroupBox, QRadioButton, QHBoxLayout, QPushButton
+from PyQt4.QtGui import QDialog, QVBoxLayout, QGroupBox, QRadioButton, \
+         QHBoxLayout, QPushButton
 from PyQt4.QtCore import SIGNAL
 from PyQt4.QtGui import QApplication as qa
 
@@ -40,7 +41,8 @@ class ScannerSelect(QDialog):
 
 
 
-    def getSelectedIndex(self, title, items, default_index):
+    def getSelectedIndex(self, title, items, _):
+        ## TODO: what's the last argument?
         self.radio_group.setTitle(title)
         
         radio_layout = QVBoxLayout(self.radio_group)
@@ -51,8 +53,8 @@ class ScannerSelect(QDialog):
             radio_layout.addWidget(radio)#, self.radio_group))
 
         if self.exec_():
-            for index in range(0, len(radios)):
-                if radios[index].isChecked():
+            for index, radio in enumerate(radios):
+                if radio.isChecked():
                     return index
             
         return -1
