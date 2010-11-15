@@ -7,9 +7,8 @@
 
 ## PyQt
 from PyQt4.QtCore import QThread, SIGNAL
-
-## sane
-import sane
+## SANE
+# import sane
 
 class ScannerThread(QThread):
     def __init__(self, parent=None, selectedScanner=None):
