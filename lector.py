@@ -16,7 +16,6 @@ from    PyQt4.QtGui   import QMainWindow, QRadioButton, QFileDialog, \
             QMessageBox, QApplication
 from    subprocess    import Popen, PIPE
 from    glob          import glob
-import  sane
 
 ## Lector
 from    ui_lector     import Ui_Lector
@@ -102,21 +101,29 @@ class Window(QMainWindow):
         self.readSettings()
 
         ##SANE
-        sane.init()
-        sane_list = sane.get_devices()
-        scanner_desc_list = [scanner[2] for scanner in sane_list]
-
-        ss = ScannerSelect()
-
-        idx = ss.getSelectedIndex(self.tr('Select scanner'),
-                                  scanner_desc_list, 0)
         try:
-            self.selectedScanner = sane.get_devices()[idx][0]
-            self.thread = ScannerThread(self, self.selectedScanner)
-            
-            QObject.connect(self.thread, SIGNAL("scannedImage()"),
-                            self.on_scannedImage)
-        except KeyError:
+            import  sane
+            sane.init()
+            sane_list = sane.get_devices()
+
+            if sane.get_devices():  # sane found scanner
+                #TODO: if one scanner - automatically select
+                scanner_desc_list = [scanner[2] for scanner in sane_list]
+
+                ss = ScannerSelect()
+                idx = ss.getSelectedIndex(self.tr('Select scanner'),
+                                          scanner_desc_list, 0)
+                try:
+                    self.selectedScanner = sane.get_devices()[idx][0]
+                    self.thread = ScannerThread(self, self.selectedScanner)
+                    QObject.connect(self.thread, SIGNAL("scannedImage()"),
+                                    self.on_scannedImage)
+                except KeyError:
+                    self.ui.actionScan.setEnabled(False)
+            else: # sane found no scaner - disable scanning; 
+                print "No scanner found!"
+                self.ui.actionScan.setEnabled(False)
+        except:
             self.ui.actionScan.setEnabled(False)
         
 
