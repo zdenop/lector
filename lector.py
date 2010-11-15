@@ -57,13 +57,17 @@ class Window(QMainWindow):
             SIGNAL("activated()"), self.ocrWidget.doOcr)
 
         ## TODO: check if tesseract is installed
-        poTess = Popen('tesseract /tmp/try /tmp/try -l iamnottrue', stderr=PIPE,
+        poTess = Popen('tesseract try try -l iamnottrue', stderr=PIPE,
             shell=True)
         lTess = poTess.stderr.readline()
-        pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
+        langdata_ext = (lTess.split('/')).pop().strip().rsplit('.', 1)[1]
+        if os.getenv('TESSDATA_PREFIX') == None:
+            pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
+        else:
+            pTess = os.getenv('TESSDATA_PREFIX') + "tessdata/"
 
-        unicharsets = glob(pTess+'*.unicharset')
-        languages = [uc[len(pTess):len(pTess)+3] for uc in unicharsets]
+        langdata = glob(pTess + '*.' + langdata_ext)
+        languages = [os.path.basename(uc).rsplit('.', 1)[0] for uc in langdata]
 
         languages_ext = {
             'eng': self.tr('English'),
