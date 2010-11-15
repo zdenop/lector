@@ -24,7 +24,7 @@ from    textwidget    import TextWidget
 from    scannerselect import ScannerSelect
 from    scannerthread import ScannerThread
 
-            
+
 class Window(QMainWindow):
     ## Override constructor
     ## 
@@ -69,12 +69,44 @@ class Window(QMainWindow):
         languages = [os.path.basename(uc).rsplit('.', 1)[0] for uc in langdata]
 
         languages_ext = {
-            'eng': self.tr('English'),
-            'ita': self.tr('Italian'),
-            'deu': self.tr('German'),
+            'bul': self.tr('Bulgarian'),
+            'cat': self.tr('Catalan'),
+            'ces': self.tr('Czech'),
+            'chi_tra': self.tr('Chinese (Traditional)'),
+            'chi_sim': self.tr('Chinese (Simplified)'),
+            'dan': self.tr('Danish'),
+            'dan-frak': self.tr('Danish (Fraktur)'),
             'nld': self.tr('Dutch'),
+            'eng': self.tr('English'),
+            'fin': self.tr('Finnish'),
             'fra': self.tr('French'),
-            'spa': self.tr('Spanish')}
+            'deu': self.tr('German'),
+            'deu-frak': self.tr('German (Fraktur)'),
+            'ell': self.tr('Greek'),
+            'hun': self.tr('Hungarian'),
+            'ind': self.tr('Indonesian'),
+            'ita': self.tr('Italian'),
+            'jpn': self.tr('Japanese'),
+            'kor': self.tr('Korean'),
+            'lav': self.tr('Latvian'),
+            'lit': self.tr('Lithuanian'),
+            'nor': self.tr('Norwegian'),
+            'pol': self.tr('Polish'),
+            'por': self.tr('Portuguese'),
+            'ron': self.tr('Romanian'),
+            'rus': self.tr('Russian'),
+            'slk': self.tr('Slovak'),
+            'slk-frak': self.tr('Slovak (Fraktur)'),
+            'slv': self.tr('Slovenian'),
+            'spa': self.tr('Spanish'),
+            'srp': self.tr('Serbian'),
+            'swe': self.tr('Swedish'),
+            'swe-frak': self.tr('Swedish (Fraktur)'),
+            'tgl': self.tr('Tagalog'),
+            'tur': self.tr('Turkish'),
+            'ukr': self.tr('Ukrainian'),
+            'vie': self.tr('Vietnamese')
+            }
         self.rbtn_languages = {}
 
         for lang in languages:
@@ -82,7 +114,7 @@ class Window(QMainWindow):
                 lang_ext = languages_ext[lang]
             except KeyError:
                 continue
-            
+
             rbtn = QRadioButton(self.ui.groupBox_language)
             rbtn.setObjectName("rbtn_%s" % lang)
             rbtn.setText(lang_ext)
@@ -146,7 +178,6 @@ class Window(QMainWindow):
         self.ocrWidget.cambiaImmagine()
 
         self.enableActions(True)
-
 
 
     def enableActions(self, enable=True):
@@ -253,7 +284,7 @@ class Window(QMainWindow):
     def on_actionSaveImageAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                             self.tr("Save image"), self.curDir,
-                                            self.tr("PNG document") + " (*.png)"
+                                            self.tr("PNG image") + " (*.png)"
                                             ))
         if not fn: return
 
@@ -271,11 +302,11 @@ if __name__ == "__main__":
 
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
-    if lecTranslator.load("lector_" + locale, ':/translations/ts'):
+    if lecTranslator.load("lector_" + locale, 'ts'):
         app.installTranslator(lecTranslator)
 
     qtTranslator = QTranslator()
-    if qtTranslator.load("qt_" + locale, ':/translations/ts'):
+    if qtTranslator.load("qt_" + locale, 'ts'):
         app.installTranslator(qtTranslator)
 
     window = Window()

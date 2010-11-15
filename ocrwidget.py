@@ -250,8 +250,9 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.textBrowser.clear()
 
-        progress = QtGui.QProgressDialog("Sto leggendo le immagini...",
-                                         "Annulla", 0, numItems)
+        progress = QtGui.QProgressDialog(self.tr("Reading images..."),
+                                         self.tr("Cancel"), 0, numItems)
+        progress.setWindowTitle(self.tr("Processing images..."))
         progress.setWindowModality(QtCore.Qt.WindowModal)
         progress.setMinimumDuration(0)
         progress.setValue(0)
