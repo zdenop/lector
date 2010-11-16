@@ -264,12 +264,16 @@ class QOcrWidget(QtGui.QGraphicsView):
             pos = item.scenePos()
             
             box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
-            filename = "/tmp/out.%d.tif" % i
+            filename = "/tmp/out.%d.png" % i
 
             region = self.scene().im.crop(box)
             
             if item.type == 1:
-                region.save(filename)
+                ## Improve quality of text for tesseract
+                ## TODO: put it as option for OCR because of longer duration
+                nx, ny = rect.width(), rect.height()
+                region = region.resize((int(nx*3), int(ny*3)), Image.BICUBIC).convert('L') 
+                region.save(filename, dpi=(600, 600))
 
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
                                                               self.language)
