@@ -250,15 +250,20 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         self.textBrowser.clear()
 
-        progress = QtGui.QProgressDialog(self.tr("Reading images..."),
-                                         self.tr("Cancel"), 0, numItems)
+        progress = QtGui.QProgressDialog(self.tr("Processing images..."),
+                                         self.tr("Abort"), 0, numItems)
         progress.setWindowTitle(self.tr("Processing images..."))
         progress.setWindowModality(QtCore.Qt.WindowModal)
         progress.setMinimumDuration(0)
         progress.setValue(0)
+        progress.setAutoClose(True)
+        progress.setAutoReset(True)
         progress.forceShow()
 
         for i, item in enumerate(aItems):
+            if (progress.wasCanceled()):
+                break;
+                
             progress.setValue(i)
             rect = item.rect()
             pos = item.scenePos()
@@ -287,9 +292,6 @@ class QOcrWidget(QtGui.QGraphicsView):
 
                 s = "<img src='%s'>" % filename
                 self.textBrowser.append(s)
-
-            if (progress.wasCanceled()):
-                break;
 
         progress.setValue(numItems)
 
