@@ -1,18 +1,21 @@
 <RCC>
-    <qresource prefix="/icons" >
-        <file>icons/exit.png</file>
-        <file>icons/fileopen.png</file>
-        <file>icons/filesave.png</file>
-        <file>icons/player_play.png</file>
-        <file>icons/rotate.png</file>
-        <file>icons/rotate_ccw.png</file>
-        <file>icons/rotate_cw.png</file>
-        <file>icons/viewmag+.png</file>
-        <file>icons/viewmag-.png</file>
-        <file>icons/scanner.png</file>
-    </qresource>
-    <qresource prefix="/translations" >
-        <file>ts/lector_it_IT.qm</file>
-        <file>ts/qt_it_IT.qm</file>
-    </qresource>
+  <qresource prefix="/icons">
+    <file>icons/L.png</file>
+    <file>icons/exit.png</file>
+    <file>icons/fileopen.png</file>
+    <file>icons/filesave.png</file>
+    <file>icons/player_play.png</file>
+    <file>icons/rotate.png</file>
+    <file>icons/rotate_ccw.png</file>
+    <file>icons/rotate_cw.png</file>
+    <file>icons/viewmag+.png</file>
+    <file>icons/viewmag-.png</file>
+    <file>icons/scanner.png</file>
+  </qresource>
+  <qresource prefix="/translations">
+    <file>ts/lector_de_DE.ts</file>
+    <file>ts/lector_sk_SK.ts</file>
+    <file>ts/lector_it_IT.qm</file>
+    <file>ts/qt_it_IT.qm</file>
+  </qresource>
 </RCC>

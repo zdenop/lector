@@ -3,6 +3,7 @@
 """ Lector: lector.py
 
     Copyright (C) 2008-2010 Davide Setti
+    Website: http://code.google.com/p/lector
 
     This program is released under the GNU GPLv2
 """
@@ -10,10 +11,11 @@
 ## System
 import  sys
 import  os
-from    PyQt4.QtCore  import SIGNAL, QObject, QSettings, QVariant, QPoint, \
-        QSize, QString, QTime, qsrand, pyqtSignature, QLocale, QTranslator
+from    PyQt4.QtCore  import SIGNAL, QObject, QSettings, QVariant, \
+        QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
+        QTranslator
 from    PyQt4.QtGui   import QMainWindow, QRadioButton, QFileDialog, \
-            QMessageBox, QApplication
+        QMessageBox, QApplication, QComboBox
 from    subprocess    import Popen, PIPE
 from    glob          import glob
 
@@ -67,6 +69,7 @@ class Window(QMainWindow):
 
         langdata = glob(pTess + '*.' + langdata_ext)
         languages = [os.path.basename(uc).rsplit('.', 1)[0] for uc in langdata]
+        languages.sort()
 
         languages_ext = {
             'bul': self.tr('Bulgarian'),
@@ -107,7 +110,6 @@ class Window(QMainWindow):
             'ukr': self.tr('Ukrainian'),
             'vie': self.tr('Vietnamese')
             }
-        self.rbtn_languages = {}
 
         for lang in languages:
             try:
@@ -115,23 +117,20 @@ class Window(QMainWindow):
             except KeyError:
                 continue
 
-            rbtn = QRadioButton(self.ui.groupBox_language)
-            rbtn.setObjectName("rbtn_%s" % lang)
-            rbtn.setText(lang_ext)
-            
             ##TODO:change this layout to a more human name
-            self.ui.vboxlayout2.addWidget(rbtn)
-
-            QObject.connect(rbtn, SIGNAL('clicked()'), self.changeLanguage)
-
-            self.rbtn_languages[lang] = rbtn
+            self.ui.rbtn_lang_select.addItem(lang_ext, QVariant(lang))
+            QObject.connect(self.ui.rbtn_lang_select,
+                SIGNAL('currentIndexChanged(int)'), self.changeLanguage)
 
         #disable unusable actions until a file has been opened
         self.enableActions(False)
 
         ## load saved settings
         self.readSettings()
+        self.check_scanner_env()
 
+
+    def check_scanner_env(self):
         ##SANE
         try:
             import  sane
@@ -157,7 +156,7 @@ class Window(QMainWindow):
                 self.ui.actionScan.setEnabled(False)
         except:
             self.ui.actionScan.setEnabled(False)
-        
+
 
     def on_scannedImage(self):
         im = self.thread.im
@@ -169,13 +168,14 @@ class Window(QMainWindow):
     def on_actionOpen_activated(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
                 self.tr("Open image"), self.curDir,
-                self.tr("Images (*.png *.xpm *.jpg)")
+                self.tr("Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)")
             ))
         if not fn: return
 
         self.ocrWidget.filename = fn
         self.curDir = os.path.dirname(fn)
         self.ocrWidget.cambiaImmagine()
+        self.setWindowTitle("Lector: " + fn)
 
         self.enableActions(True)
 
@@ -198,8 +198,8 @@ class Window(QMainWindow):
         ##TODO: check thread end before the submission of a new task
         #self.thread.wait()
 
-    def changeLanguage(self):
-        lang = self.sender().objectName()[5:]
+    def changeLanguage(self, row):
+        lang = self.sender().itemData(row).toString()
         self.ocrWidget.language = lang
 
 
@@ -223,7 +223,8 @@ class Window(QMainWindow):
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
         try:
-            self.rbtn_languages[lang].setChecked(True)
+            currentIndex=self.ui.rbtn_lang_select.findData(lang)
+            self.ui.rbtn_lang_select.setCurrentIndex(currentIndex)
             self.ocrWidget.language = lang
         except KeyError:
             pass
@@ -234,7 +235,6 @@ class Window(QMainWindow):
         #        ).toSize()
         #self.ui.textBrowser.resize(size)
         #self.ui.textBrowser.move(pos)
-
 
     def writeSettings(self):
         settings = QSettings("Davide Setti", "Lector")
@@ -295,11 +295,23 @@ class Window(QMainWindow):
         #self.textBrowser.saveAs(fn)
 
 
+    @pyqtSignature('')
+    def on_actionAbout_Lector_activated(self):
+        QMessageBox.about(self, self.tr("About Lector"), self.tr(
+          "<p>The <b>Lector</b> is a graphical ocr solution for GNU/"
+          "Linux based on Python, Qt4 and tessaract OCR.</p><p></p>"
+          "<p><b>Author:</b> Davide Setti</p><p></p>"
+          "<p><b>Contributors:</b> chopinX04, filip.dominec, zdposter</p>"
+          "<p><b>Web site:</b> http://code.google.com/p/lector</p>"
+          "<p><b>Source code:</b> http://code.google.com/p/lector/source/checkout</p>"))
+
+
 ## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
+    ## TODO: first check for settings. If they do not exits init them!
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
     if lecTranslator.load("lector_" + locale, 'ts'):

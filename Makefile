@@ -9,8 +9,7 @@ resources:
 res: resources
 
 translation:
-	lrelease-qt4 ts/qt_it_IT.ts
-	lrelease-qt4 lector.pro
+	lrelease lector.pro
 
 up_translation:
 	pylupdate4 lector.pro
