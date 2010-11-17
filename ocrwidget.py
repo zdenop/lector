@@ -41,6 +41,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scene().isModified = False
         self.bResizing = False
 
+
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
 
@@ -55,21 +56,27 @@ class QOcrWidget(QtGui.QGraphicsView):
 
             if self.resizingEdge & 1: #bit mask: top is moving
                 #max ensures that y >= 0
-                newY = max(0, self.resizingAreaPos.y() + sp.y() - self.resizingStartingPos.y())
-                newHeight = self.resizingAreaRect.height() + self.resizingAreaPos.y() - newY
+                newY = max(0, self.resizingAreaPos.y() + sp.y() - \
+                            self.resizingStartingPos.y())
+                newHeight = self.resizingAreaRect.height() + \
+                            self.resizingAreaPos.y() - newY
                 
             elif self.resizingEdge & 2: #bit mask: bottom is moving
-                newHeight = self.resizingAreaRect.height() + sp.y() - self.resizingStartingPos.y()
+                newHeight = self.resizingAreaRect.height() + sp.y() - \
+                            self.resizingStartingPos.y()
                 
                 #force area to be inside the scene
                 if newY + newHeight > self.scene().height():
                     newHeight = self.scene().height() - newY
 
             if self.resizingEdge & 4: #bit mask: right is moving
-                newX = max(0, self.resizingAreaPos.x() + sp.x() - self.resizingStartingPos.x())
-                newWidth = self.resizingAreaRect.width() + self.resizingAreaPos.x() - newX
+                newX = max(0, self.resizingAreaPos.x() + sp.x() - \
+                            self.resizingStartingPos.x())
+                newWidth = self.resizingAreaRect.width() + \
+                            self.resizingAreaPos.x() - newX
             elif self.resizingEdge & 8: #bit mask: right is moving
-                newWidth = self.resizingAreaRect.width() + sp.x() - self.resizingStartingPos.x() 
+                newWidth = self.resizingAreaRect.width() + sp.x() - \
+                            self.resizingStartingPos.x()
                 
                 #force area to be inside the scene
                 if newX + newWidth > self.scene().width():
@@ -120,8 +127,9 @@ class QOcrWidget(QtGui.QGraphicsView):
         edge = ret % 100
         iArea = ret / 100 - 1
 
-        # resizing the area if it exists
-        if edge:
+        ## TODO: put modifier to config
+        # resizing/moving the area if it exists
+        if (edge and event.modifiers() == QtCore.Qt.NoModifier):
             self.bResizing = True
             self.resizingEdge = edge
             self.resizingArea = self.scene().areas[iArea]
@@ -129,8 +137,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-        # creation of a new area 
-        elif iArea == -1:
+        # creation of a new area if CTRL is pressed 
+        elif (iArea == -1 and event.modifiers() == QtCore.Qt.ControlModifier):
             size = QtCore.QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
@@ -146,6 +154,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         QtGui.QGraphicsView.mousePressEvent(self,event)
 
+
     def mouseReleaseEvent(self, event):
         if self.bResizing: ## stop resizing
             self.bResizing = False
@@ -159,6 +168,17 @@ class QOcrWidget(QtGui.QGraphicsView):
                 True)
 
         QtGui.QGraphicsView.mouseReleaseEvent(self,event)
+
+
+    def wheelEvent(self, event):
+        '''Zoom In/Out with CTRL + mouse wheel'''
+        delta = event.delta()
+        if (event.modifiers() == QtCore.Qt.ControlModifier and delta > 0):
+            factor = 1.41 ** (event.delta() / 240.0)
+            self.scale(factor, factor)
+        elif (event.modifiers() == QtCore.Qt.ControlModifier and delta < 0):
+            factor = 1.41 ** (event.delta() / 240.0)
+            self.scale(factor,  factor)
 
 
     def cambiaImmagine(self):
@@ -201,8 +221,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.scene().setSize()
         self.scene().generateQtImage()
         self.resetCachedContent()
-        
-        
+
+
     def rotateLeft(self):
         self.scene().im = self.scene().im.rotate(90)
 
@@ -268,7 +288,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             rect = item.rect()
             pos = item.scenePos()
             
-            box = (int(pos.x()),int(pos.y()),int(rect.width()+pos.x()),int(rect.height()+pos.y()))
+            box = (int(pos.x()), int(pos.y()), int(rect.width() + pos.x()), \
+                    int(rect.height() + pos.y()))
             filename = "/tmp/out.%d.png" % i
 
             region = self.scene().im.crop(box)
@@ -277,7 +298,8 @@ class QOcrWidget(QtGui.QGraphicsView):
                 ## Improve quality of text for tesseract
                 ## TODO: put it as option for OCR because of longer duration
                 nx, ny = rect.width(), rect.height()
-                region = region.resize((int(nx*3), int(ny*3)), Image.BICUBIC).convert('L') 
+                region = region.resize((int(nx*3), int(ny*3)), \
+                            Image.BICUBIC).convert('L') 
                 region.save(filename, dpi=(600, 600))
 
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
@@ -295,6 +317,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         progress.setValue(numItems)
 
+
     def keyReleaseEvent(self, event):
         if event.key() == QtCore.Qt.Key_Delete:
             item = self.scene().focusItem()
@@ -304,4 +327,3 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         QtGui.QGraphicsView.keyReleaseEvent(self, event)
 
-       
