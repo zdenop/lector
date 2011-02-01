@@ -2,12 +2,11 @@
 
 """ Lector: ocrwidget.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
 
-import sys
 import Image
 import os
 from PyQt4 import QtCore, QtGui
@@ -129,7 +128,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         ## TODO: put modifier to config
         # resizing/moving the area if it exists
-        if (edge and event.modifiers() == QtCore.Qt.NoModifier):
+        if edge and event.modifiers() == QtCore.Qt.NoModifier:
             self.bResizing = True
             self.resizingEdge = edge
             self.resizingArea = self.scene().areas[iArea]
@@ -138,7 +137,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
         # creation of a new area if CTRL is pressed 
-        elif (iArea == -1 and event.modifiers() == QtCore.Qt.ControlModifier):
+        elif iArea == -1 and event.modifiers() == QtCore.Qt.ControlModifier:
             size = QtCore.QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
@@ -195,12 +194,13 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def prepareDimensions(self):
         #set scene size and view scale
-        self.scene().setSize()
+        scene = self.scene()
+        scene.setSize()
 
         vw = float(self.width())
         vh = float(self.height())
-        iw = float(self.scene().im.size[0])
-        ih = float(self.scene().im.size[1])
+        iw = float(scene.im.size[0])
+        ih = float(scene.im.size[1])
         ratio = min (vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
@@ -210,58 +210,48 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaTextSize = 10 / ratio
 
         #show image
-        self.scene().generateQtImage()
+        scene.generateQtImage()
         self.resetCachedContent()
-        self.scene().isModified = False
+        scene.isModified = False
 
+
+    def rotate(self, angle):
+        scene = self.scene()
+        scene.im = scene.im.rotate(angle)
+
+        scene.setSize()
+        scene.generateQtImage()
+        self.resetCachedContent()
 
     def rotateRight(self):
-        self.scene().im = self.scene().im.rotate(-90)
-
-        self.scene().setSize()
-        self.scene().generateQtImage()
-        self.resetCachedContent()
+        self.rotate(-90)
 
 
     def rotateLeft(self):
-        self.scene().im = self.scene().im.rotate(90)
-
-        self.scene().setSize()
-        self.scene().generateQtImage()
-        self.resetCachedContent()
+        self.rotate(90)
         
 
     def rotateFull(self):
-        self.scene().im = self.scene().im.rotate(180)
+        self.rotate(180)
 
-        self.scene().setSize()
-        self.scene().generateQtImage()
+
+    def zoom(self, factor):
+        inv_factor = 1./factor
+        self.scale(factor, factor)
+        OcrArea.resizeBorder *= inv_factor
+        self.areaBorder *= inv_factor
+        self.areaTextSize *= inv_factor
+
+        self.scene().updateAreas(self.areaBorder, self.areaTextSize)
+
         self.resetCachedContent()
-
+        self.repaint()
 
     def zoomIn(self):
-        self.scale(1.25, 1.25)
-        OcrArea.resizeBorder *= 0.8
-        self.areaBorder *= 0.8
-        self.areaTextSize *= 0.8
-
-        self.scene().updateAreas(self.areaBorder, self.areaTextSize)
-                
-        self.resetCachedContent()
-        self.repaint()
-
+        self.zoom(1.25)
 
     def zoomOut(self):
-        self.scale(0.8, 0.8)
-        OcrArea.resizeBorder *= 1.25
-        self.areaBorder *= 1.25
-        self.areaTextSize *= 1.25
-
-        self.scene().updateAreas(self.areaBorder, self.areaTextSize)
-
-        self.resetCachedContent()
-        self.repaint()
-
+        self.zoom(.8)
 
     def doOcr(self):
         import codecs
@@ -281,8 +271,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         progress.forceShow()
 
         for i, item in enumerate(aItems):
-            if (progress.wasCanceled()):
-                break;
+            if progress.wasCanceled():
+                break
                 
             progress.setValue(i)
             rect = item.rect()

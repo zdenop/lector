@@ -17,7 +17,6 @@ class TextWidget(QtGui.QTextBrowser):
 
         self.setReadOnly(False)
 
-
     def saveAs(self, filename):
         from os import popen
         from shutil import move

@@ -2,7 +2,7 @@
 
 """ Lector: scannerselect.py
 
-    Copyright (C) 2008-2010 Davide Setti
+    Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
@@ -14,7 +14,6 @@ from PyQt4.QtGui import QApplication as qa
 
 
 class ScannerSelect(QDialog):
-
     def __init__(self):
         QDialog.__init__(self)
 
@@ -38,8 +37,6 @@ class ScannerSelect(QDialog):
 
         self.connect(ok, SIGNAL("clicked()"), self.accept)
         self.connect(cancel, SIGNAL("clicked()"), self.reject)
-
-
 
     def getSelectedIndex(self, title, items, _):
         ## TODO: what's the last argument?
