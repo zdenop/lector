@@ -1,6 +1,6 @@
 """ Lector: scannerthread.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
@@ -10,7 +10,7 @@ from PyQt4.QtCore import QThread, SIGNAL
 ## SANE
 try:
     import sane
-except:
+except ImportError:
     print "SANE not found!"
 
 class ScannerThread(QThread):

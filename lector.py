@@ -2,7 +2,7 @@
 
 """ Lector: lector.py
 
-    Copyright (C) 2008-2010 Davide Setti
+    Copyright (C) 2011 Davide Setti
     Website: http://code.google.com/p/lector
 
     This program is released under the GNU GPLv2
@@ -61,8 +61,8 @@ class Window(QMainWindow):
         poTess = Popen('tesseract try try -l iamnottrue', stderr=PIPE,
             shell=True)
         lTess = poTess.stderr.readline()
-        langdata_ext = (lTess.split('/')).pop().strip().rsplit('.', 1)[1]
-        if os.getenv('TESSDATA_PREFIX') == None:
+        langdata_ext = lTess.split('/').pop().strip().rsplit('.', 1)[1]
+        if os.getenv('TESSDATA_PREFIX') is None:
             pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
         else:
             pTess = os.getenv('TESSDATA_PREFIX') + "tessdata/"
@@ -122,7 +122,7 @@ class Window(QMainWindow):
             QObject.connect(self.ui.rbtn_lang_select,
                 SIGNAL('currentIndexChanged(int)'), self.changeLanguage)
 
-        #disable unusable actions until a file has been opened
+        #disable useless actions until a file has been opened
         self.enableActions(False)
 
         ## load saved settings
@@ -137,7 +137,7 @@ class Window(QMainWindow):
             sane.init()
             sane_list = sane.get_devices()
 
-            if sane.get_devices():  # sane found scanner
+            if sane_list:  # sane found scanner
                 #TODO: if one scanner - automatically select
                 scanner_desc_list = [scanner[2] for scanner in sane_list]
 
@@ -145,13 +145,13 @@ class Window(QMainWindow):
                 idx = ss.getSelectedIndex(self.tr('Select scanner'),
                                           scanner_desc_list, 0)
                 try:
-                    self.selectedScanner = sane.get_devices()[idx][0]
+                    self.selectedScanner = sane_list[idx][0]
                     self.thread = ScannerThread(self, self.selectedScanner)
                     QObject.connect(self.thread, SIGNAL("scannedImage()"),
                                     self.on_scannedImage)
                 except KeyError:
                     self.ui.actionScan.setEnabled(False)
-            else: # sane found no scaner - disable scanning; 
+            else: # sane found no scanner - disable scanning;
                 print "No scanner found!"
                 self.ui.actionScan.setEnabled(False)
         except:
@@ -324,5 +324,4 @@ if __name__ == "__main__":
     window = Window()
 
     window.show()
-
     sys.exit(app.exec_())

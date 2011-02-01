@@ -12,7 +12,7 @@ from ocrarea import OcrArea
 
 
 class QOcrScene(QtGui.QGraphicsScene):
-    def __init__(self, parent, lang, areaType):
+    def __init__(self, _, lang, areaType):
         QtGui.QGraphicsScene.__init__(self)
 
         self.language = lang
@@ -38,17 +38,18 @@ class QOcrScene(QtGui.QGraphicsScene):
         return item
 
     def removeArea(self, item):
-        if item:
-            idx = self.areas.index(item)
+        if item is None:
+            return
+        
+        idx = self.areas.index(item)
 
-            self.areas.remove(item)
-            self.removeItem(item)
-            
-            for i, item in enumerate(self.areas[idx:]):
-                item.setIndex(i+idx-1)
+        self.areas.remove(item)
+        self.removeItem(item)
 
+        for i, item in enumerate(self.areas[idx:]):
+            item.setIndex(i+idx-1)
 
-    def updateAreas(self, areaBorder, areaTextSize):    
+    def updateAreas(self, areaBorder, areaTextSize):
         def resizeBorderAndText(item):
             # resize border
             pen = item.pen()
@@ -62,8 +63,7 @@ class QOcrScene(QtGui.QGraphicsScene):
     def areaAt(self, pos):
         edge = 0
         onArea = 0
-        for i in range(len(self.areas)):
-            item = self.areas[i]
+        for i, item in enumerate(self.areas):
             r = item.rect()
 
             # this is not very clean... it checks that the mouse is over an
@@ -104,7 +104,7 @@ class QOcrScene(QtGui.QGraphicsScene):
                 break
 
         if not edge:
-            edge = (onArea) * 100
+            edge = onArea * 100
 
         return edge
 
@@ -114,11 +114,10 @@ class QOcrScene(QtGui.QGraphicsScene):
     def getType(self):
         area = self.sender()
 
-        if (area.type == 1): 
+        if area.type == 1:
             self.rbtn_areato_text.setChecked(True)
-        elif (area.type == 2): 
+        elif area.type == 2:
             self.rbtn_areato_image.setChecked(True)
-
 
     def generateQtImage(self):
         from utils import pilImage2Qt

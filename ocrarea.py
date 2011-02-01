@@ -2,7 +2,7 @@
 
 """ Lector: ocrarea.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
@@ -13,7 +13,6 @@ from PyQt4.QtCore import pyqtSignature
 
 
 class OcrArea(QtGui.QGraphicsRectItem):
-    
     ## static data
     resizeborder = .0
     
@@ -46,14 +45,12 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.newEvent = QtCore.QObject()
 
     def setIndex(self, idx):
-        self.text.setPlainText("%d" % idx)
-
+        self.text.setPlainText(str(idx))
 
     def setTextSize(self, size):
         font = QtGui.QFont()
         font.setPointSizeF(size)
         self.text.setFont(font)
-
 
     def contextMenuEvent(self, event):
         menu = QtGui.QMenu()
@@ -87,19 +84,17 @@ class OcrArea(QtGui.QGraphicsRectItem):
     # or from text type to image
     @pyqtSignature('')
     def on_rbtn_areato_text_clicked(self):
-        if (self.type == 2):
+        if self.type == 2:
             self.type = 1
     
     @pyqtSignature('')
     def on_rbtn_areato_image_clicked(self):
-        if (self.type == 1):
+        if self.type == 1:
             self.type = 2
 
-
-    # when the area is selected the signal "isClicked()"
-    # is arrized
+    # when the area is selected the signal "isClicked()" is raised
     def mousePressEvent(self, event):
-        self.newEvent.emit(QtCore.SIGNAL("siClicked()"))
+        self.newEvent.emit(QtCore.SIGNAL("isClicked()"))
         QtGui.QGraphicsRectItem.mousePressEvent(self, event)
  
     ## type property
