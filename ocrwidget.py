@@ -12,17 +12,14 @@ import os
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
 from ocrarea import OcrArea
-from qocrscene import QOcrScene
-#import sys
-#sys.path.append('/usr/lib/ooo-2.0/program')
-#import uno
+from ocrscene import OcrScene
 
 
 class QOcrWidget(QtGui.QGraphicsView):
     def __init__(self, lang, areaType, statusBar):
         QtGui.QGraphicsView.__init__(self)
 
-        self.ocrscene = QOcrScene(self, lang, areaType)
+        self.ocrscene = OcrScene(self, lang, areaType)
         self.setScene(self.ocrscene)
 
         self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
@@ -39,7 +36,6 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.setCursor(QtCore.Qt.CrossCursor)
         self.scene().isModified = False
         self.bResizing = False
-
 
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
@@ -126,9 +122,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         edge = ret % 100
         iArea = ret / 100 - 1
 
-        ## TODO: put modifier to config
         # resizing/moving the area if it exists
-        if edge and event.modifiers() == QtCore.Qt.NoModifier:
+        if edge:
             self.bResizing = True
             self.resizingEdge = edge
             self.resizingArea = self.scene().areas[iArea]
@@ -136,8 +131,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-        # creation of a new area if CTRL is pressed 
-        elif iArea == -1 and event.modifiers() == QtCore.Qt.ControlModifier:
+        # creation of a new area
+        elif iArea == -1:
             size = QtCore.QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
@@ -226,14 +221,11 @@ class QOcrWidget(QtGui.QGraphicsView):
     def rotateRight(self):
         self.rotate(-90)
 
-
     def rotateLeft(self):
         self.rotate(90)
         
-
     def rotateFull(self):
         self.rotate(180)
-
 
     def zoom(self, factor):
         inv_factor = 1./factor

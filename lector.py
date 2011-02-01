@@ -56,6 +56,8 @@ class Window(QMainWindow):
             SIGNAL("activated()"), self.ocrWidget.zoomOut)
         QObject.connect(self.ui.actionOcr,
             SIGNAL("activated()"), self.ocrWidget.doOcr)
+        QObject.connect(self.ocrWidget.scene(),
+            SIGNAL("changedSelectedAreaType(int)"), self.changedSelectedAreaType)
 
         ## TODO: check if tesseract is installed
         poTess = Popen('tesseract try try -l iamnottrue', stderr=PIPE,
@@ -212,6 +214,17 @@ class Window(QMainWindow):
     def on_rbtn_image_clicked(self):
         self.ocrWidget.areaType = 2
 
+    # clicking the change box type events
+    # from image type to text
+    # or from text type to image
+    @pyqtSignature('')
+    def on_rbtn_areato_text_clicked(self):
+        self.ocrWidget.scene().changeSelectedAreaType(1)
+
+    @pyqtSignature('')
+    def on_rbtn_areato_image_clicked(self):
+        self.ocrWidget.scene().changeSelectedAreaType(2)
+
     def readSettings(self):
         settings = QSettings("Davide Setti", "Lector")
         pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
@@ -301,7 +314,23 @@ class Window(QMainWindow):
           "<p><b>Web site:</b> http://code.google.com/p/lector</p>"
           "<p><b>Source code:</b> http://code.google.com/p/lector/source/checkout</p>"))
 
+    def changedSelectedAreaType(self, _type):
+        if _type in (1,2):
+            self.ui.rbtn_areato_text.setCheckable(True)
+            self.ui.rbtn_areato_image.setCheckable(True)
 
+            if _type == 1:
+                self.ui.rbtn_areato_text.setChecked(True)
+            elif _type == 2:
+                self.ui.rbtn_areato_image.setChecked(True)
+        else:
+            self.ui.rbtn_areato_text.setCheckable(False)
+            self.ui.rbtn_areato_text.update()
+            self.ui.rbtn_areato_image.setCheckable(False)
+            self.ui.rbtn_areato_image.update()
+
+
+        
 ## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)

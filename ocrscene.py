@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-""" Lector: qocrscene.py
+""" Lector: ocrscene.py
 
-    Copyright (C) 2008 Davide Setti
+    Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
 """ 
@@ -11,7 +11,9 @@ from PyQt4 import QtCore, QtGui
 from ocrarea import OcrArea
 
 
-class QOcrScene(QtGui.QGraphicsScene):
+class OcrScene(QtGui.QGraphicsScene):
+    selectedAreaIdx = None
+    
     def __init__(self, _, lang, areaType):
         QtGui.QGraphicsScene.__init__(self)
 
@@ -22,17 +24,13 @@ class QOcrScene(QtGui.QGraphicsScene):
         
         self.areas = []
 
-
     def createArea(self, pos, size, type_, areaBorder, areaTextSize):
         item = OcrArea(pos, size, type_, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
 
-        # grabbing the signal isClicked() and connecting the slot getType when
-        # an area is selected
-        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"),
-                               self.getType)
-
         self.areas.append(item)
+        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"), self.changedSelection)
+        self.setFocusItem(item)
         self.isModified = True
 
         return item
@@ -45,9 +43,12 @@ class QOcrScene(QtGui.QGraphicsScene):
 
         self.areas.remove(item)
         self.removeItem(item)
+        self.selectedAreaIdx = None
 
         for i, item in enumerate(self.areas[idx:]):
             item.setIndex(i+idx-1)
+
+        self.__emitChangedSelection(0)
 
     def updateAreas(self, areaBorder, areaTextSize):
         def resizeBorderAndText(item):
@@ -84,13 +85,13 @@ class QOcrScene(QtGui.QGraphicsScene):
 
             edge = 0
 
-            if (dyt < OcrArea.resizeBorder):
+            if dyt < OcrArea.resizeBorder:
                 edge += 1
-            if (dyb < OcrArea.resizeBorder):
+            if dyb < OcrArea.resizeBorder:
                 edge += 2
-            if (dxl < OcrArea.resizeBorder):
+            if dxl < OcrArea.resizeBorder:
                 edge += 4
-            if (dxr < OcrArea.resizeBorder):
+            if dxr < OcrArea.resizeBorder:
                 edge += 8
             
             if not onArea:
@@ -107,17 +108,6 @@ class QOcrScene(QtGui.QGraphicsScene):
             edge = onArea * 100
 
         return edge
-
-    # when selecting a selected area, it's possibile to
-    # view its type in the "change area"
-    # and to change it (only with the left button)
-    def getType(self):
-        area = self.sender()
-
-        if area.type == 1:
-            self.rbtn_areato_text.setChecked(True)
-        elif area.type == 2:
-            self.rbtn_areato_image.setChecked(True)
 
     def generateQtImage(self):
         from utils import pilImage2Qt
@@ -138,9 +128,24 @@ class QOcrScene(QtGui.QGraphicsScene):
         painter.drawImage(sceneRect, self.ocrImage)
         #self.statusBar.showMessage(self.tr("Disegno bag"))
 
-    
     def setSize(self):
         iw = float(self.im.size[0])
         ih = float(self.im.size[1])
         self.setSceneRect(0, 0, int(iw), int(ih))
 
+    # when selecting a selected area, it's possibile to
+    # view its type in the "change area"
+    # and to change it (only with the left button)
+    def changedSelection(self):
+        area = self.sender().area
+        self.selectedAreaIdx = self.areas.index(area)
+        self.__emitChangedSelection(area.type)
+
+    def __emitChangedSelection(self, _type):
+        self.emit(QtCore.SIGNAL("changedSelectedAreaType(int)"), _type)
+
+    def changeSelectedAreaType(self, _type):
+        try:
+            self.areas[self.selectedAreaIdx].type = _type
+        except TypeError:
+            pass
