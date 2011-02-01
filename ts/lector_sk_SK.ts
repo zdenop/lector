@@ -470,7 +470,7 @@
     </message>
     <message>
         <location filename="lector.py" line="284"/>
-        <source>ODF document</source>
+        <source>ODT document</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
