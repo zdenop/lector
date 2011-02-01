@@ -29,7 +29,7 @@ from    scannerthread import ScannerThread
 
 class Window(QMainWindow):
     ## Override constructor
-    ## 
+    ##
     def __init__(self, parent = None):
         QMainWindow.__init__(self)
 
@@ -288,7 +288,7 @@ class Window(QMainWindow):
         self.curDir = os.path.dirname(fn)
         ## TODO: move this to the Scene?
         ## TODO: if jpeg pil converts it??
-        self.ocrWidget.im.save(fn)
+        self.ocrWidget.scene().im.save(fn)
         #self.textBrowser.saveAs(fn)
 
     @pyqtSignature('')
