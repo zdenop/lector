@@ -127,13 +127,14 @@ class Window(QMainWindow):
 
         ## load saved settings
         self.readSettings()
+
         self.check_scanner_env()
 
 
     def check_scanner_env(self):
         ##SANE
         try:
-            import  sane
+            import sane
             sane.init()
             sane_list = sane.get_devices()
 
@@ -146,11 +147,13 @@ class Window(QMainWindow):
                                           scanner_desc_list, 0)
                 try:
                     self.selectedScanner = sane_list[idx][0]
+                except KeyError:
+                    self.ui.actionScan.setEnabled(False)
+                else:
                     self.thread = ScannerThread(self, self.selectedScanner)
                     QObject.connect(self.thread, SIGNAL("scannedImage()"),
                                     self.on_scannedImage)
-                except KeyError:
-                    self.ui.actionScan.setEnabled(False)
+
             else: # sane found no scanner - disable scanning;
                 print "No scanner found!"
                 self.ui.actionScan.setEnabled(False)
@@ -191,7 +194,6 @@ class Window(QMainWindow):
                        self.ui.actionSaveImageAs,):
             action.setEnabled(enable)
 
-
     @pyqtSignature('')
     def on_actionScan_activated(self):
         self.thread.run()
@@ -201,7 +203,6 @@ class Window(QMainWindow):
     def changeLanguage(self, row):
         lang = self.sender().itemData(row).toString()
         self.ocrWidget.language = lang
-
 
     @pyqtSignature('')
     def on_rbtn_text_clicked(self):
@@ -219,7 +220,7 @@ class Window(QMainWindow):
                                      ).toString()
         self.resize(size)
         self.move(pos)
-        
+
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
         try:
@@ -249,7 +250,6 @@ class Window(QMainWindow):
         ## save language
         settings.setValue("rbtn/lang", QVariant(self.ocrWidget.language))
 
-
     def closeEvent(self, event):
         if (not self.ocrWidget.scene().isModified) or self.areYouSureToExit():
             self.writeSettings()
@@ -257,7 +257,6 @@ class Window(QMainWindow):
         else:
             event.ignore()
 
-    
     def areYouSureToExit(self):
         ret = QMessageBox.warning(self, "Lector",
                                   self.tr("Are you sure you want to exit?"),
@@ -266,7 +265,6 @@ class Window(QMainWindow):
             return False
         elif ret == QMessageBox.Yes:
             return True
-
 
     @pyqtSignature('')
     def on_actionSaveDocumentAs_activated(self):
@@ -279,7 +277,6 @@ class Window(QMainWindow):
         self.curDir = os.path.dirname(fn)
         self.textBrowser.saveAs(fn)
 
-    
     @pyqtSignature('')
     def on_actionSaveImageAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
@@ -293,7 +290,6 @@ class Window(QMainWindow):
         ## TODO: if jpeg pil converts it??
         self.ocrWidget.im.save(fn)
         #self.textBrowser.saveAs(fn)
-
 
     @pyqtSignature('')
     def on_actionAbout_Lector_activated(self):
@@ -311,7 +307,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
-    ## TODO: first check for settings. If they do not exits init them!
+    ## TODO: check for settings first. If they do not exists initialize them!
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
     if lecTranslator.load("lector_" + locale, 'ts'):
