@@ -15,18 +15,18 @@ from PyQt4.QtCore import pyqtSignature
 class OcrArea(QtGui.QGraphicsRectItem):
     ## static data
     resizeborder = .0
-    
+
     def __init__(self, pos, size, type_, parent = None, scene = None,
                  areaBorder = 2, index = 0, textSize = 50):
         QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(),
                                          size.height(), parent, scene)
         self.setPos(pos)
-        
+
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
         self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
             QtGui.QGraphicsItem.ItemIsFocusable |
             QtGui.QGraphicsItem.ItemIsSelectable)
-        
+
         ## set index label
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)
         self.setTextSize(textSize)
@@ -43,6 +43,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
         # needed for the emission of a signal
         self.newEvent = QtCore.QObject()
+        self.newEvent.area = self
 
     def setIndex(self, idx):
         self.text.setPlainText(str(idx))
@@ -79,33 +80,20 @@ class OcrArea(QtGui.QGraphicsRectItem):
         elif selectedAction == graphicsAction:
             self.type = 2
 
-    # clicking the change box type events
-    # from image type to text
-    # or from text type to image
-    @pyqtSignature('')
-    def on_rbtn_areato_text_clicked(self):
-        if self.type == 2:
-            self.type = 1
-    
-    @pyqtSignature('')
-    def on_rbtn_areato_image_clicked(self):
-        if self.type == 1:
-            self.type = 2
-
     # when the area is selected the signal "isClicked()" is raised
     def mousePressEvent(self, event):
         self.newEvent.emit(QtCore.SIGNAL("isClicked()"))
         QtGui.QGraphicsRectItem.mousePressEvent(self, event)
- 
+
     ## type property
     def _setType(self, type_):
         self.__type = type_
-        
+
         if self.__type == 1:
             self.color = QtCore.Qt.darkGreen
         else: ## TODO: else -> elif ... + else raise exception
             self.color = QtCore.Qt.blue
-        
+
         self.text.setDefaultTextColor(self.color)
 
         pen = self.pen()
