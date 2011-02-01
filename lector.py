@@ -283,7 +283,7 @@ class Window(QMainWindow):
     def on_actionSaveDocumentAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                         self.tr("Save document"), self.curDir,
-                                        self.tr("ODF document") + " (*.odf)"
+                                        self.tr("ODT document") + " (*.odt)"
                                         ))
         if not fn: return
 
