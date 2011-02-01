@@ -25,7 +25,7 @@
     <message>
         <location filename="ui_lector.ui" line="58"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aiuto</translation>
     </message>
     <message>
         <location filename="ui_lector.ui" line="71"/>
@@ -158,85 +158,10 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="370"/>
+        <location filename="ui_lector.ui" line="375"/>
         <source>About Lector...</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>PPDOptionsModel</name>
-</context>
-<context>
-    <name>Q3Accel</name>
-</context>
-<context>
-    <name>Q3DataTable</name>
-</context>
-<context>
-    <name>Q3FileDialog</name>
-</context>
-<context>
-    <name>Q3LocalFs</name>
-</context>
-<context>
-    <name>Q3MainWindow</name>
-</context>
-<context>
-    <name>Q3NetworkProtocol</name>
-</context>
-<context>
-    <name>Q3ProgressDialog</name>
-</context>
-<context>
-    <name>Q3TabDialog</name>
-</context>
-<context>
-    <name>Q3TextEdit</name>
-</context>
-<context>
-    <name>Q3TitleBar</name>
-</context>
-<context>
-    <name>Q3ToolBar</name>
-</context>
-<context>
-    <name>Q3UrlOperator</name>
-</context>
-<context>
-    <name>Q3Wizard</name>
-</context>
-<context>
-    <name>QAbstractSocket</name>
-</context>
-<context>
-    <name>QAbstractSpinBox</name>
-</context>
-<context>
-    <name>QApplication</name>
-</context>
-<context>
-    <name>QAxSelect</name>
-</context>
-<context>
-    <name>QCheckBox</name>
-</context>
-<context>
-    <name>QColorDialog</name>
-</context>
-<context>
-    <name>QComboBox</name>
-</context>
-<context>
-    <name>QDB2Driver</name>
-</context>
-<context>
-    <name>QDB2Result</name>
-</context>
-<context>
-    <name>QDateTimeEdit</name>
-</context>
-<context>
-    <name>QDial</name>
 </context>
 <context>
     <name>QDialog</name>
@@ -643,33 +568,6 @@ Vuoi cancellarlo lo stesso?</translation>
     </message>
 </context>
 <context>
-    <name>QFileSystemModel</name>
-</context>
-<context>
-    <name>QFontDialog</name>
-</context>
-<context>
-    <name>QFtp</name>
-</context>
-<context>
-    <name>QHostInfo</name>
-</context>
-<context>
-    <name>QHostInfoAgent</name>
-</context>
-<context>
-    <name>QHttp</name>
-</context>
-<context>
-    <name>QHttpSocketEngine</name>
-</context>
-<context>
-    <name>QIBaseDriver</name>
-</context>
-<context>
-    <name>QIBaseResult</name>
-</context>
-<context>
     <name>QIODevice</name>
     <message>
         <location filename="../src/corelib/global/qglobal.cpp" line="1982"/>
@@ -696,12 +594,6 @@ Vuoi cancellarlo lo stesso?</translation>
         <source>Unknown error</source>
         <translation type="obsolete">Errore sconosciuto</translation>
     </message>
-</context>
-<context>
-    <name>QInputContext</name>
-</context>
-<context>
-    <name>QLibrary</name>
 </context>
 <context>
     <name>QLineEdit</name>
@@ -740,15 +632,6 @@ Vuoi cancellarlo lo stesso?</translation>
         <source>Select All</source>
         <translation type="obsolete">Seleziona tutto</translation>
     </message>
-</context>
-<context>
-    <name>QMYSQLDriver</name>
-</context>
-<context>
-    <name>QMYSQLResult</name>
-</context>
-<context>
-    <name>QMdiSubWindow</name>
 </context>
 <context>
     <name>QMenu</name>
@@ -881,27 +764,6 @@ Vuoi cancellarlo lo stesso?</translation>
     </message>
 </context>
 <context>
-    <name>QMultiInputContext</name>
-</context>
-<context>
-    <name>QMultiInputContextPlugin</name>
-</context>
-<context>
-    <name>QNativeSocketEngine</name>
-</context>
-<context>
-    <name>QOCIDriver</name>
-</context>
-<context>
-    <name>QOCIResult</name>
-</context>
-<context>
-    <name>QODBCDriver</name>
-</context>
-<context>
-    <name>QODBCResult</name>
-</context>
-<context>
     <name>QObject</name>
     <message>
         <location filename="../src/gui/util/qdesktopservices_mac.cpp" line="147"/>
@@ -912,24 +774,15 @@ Vuoi cancellarlo lo stesso?</translation>
 <context>
     <name>QOcrWidget</name>
     <message>
-        <location filename="ocrwidget.py" line="255"/>
+        <location filename="ocrwidget.py" line="257"/>
         <source>Processing images...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="253"/>
+        <location filename="ocrwidget.py" line="255"/>
         <source>Abort</source>
         <translation type="unfinished">Termina</translation>
     </message>
-</context>
-<context>
-    <name>QPSQLDriver</name>
-</context>
-<context>
-    <name>QPSQLResult</name>
-</context>
-<context>
-    <name>QPluginLoader</name>
 </context>
 <context>
     <name>QPrintDialog</name>
@@ -1304,9 +1157,6 @@ Seleziona un file differente.</translation>
     </message>
 </context>
 <context>
-    <name>QProgressDialog</name>
-</context>
-<context>
     <name>QPushButton</name>
     <message>
         <location filename="../src/plugins/accessible/widgets/simplewidgets.cpp" line="80"/>
@@ -1323,33 +1173,6 @@ Seleziona un file differente.</translation>
     </message>
 </context>
 <context>
-    <name>QRegExp</name>
-</context>
-<context>
-    <name>QSQLite2Driver</name>
-</context>
-<context>
-    <name>QSQLite2Result</name>
-</context>
-<context>
-    <name>QSQLiteDriver</name>
-</context>
-<context>
-    <name>QSQLiteResult</name>
-</context>
-<context>
-    <name>QScrollBar</name>
-</context>
-<context>
-    <name>QShortcut</name>
-</context>
-<context>
-    <name>QSlider</name>
-</context>
-<context>
-    <name>QSocks5SocketEngine</name>
-</context>
-<context>
     <name>QSpinBox</name>
     <message>
         <location filename="../src/plugins/accessible/widgets/rangecontrols.cpp" line="120"/>
@@ -1361,42 +1184,6 @@ Seleziona un file differente.</translation>
         <source>Less</source>
         <translation type="obsolete">Meno</translation>
     </message>
-</context>
-<context>
-    <name>QSql</name>
-</context>
-<context>
-    <name>QSslSocket</name>
-</context>
-<context>
-    <name>QTDSDriver</name>
-</context>
-<context>
-    <name>QTabBar</name>
-</context>
-<context>
-    <name>QTcpServer</name>
-</context>
-<context>
-    <name>QTextControl</name>
-</context>
-<context>
-    <name>QToolButton</name>
-</context>
-<context>
-    <name>QUdpSocket</name>
-</context>
-<context>
-    <name>QUndoGroup</name>
-</context>
-<context>
-    <name>QUndoModel</name>
-</context>
-<context>
-    <name>QUndoStack</name>
-</context>
-<context>
-    <name>QUnicodeControlCharacterMenu</name>
 </context>
 <context>
     <name>QWhatsThisAction</name>
@@ -1415,18 +1202,6 @@ Seleziona un file differente.</translation>
     </message>
 </context>
 <context>
-    <name>QWizard</name>
-</context>
-<context>
-    <name>QWorkspace</name>
-</context>
-<context>
-    <name>QXml</name>
-</context>
-<context>
-    <name>QXmlStream</name>
-</context>
-<context>
     <name>Window</name>
     <message>
         <location filename="lector.py" line="46"/>
@@ -1434,238 +1209,238 @@ Seleziona un file differente.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="75"/>
+        <location filename="lector.py" line="77"/>
         <source>Bulgarian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="76"/>
+        <location filename="lector.py" line="78"/>
         <source>Catalan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="77"/>
+        <location filename="lector.py" line="79"/>
         <source>Czech</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="78"/>
+        <location filename="lector.py" line="80"/>
         <source>Chinese (Traditional)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="79"/>
+        <location filename="lector.py" line="81"/>
         <source>Chinese (Simplified)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="80"/>
+        <location filename="lector.py" line="82"/>
         <source>Danish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="81"/>
+        <location filename="lector.py" line="83"/>
         <source>Danish (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="82"/>
+        <location filename="lector.py" line="84"/>
         <source>Dutch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="83"/>
+        <location filename="lector.py" line="85"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="84"/>
+        <location filename="lector.py" line="86"/>
         <source>Finnish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="85"/>
+        <location filename="lector.py" line="87"/>
         <source>French</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="86"/>
+        <location filename="lector.py" line="88"/>
         <source>German</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="87"/>
+        <location filename="lector.py" line="89"/>
         <source>German (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="88"/>
+        <location filename="lector.py" line="90"/>
         <source>Greek</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="89"/>
+        <location filename="lector.py" line="91"/>
         <source>Hungarian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="90"/>
+        <location filename="lector.py" line="92"/>
         <source>Indonesian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="91"/>
+        <location filename="lector.py" line="93"/>
         <source>Italian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="92"/>
+        <location filename="lector.py" line="94"/>
         <source>Japanese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="93"/>
+        <location filename="lector.py" line="95"/>
         <source>Korean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="94"/>
+        <location filename="lector.py" line="96"/>
         <source>Latvian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="95"/>
+        <location filename="lector.py" line="97"/>
         <source>Lithuanian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="96"/>
+        <location filename="lector.py" line="98"/>
         <source>Norwegian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="97"/>
+        <location filename="lector.py" line="99"/>
         <source>Polish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="98"/>
+        <location filename="lector.py" line="100"/>
         <source>Portuguese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="99"/>
+        <location filename="lector.py" line="101"/>
         <source>Romanian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="100"/>
+        <location filename="lector.py" line="102"/>
         <source>Russian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="101"/>
+        <location filename="lector.py" line="103"/>
         <source>Slovak</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="102"/>
+        <location filename="lector.py" line="104"/>
         <source>Slovak (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="103"/>
+        <location filename="lector.py" line="105"/>
         <source>Slovenian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="104"/>
+        <location filename="lector.py" line="106"/>
         <source>Spanish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="105"/>
+        <location filename="lector.py" line="107"/>
         <source>Serbian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="106"/>
+        <location filename="lector.py" line="108"/>
         <source>Swedish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="107"/>
+        <location filename="lector.py" line="109"/>
         <source>Swedish (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="108"/>
+        <location filename="lector.py" line="110"/>
         <source>Tagalog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="109"/>
+        <location filename="lector.py" line="111"/>
         <source>Turkish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="110"/>
+        <location filename="lector.py" line="112"/>
         <source>Ukrainian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="111"/>
+        <location filename="lector.py" line="113"/>
         <source>Vietnamese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="145"/>
+        <location filename="lector.py" line="148"/>
         <source>Select scanner</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="169"/>
+        <location filename="lector.py" line="174"/>
         <source>Open image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="169"/>
+        <location filename="lector.py" line="174"/>
         <source>Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="262"/>
+        <location filename="lector.py" line="274"/>
         <source>Are you sure you want to exit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="273"/>
+        <location filename="lector.py" line="284"/>
         <source>Save document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="273"/>
-        <source>RTF document</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="lector.py" line="285"/>
+        <location filename="lector.py" line="295"/>
         <source>Save image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="285"/>
+        <location filename="lector.py" line="295"/>
         <source>PNG image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="300"/>
+        <location filename="lector.py" line="309"/>
         <source>About Lector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="300"/>
+        <location filename="lector.py" line="309"/>
         <source>&lt;p&gt;The &lt;b&gt;Lector&lt;/b&gt; is a graphical ocr solution for GNU/Linux based on Python, Qt4 and tessaract OCR.&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Author:&lt;/b&gt; Davide Setti&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributors:&lt;/b&gt; chopinX04, filip.dominec, zdposter&lt;/p&gt;&lt;p&gt;&lt;b&gt;Web site:&lt;/b&gt; http://code.google.com/p/lector&lt;/p&gt;&lt;p&gt;&lt;b&gt;Source code:&lt;/b&gt; http://code.google.com/p/lector/source/checkout&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="284"/>
+        <source>ODF document</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -173,7 +173,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui_lector.ui" line="370"/>
+        <location filename="ui_lector.ui" line="375"/>
         <source>About Lector...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -206,12 +206,12 @@
         <translation type="obsolete">Zrušiť</translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="255"/>
+        <location filename="ocrwidget.py" line="257"/>
         <source>Processing images...</source>
         <translation>Spracovanie obrázkov...</translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="253"/>
+        <location filename="ocrwidget.py" line="255"/>
         <source>Abort</source>
         <translation type="unfinished"></translation>
     </message>
@@ -224,7 +224,7 @@
         <translation>Pripravený</translation>
     </message>
     <message>
-        <location filename="lector.py" line="169"/>
+        <location filename="lector.py" line="174"/>
         <source>Open image</source>
         <translation>Otvoriť obrázok</translation>
     </message>
@@ -234,57 +234,57 @@
         <translation type="obsolete">Obrázky (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="262"/>
+        <location filename="lector.py" line="274"/>
         <source>Are you sure you want to exit?</source>
         <translation>Skutočne chcete skončiť?</translation>
     </message>
     <message>
-        <location filename="lector.py" line="273"/>
+        <location filename="lector.py" line="284"/>
         <source>Save document</source>
         <translation>Uložiť dokument</translation>
     </message>
     <message>
         <location filename="lector.py" line="273"/>
         <source>RTF document</source>
-        <translation>RTF dokument</translation>
+        <translation type="obsolete">RTF dokument</translation>
     </message>
     <message>
-        <location filename="lector.py" line="83"/>
+        <location filename="lector.py" line="85"/>
         <source>English</source>
         <translation>Anglický</translation>
     </message>
     <message>
-        <location filename="lector.py" line="91"/>
+        <location filename="lector.py" line="93"/>
         <source>Italian</source>
         <translation>Taliančina</translation>
     </message>
     <message>
-        <location filename="lector.py" line="86"/>
+        <location filename="lector.py" line="88"/>
         <source>German</source>
         <translation>Nemčina</translation>
     </message>
     <message>
-        <location filename="lector.py" line="82"/>
+        <location filename="lector.py" line="84"/>
         <source>Dutch</source>
         <translation>Holandský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="85"/>
+        <location filename="lector.py" line="87"/>
         <source>French</source>
         <translation>Francúzsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="104"/>
+        <location filename="lector.py" line="106"/>
         <source>Spanish</source>
         <translation>Španielsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="145"/>
+        <location filename="lector.py" line="148"/>
         <source>Select scanner</source>
         <translation>Výber skenera</translation>
     </message>
     <message>
-        <location filename="lector.py" line="285"/>
+        <location filename="lector.py" line="295"/>
         <source>Save image</source>
         <translation>Uložiť obrázok</translation>
     </message>
@@ -294,178 +294,183 @@
         <translation type="obsolete">PNG obrázok</translation>
     </message>
     <message>
-        <location filename="lector.py" line="285"/>
+        <location filename="lector.py" line="295"/>
         <source>PNG image</source>
         <translation>PNG obrázok</translation>
     </message>
     <message>
-        <location filename="lector.py" line="75"/>
+        <location filename="lector.py" line="77"/>
         <source>Bulgarian</source>
         <translation>Bulharský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="76"/>
+        <location filename="lector.py" line="78"/>
         <source>Catalan</source>
         <translation>Katalánský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="77"/>
+        <location filename="lector.py" line="79"/>
         <source>Czech</source>
         <translation>Český</translation>
     </message>
     <message>
-        <location filename="lector.py" line="78"/>
+        <location filename="lector.py" line="80"/>
         <source>Chinese (Traditional)</source>
         <translation>Čínsky (Tradičný)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="79"/>
+        <location filename="lector.py" line="81"/>
         <source>Chinese (Simplified)</source>
         <translation>Čísky (zjednodušený)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="80"/>
+        <location filename="lector.py" line="82"/>
         <source>Danish</source>
         <translation>Dánsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="84"/>
+        <location filename="lector.py" line="86"/>
         <source>Finnish</source>
         <translation>Fínsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="88"/>
+        <location filename="lector.py" line="90"/>
         <source>Greek</source>
         <translation>Grécky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="89"/>
+        <location filename="lector.py" line="91"/>
         <source>Hungarian</source>
         <translation>Maďarský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="90"/>
+        <location filename="lector.py" line="92"/>
         <source>Indonesian</source>
         <translation>Indonézsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="92"/>
+        <location filename="lector.py" line="94"/>
         <source>Japanese</source>
         <translation>Japonský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="93"/>
+        <location filename="lector.py" line="95"/>
         <source>Korean</source>
         <translation>Kórejský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="94"/>
+        <location filename="lector.py" line="96"/>
         <source>Latvian</source>
         <translation>Lotyšský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="95"/>
+        <location filename="lector.py" line="97"/>
         <source>Lithuanian</source>
         <translation>Litovský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="96"/>
+        <location filename="lector.py" line="98"/>
         <source>Norwegian</source>
         <translation>Nórsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="97"/>
+        <location filename="lector.py" line="99"/>
         <source>Polish</source>
         <translation>Polský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="98"/>
+        <location filename="lector.py" line="100"/>
         <source>Portuguese</source>
         <translation>Portugalský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="99"/>
+        <location filename="lector.py" line="101"/>
         <source>Romanian</source>
         <translation>Rumunský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="100"/>
+        <location filename="lector.py" line="102"/>
         <source>Russian</source>
         <translation>Ruský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="101"/>
+        <location filename="lector.py" line="103"/>
         <source>Slovak</source>
         <translation>Slovenský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="103"/>
+        <location filename="lector.py" line="105"/>
         <source>Slovenian</source>
         <translation>Slovinský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="105"/>
+        <location filename="lector.py" line="107"/>
         <source>Serbian</source>
         <translation>Srbský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="106"/>
+        <location filename="lector.py" line="108"/>
         <source>Swedish</source>
         <translation>Švédsky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="108"/>
+        <location filename="lector.py" line="110"/>
         <source>Tagalog</source>
         <translation>Tagalog</translation>
     </message>
     <message>
-        <location filename="lector.py" line="109"/>
+        <location filename="lector.py" line="111"/>
         <source>Turkish</source>
         <translation>Turecký</translation>
     </message>
     <message>
-        <location filename="lector.py" line="110"/>
+        <location filename="lector.py" line="112"/>
         <source>Ukrainian</source>
         <translation>Ukrajinský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="111"/>
+        <location filename="lector.py" line="113"/>
         <source>Vietnamese</source>
         <translation>Vietnamský</translation>
     </message>
     <message>
-        <location filename="lector.py" line="81"/>
+        <location filename="lector.py" line="83"/>
         <source>Danish (Fraktur)</source>
         <translation>Dánsky (Fraktur)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="87"/>
+        <location filename="lector.py" line="89"/>
         <source>German (Fraktur)</source>
         <translation>Nemecký (Fraktur)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="102"/>
+        <location filename="lector.py" line="104"/>
         <source>Slovak (Fraktur)</source>
         <translation>Slovenský (Fraktur)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="107"/>
+        <location filename="lector.py" line="109"/>
         <source>Swedish (Fraktur)</source>
         <translation>Švédsky (Fraktur)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="169"/>
+        <location filename="lector.py" line="174"/>
         <source>Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="300"/>
+        <location filename="lector.py" line="309"/>
         <source>About Lector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="300"/>
+        <location filename="lector.py" line="309"/>
         <source>&lt;p&gt;The &lt;b&gt;Lector&lt;/b&gt; is a graphical ocr solution for GNU/Linux based on Python, Qt4 and tessaract OCR.&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Author:&lt;/b&gt; Davide Setti&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributors:&lt;/b&gt; chopinX04, filip.dominec, zdposter&lt;/p&gt;&lt;p&gt;&lt;b&gt;Web site:&lt;/b&gt; http://code.google.com/p/lector&lt;/p&gt;&lt;p&gt;&lt;b&gt;Source code:&lt;/b&gt; http://code.google.com/p/lector/source/checkout&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="284"/>
+        <source>ODF document</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
