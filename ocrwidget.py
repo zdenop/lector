@@ -272,7 +272,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             
             box = (int(pos.x()), int(pos.y()), int(rect.width() + pos.x()), \
                     int(rect.height() + pos.y()))
-            filename = "/tmp/out.%d.png" % i
+            filename = "/tmp/out.%d.tif" % i
 
             region = self.scene().im.crop(box)
             
