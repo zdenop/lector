@@ -3,7 +3,7 @@
     Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
-""" 
+"""
 
 ## PyQt
 from PyQt4.QtCore import QThread, SIGNAL
@@ -27,14 +27,14 @@ class ScannerThread(QThread):
         s.mode = 'color'
 
         ## geometry
-        #try:
-        #    s.tl_x = 0.0 # self.config.getfloat('window', 'tl_x')
-        #    s.tl_y = 0.0 # self.config.getfloat('window', 'tl_y')
-        #    s.br_x = 215.0 # self.config.getfloat('window', 'br_x')
-        #    s.br_y = 297.0 # self.config.getfloat('window', 'br_y')
-        #except AttributeError:
-        #    print "WARNING: Can't set scan geometry"
-          
+        try:
+            s.tl_x = 0.0 # self.config.getfloat('window', 'tl_x')
+            s.tl_y = 0.0 # self.config.getfloat('window', 'tl_y')
+            s.br_x = 215.0 # self.config.getfloat('window', 'br_x')
+            s.br_y = 297.0 # self.config.getfloat('window', 'br_y')
+        except AttributeError:
+            print "WARNING: Can't set scan geometry"
+
         s.resolution = 300
 
         #print 'Device parameters:', s.get_parameters()
