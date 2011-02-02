@@ -169,8 +169,7 @@ class Window(QMainWindow):
             pass
 
     def on_scannedImage(self):
-        im = self.thread.im
-        self.ocrWidget.scene().im = im
+        self.ocrWidget.scene().im = self.thread.im
         self.ocrWidget.prepareDimensions()
         self.enableActions()
 
