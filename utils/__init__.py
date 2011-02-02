@@ -28,10 +28,12 @@ def extract_tesseract_languages_path(error_message):
 
 
 def get_tesseract_languages():
-    ## TODO: check if tesseract is installed
     if os.getenv('TESSDATA_PREFIX') is None:
-        poTess = Popen('tesseract try try -l invalid', stderr=PIPE,
-        shell=True)
+        try:
+            poTess = Popen(['a', 'a', '-l invalid'], 1024, 'tesseract',
+                            stderr=PIPE)
+        except OSError:
+            return None
         lTess = poTess.stderr.readline()
         tessdata_path, langdata_ext = extract_tesseract_languages_path(lTess)
     else:

@@ -26,8 +26,8 @@ from scannerthread import ScannerThread
 from utils import get_tesseract_languages
 
 class Window(QMainWindow):
-    ## Override constructor
-    ##
+    ocrAvailable = True
+    
     def __init__(self, parent = None, scanner=True):
         QMainWindow.__init__(self)
 
@@ -55,61 +55,74 @@ class Window(QMainWindow):
         QObject.connect(self.ui.actionOcr,
             SIGNAL("activated()"), self.ocrWidget.doOcr)
         QObject.connect(self.ocrWidget.scene(),
-            SIGNAL("changedSelectedAreaType(int)"), self.changedSelectedAreaType)
+            SIGNAL("changedSelectedAreaType(int)"),
+            self.changedSelectedAreaType)
 
-        languages = list(get_tesseract_languages())
-        languages.sort()
+        try:
+            languages = list(get_tesseract_languages())
+        except TypeError: #tesseract is not installed
+            #TODO: replace QMessageBox.warning with QErrorMessage (but we need
+            #      to keep state
+            #dialog = QErrorMessage(self)
+            #dialog.showMessage(
+            #    self.tr("tessaract not available. Please check requirements"))
+            QMessageBox.warning(self,
+                "Tesseract",
+                self.tr("Tessaract not available. Please check requirements"))
+            self.ocrAvailable = False
+        else:
+            languages.sort()
 
-        languages_ext = {
-            'bul': self.tr('Bulgarian'),
-            'cat': self.tr('Catalan'),
-            'ces': self.tr('Czech'),
-            'chi_tra': self.tr('Chinese (Traditional)'),
-            'chi_sim': self.tr('Chinese (Simplified)'),
-            'dan': self.tr('Danish'),
-            'dan-frak': self.tr('Danish (Fraktur)'),
-            'nld': self.tr('Dutch'),
-            'eng': self.tr('English'),
-            'fin': self.tr('Finnish'),
-            'fra': self.tr('French'),
-            'deu': self.tr('German'),
-            'deu-frak': self.tr('German (Fraktur)'),
-            'ell': self.tr('Greek'),
-            'hun': self.tr('Hungarian'),
-            'ind': self.tr('Indonesian'),
-            'ita': self.tr('Italian'),
-            'jpn': self.tr('Japanese'),
-            'kor': self.tr('Korean'),
-            'lav': self.tr('Latvian'),
-            'lit': self.tr('Lithuanian'),
-            'nor': self.tr('Norwegian'),
-            'pol': self.tr('Polish'),
-            'por': self.tr('Portuguese'),
-            'ron': self.tr('Romanian'),
-            'rus': self.tr('Russian'),
-            'slk': self.tr('Slovak'),
-            'slk-frak': self.tr('Slovak (Fraktur)'),
-            'slv': self.tr('Slovenian'),
-            'spa': self.tr('Spanish'),
-            'srp': self.tr('Serbian'),
-            'swe': self.tr('Swedish'),
-            'swe-frak': self.tr('Swedish (Fraktur)'),
-            'tgl': self.tr('Tagalog'),
-            'tur': self.tr('Turkish'),
-            'ukr': self.tr('Ukrainian'),
-            'vie': self.tr('Vietnamese')
-            }
+            languages_ext = {
+                'bul': self.tr('Bulgarian'),
+                'cat': self.tr('Catalan'),
+                'ces': self.tr('Czech'),
+                'chi_tra': self.tr('Chinese (Traditional)'),
+                'chi_sim': self.tr('Chinese (Simplified)'),
+                'dan': self.tr('Danish'),
+                'dan-frak': self.tr('Danish (Fraktur)'),
+                'nld': self.tr('Dutch'),
+                'eng': self.tr('English'),
+                'fin': self.tr('Finnish'),
+                'fra': self.tr('French'),
+                'deu': self.tr('German'),
+                'deu-frak': self.tr('German (Fraktur)'),
+                'ell': self.tr('Greek'),
+                'hun': self.tr('Hungarian'),
+                'ind': self.tr('Indonesian'),
+                'ita': self.tr('Italian'),
+                'jpn': self.tr('Japanese'),
+                'kor': self.tr('Korean'),
+                'lav': self.tr('Latvian'),
+                'lit': self.tr('Lithuanian'),
+                'nor': self.tr('Norwegian'),
+                'pol': self.tr('Polish'),
+                'por': self.tr('Portuguese'),
+                'ron': self.tr('Romanian'),
+                'rus': self.tr('Russian'),
+                'slk': self.tr('Slovak'),
+                'slk-frak': self.tr('Slovak (Fraktur)'),
+                'slv': self.tr('Slovenian'),
+                'spa': self.tr('Spanish'),
+                'srp': self.tr('Serbian'),
+                'swe': self.tr('Swedish'),
+                'swe-frak': self.tr('Swedish (Fraktur)'),
+                'tgl': self.tr('Tagalog'),
+                'tur': self.tr('Turkish'),
+                'ukr': self.tr('Ukrainian'),
+                'vie': self.tr('Vietnamese')
+                }
 
-        for lang in languages:
-            try:
-                lang_ext = languages_ext[lang]
-            except KeyError:
-                continue
+            for lang in languages:
+                try:
+                    lang_ext = languages_ext[lang]
+                except KeyError:
+                    continue
 
-            ##TODO:change this layout to a more human name
-            self.ui.rbtn_lang_select.addItem(lang_ext, QVariant(lang))
-            QObject.connect(self.ui.rbtn_lang_select,
-                SIGNAL('currentIndexChanged(int)'), self.changeLanguage)
+                ##TODO:change this layout to a more human name
+                self.ui.rbtn_lang_select.addItem(lang_ext, QVariant(lang))
+                QObject.connect(self.ui.rbtn_lang_select,
+                    SIGNAL('currentIndexChanged(int)'), self.changeLanguage)
 
         #disable useless actions until a file has been opened
         self.enableActions(False)
@@ -176,17 +189,16 @@ class Window(QMainWindow):
 
         self.enableActions(True)
 
-
     def enableActions(self, enable=True):
         for action in (self.ui.actionRotateRight,
                        self.ui.actionRotateLeft,
                        self.ui.actionRotateFull,
                        self.ui.actionZoomIn,
                        self.ui.actionZoomOut,
-                       self.ui.actionOcr,
                        self.ui.actionSaveDocumentAs,
                        self.ui.actionSaveImageAs,):
             action.setEnabled(enable)
+        self.ui.actionOcr.setEnabled(enable and self.ocrAvailable)
 
     @pyqtSignature('')
     def on_actionScan_activated(self):
