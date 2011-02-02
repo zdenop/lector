@@ -28,7 +28,7 @@ from utils import get_tesseract_languages
 
 class Window(QMainWindow):
     ocrAvailable = True
-    
+
     def __init__(self, parent = None, scanner=True):
         QMainWindow.__init__(self)
 
@@ -261,7 +261,7 @@ class Window(QMainWindow):
 
     def writeSettings(self):
         from utils import settings
-        
+
         settings.set("pos", self.pos())
         settings.set("size", self.size())
         settings.set("file_dialog_dir", self.curDir)
@@ -339,7 +339,7 @@ class Window(QMainWindow):
             self.ui.rbtn_areato_image.setCheckable(False)
             self.ui.rbtn_areato_image.update()
 
-        
+
 ## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)
