@@ -26,7 +26,6 @@ class ScannerThread(QThread):
 
         ## TODO: make it as option - grayscale is better for OCR
         # print s.get_options()
-        s.mode = 'color'
 
         ## geometry
         try:
@@ -38,12 +37,10 @@ class ScannerThread(QThread):
             print "WARNING: Can't set scan geometry"
 
         s.resolution = settings.get('scanner:resolution')
+        s.mode = settings.get('scanner:mode')
 
         #print 'Device parameters:', s.get_parameters()
 
-        # Initialize the scan
-        s.start()
-
         # Get an Image object
-        self.im = s.snap()
+        self.im = s.scan()
         self.emit(SIGNAL("scannedImage()"))
