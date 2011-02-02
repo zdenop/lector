@@ -16,4 +16,4 @@ up_translation:
 	pylupdate4 lector.pro
 
 clean:
-	rm -f ui/*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
+	rm -f ui/ui_*.py ui/resources*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc

@@ -18,7 +18,7 @@ IF "%1"=="build" GOTO build
 )
 
 :clean
-  rm -f ui/*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
+  rm -f ui/ui_*.py ui/resources*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
 
 :end
   echo Done!
