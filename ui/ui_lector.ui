@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -93,8 +93,6 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen"/>
-   <addaction name="separator"/>
    <addaction name="actionRotateRight"/>
    <addaction name="actionRotateLeft"/>
    <addaction name="actionRotateFull"/>
@@ -104,11 +102,6 @@
    <addaction name="separator"/>
    <addaction name="actionScan"/>
    <addaction name="actionOcr"/>
-   <addaction name="separator"/>
-   <addaction name="actionSaveDocumentAs"/>
-   <addaction name="actionSaveImageAs"/>
-   <addaction name="separator"/>
-   <addaction name="actionExit"/>
   </widget>
   <widget class="QDockWidget" name="textBrowserDock">
    <property name="sizePolicy">
@@ -134,7 +127,7 @@
    <property name="minimumSize">
     <size>
      <width>150</width>
-     <height>296</height>
+     <height>300</height>
     </size>
    </property>
    <property name="features">

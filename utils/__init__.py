@@ -30,7 +30,7 @@ def extract_tesseract_languages_path(error_message):
 def get_tesseract_languages():
     if os.getenv('TESSDATA_PREFIX') is None:
         try:
-            poTess = Popen(['a', 'a', '-l invalid'], 1024, 'tesseract',
+            poTess = Popen(['tesseract', 'a', 'a', '-l', 'invalid'], -1,
                             stderr=PIPE)
         except OSError:
             return None
