@@ -9,23 +9,21 @@
 """
 
 ## System
-import  sys
-import  os
-from    PyQt4.QtCore  import SIGNAL, QObject, QSettings, QVariant, \
-        QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
-        QTranslator
-from    PyQt4.QtGui   import QMainWindow, QRadioButton, QFileDialog, \
-        QMessageBox, QApplication, QComboBox
-from    subprocess    import Popen, PIPE
-from    glob          import glob
+import sys
+import os
+from PyQt4.QtCore import SIGNAL, QObject, QSettings, QVariant, \
+    QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
+    QTranslator
+from PyQt4.QtGui import QMainWindow, QRadioButton, QFileDialog, \
+    QMessageBox, QApplication, QComboBox
 
 ## Lector
-from    ui_lector     import Ui_Lector
-from    ocrwidget     import QOcrWidget
-from    textwidget    import TextWidget
-from    scannerselect import ScannerSelect
-from    scannerthread import ScannerThread
-
+from ui_lector import Ui_Lector
+from ocrwidget import QOcrWidget
+from textwidget import TextWidget
+from scannerselect import ScannerSelect
+from scannerthread import ScannerThread
+from utils import get_tesseract_languages
 
 class Window(QMainWindow):
     ## Override constructor
@@ -59,18 +57,7 @@ class Window(QMainWindow):
         QObject.connect(self.ocrWidget.scene(),
             SIGNAL("changedSelectedAreaType(int)"), self.changedSelectedAreaType)
 
-        ## TODO: check if tesseract is installed
-        poTess = Popen('tesseract try try -l iamnottrue', stderr=PIPE,
-            shell=True)
-        lTess = poTess.stderr.readline()
-        langdata_ext = lTess.split('/').pop().strip().rsplit('.', 1)[1]
-        if os.getenv('TESSDATA_PREFIX') is None:
-            pTess = '/' + '/'.join((lTess.split('/'))[1:-1]) + '/'
-        else:
-            pTess = os.getenv('TESSDATA_PREFIX') + "tessdata/"
-
-        langdata = glob(pTess + '*.' + langdata_ext)
-        languages = [os.path.basename(uc).rsplit('.', 1)[0] for uc in langdata]
+        languages = list(get_tesseract_languages())
         languages.sort()
 
         languages_ext = {
