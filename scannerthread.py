@@ -61,6 +61,7 @@ class ScannerThread(QThread):
         QObject.connect(self.process, SIGNAL("readyReadStandardError()"),
                         self.progress)
 
+        #TODO: manage Abort button
         progress = QtGui.QProgressDialog(
             self.tr("Progress"),
             self.tr("Abort"), 0, 100)
