@@ -18,7 +18,8 @@ from PyQt4.QtGui import QMainWindow, QRadioButton, QFileDialog, \
     QMessageBox, QApplication, QComboBox
 
 ## Lector
-from ui_lector import Ui_Lector
+from ui.ui_lector import Ui_Lector
+from settingsdialog import Settings
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
 from scannerselect import ScannerSelect
@@ -167,12 +168,16 @@ class Window(QMainWindow):
         except:
             pass
 
-
     def on_scannedImage(self):
         im = self.thread.im
         self.ocrWidget.scene().im = im
         self.ocrWidget.prepareDimensions()
         self.enableActions()
+
+    @pyqtSignature('')
+    def on_actionSettings_activated(self):
+        settings = Settings(self)
+        settings.show()
 
     @pyqtSignature('')
     def on_actionOpen_activated(self):
@@ -255,17 +260,18 @@ class Window(QMainWindow):
         #self.ui.textBrowser.move(pos)
 
     def writeSettings(self):
-        settings = QSettings("Davide Setti", "Lector")
-        settings.setValue("pos", QVariant(self.pos()))
-        settings.setValue("size", QVariant(self.size()))
-        settings.setValue("file_dialog_dir", QVariant(self.curDir))
+        from utils import settings
+        
+        settings.set("pos", self.pos())
+        settings.set("size", self.size())
+        settings.set("file_dialog_dir", self.curDir)
         #settings.setValue("textbrowser/pos", QVariant(
         #            self.ui.textBrowserDock.pos()))
         #settings.setValue("textbrowser/size", QVariant(
         #            self.ui.textBrowserDock.size()))
 
         ## save language
-        settings.setValue("rbtn/lang", QVariant(self.ocrWidget.language))
+        settings.set("rbtn/lang", self.ocrWidget.language)
 
     def closeEvent(self, event):
         if (not self.ocrWidget.scene().isModified) or self.areYouSureToExit():
@@ -304,7 +310,7 @@ class Window(QMainWindow):
 
         self.curDir = os.path.dirname(fn)
         ## TODO: move this to the Scene?
-        ## TODO: if jpeg pil converts it??
+        ## TODO: if im is a jpeg, will pil convert it?
         self.ocrWidget.scene().im.save(fn)
         #self.textBrowser.saveAs(fn)
 
@@ -333,7 +339,6 @@ class Window(QMainWindow):
             self.ui.rbtn_areato_image.setCheckable(False)
             self.ui.rbtn_areato_image.update()
 
-
         
 ## MAIN
 if __name__ == "__main__":
@@ -358,4 +363,5 @@ if __name__ == "__main__":
     window = Window(scanner=scanner)
 
     window.show()
+
     sys.exit(app.exec_())

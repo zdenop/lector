@@ -7,17 +7,18 @@ IF "%1"=="build" GOTO build
 :build
 (
   echo Building Lector...
-  pyuic4 ui_lector.ui > ui_lector.py
+  pyuic4 ui/ui_lector.ui > ui/ui_lector.py
+  pyuic4 ui/ui_settings.ui > ui/ui_settings.py
   pylupdate4 lector.pro
   lrelease lector.pro
   lrelease ts/qt_it_IT.ts
-  pyrcc4 -o resources_rc.py resources.qrc
+  pyrcc4 -o ui/resources_rc.py ui/resources.qrc
   GOTO end
   REM EXIT /B 0
 )
 
 :clean
-  rm -f ui_lector.py resources_rc.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
+  rm -f ui/*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
 
 :end
   echo Done!
