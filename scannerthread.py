@@ -13,6 +13,8 @@ try:
 except ImportError:
     print "SANE not found!"
 
+from utils import settings
+
 class ScannerThread(QThread):
     def __init__(self, parent=None, selectedScanner=None):
         QThread.__init__(self, parent)
@@ -28,18 +30,18 @@ class ScannerThread(QThread):
 
         ## geometry
         try:
-            s.tl_x = 0.0 # self.config.getfloat('window', 'tl_x')
-            s.tl_y = 0.0 # self.config.getfloat('window', 'tl_y')
-            s.br_x = 215.0 # self.config.getfloat('window', 'br_x')
-            s.br_y = 297.0 # self.config.getfloat('window', 'br_y')
+            s.tl_x = 0.0
+            s.tl_y = 0.0
+            s.br_x = settings.get('scanner:width')
+            s.br_y = settings.get('scanner:height')
         except AttributeError:
             print "WARNING: Can't set scan geometry"
 
-        s.resolution = 300
+        s.resolution = settings.get('scanner:resolution')
 
         #print 'Device parameters:', s.get_parameters()
 
-        # Initiate the scan
+        # Initialize the scan
         s.start()
 
         # Get an Image object
