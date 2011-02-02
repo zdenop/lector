@@ -28,7 +28,7 @@ from utils import get_tesseract_languages
 class Window(QMainWindow):
     ## Override constructor
     ##
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, scanner=True):
         QMainWindow.__init__(self)
 
         self.ui = Ui_Lector()
@@ -117,10 +117,14 @@ class Window(QMainWindow):
         ## load saved settings
         self.readSettings()
 
-        self.check_scanner_env()
+        if scanner:
+            self.check_scanner_env()
+        else:
+            self.ui.actionScan.setEnabled(False)
 
 
     def check_scanner_env(self):
+        self.ui.actionScan.setEnabled(False)
         ##SANE
         try:
             import sane
@@ -137,17 +141,18 @@ class Window(QMainWindow):
                 try:
                     self.selectedScanner = sane_list[idx][0]
                 except KeyError:
-                    self.ui.actionScan.setEnabled(False)
+                    pass
                 else:
                     self.thread = ScannerThread(self, self.selectedScanner)
                     QObject.connect(self.thread, SIGNAL("scannedImage()"),
                                     self.on_scannedImage)
+                    self.ui.actionScan.setEnabled(True)
+
 
             else: # sane found no scanner - disable scanning;
                 print "No scanner found!"
-                self.ui.actionScan.setEnabled(False)
         except:
-            self.ui.actionScan.setEnabled(False)
+            pass
 
 
     def on_scannedImage(self):
@@ -321,6 +326,11 @@ class Window(QMainWindow):
 ## MAIN
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    opts = [str(arg) for arg in app.arguments()[1:]]
+    if '--no-scanner' in opts:
+        scanner = False
+    else:
+        scanner = True
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
     ## TODO: check for settings first. If they do not exists initialize them!
@@ -333,7 +343,7 @@ if __name__ == "__main__":
     if qtTranslator.load("qt_" + locale, 'ts'):
         app.installTranslator(qtTranslator)
 
-    window = Window()
+    window = Window(scanner=scanner)
 
     window.show()
     sys.exit(app.exec_())
