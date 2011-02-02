@@ -6,12 +6,8 @@
 """
 
 ## PyQt
-from PyQt4.QtCore import QThread, SIGNAL, QProcess
-## SANE
-try:
-    import sane
-except ImportError:
-    print "SANE not found!"
+from PyQt4.QtCore import QThread, SIGNAL, QProcess, QObject, Qt
+from PyQt4 import QtGui
 
 from utils import settings
 
@@ -19,7 +15,7 @@ class ScanimageProcess(QProcess):
     def __init__(self, mode, resolution, size):
         super(QProcess, self).__init__()
 
-        self.start("scanimage", ('--format', 'tiff',
+        self.start("scanimage", ('-p', '--format=tiff',
                                  '--mode', mode,
                                  '--resolution', str(resolution),
                                  '-x', str(size[0]),
@@ -28,7 +24,22 @@ class ScanimageProcess(QProcess):
                    )
 
 
+def stripProgress(line):
+    """
+    >>> stripProgress('Progress: 100.0%\r')
+    100.0
+    >>> stripProgress('Progress: 10.5%\r')
+    10.5
+    >>> stripProgress('Progress: 0.8%\rProgress: 1.6%\r')
+    1.6000000000000001
+    """
+    return float(line.split('\r')[-2].split(':')[1].strip(' %'))
+
+
 class ScannerThread(QThread):
+    # keep if the image has been loaded
+    loaded = False
+
     def __init__(self, parent=None, selectedScanner=None):
         QThread.__init__(self, parent)
         self.selectedScanner = selectedScanner
@@ -45,9 +56,30 @@ class ScannerThread(QThread):
         mode = settings.get('scanner:mode')
 
         self.process = ScanimageProcess(mode, resolution, (br_x, br_y))
-        self.process.connect(self.process, SIGNAL("finished(int)"), self.scanned)
+        QObject.connect(self.process, SIGNAL("finished(int)"),
+                        self.scanned)
+        QObject.connect(self.process, SIGNAL("readyReadStandardError()"),
+                        self.progress)
 
-    def scanned(self, exit_code):
+        progress = QtGui.QProgressDialog(
+            self.tr("Progress"),
+            self.tr("Abort"), 0, 100)
+        progress.setWindowTitle(self.tr("Scanning..."))
+        progress.setWindowModality(Qt.WindowModal)
+        progress.setMinimumDuration(0)
+        progress.setValue(0)
+        progress.setAutoClose(True)
+        progress.setAutoReset(True)
+        progress.forceShow()
+
+        self.progressDialog = progress
+        self.loaded = False
+
+    def scanned(self, exit_code=0):
+        if self.loaded:
+            return
+        self.loaded = True
+
         from StringIO import StringIO
         from PIL import Image
 
@@ -55,5 +87,16 @@ class ScannerThread(QThread):
             print 'ERROR!'
             return #TODO: notify an ERROR!!
         out = self.process.readAllStandardOutput()
+
         self.im = Image.open(StringIO(out))
-        self.emit(SIGNAL("scannedImage()")
+        self.emit(SIGNAL("scannedImage()"))
+
+    def progress(self):
+        line = str(self.process.readAllStandardError())
+        progress = stripProgress(line)
+        self.progressDialog.setValue(int(progress))
+
+        #TODO: add a setting to enable/disable this ("fast scanning")
+        if progress == 100.:
+            QObject.connect(self.process, SIGNAL("readyReadStandardOutput()"),
+                            self.scanned)

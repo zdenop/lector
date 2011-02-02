@@ -5,7 +5,7 @@
     Copyright (C) 2011 Davide Setti
 
     This program is released under the GNU GPLv2
-""" 
+"""
 
 import Image
 import os
@@ -28,11 +28,11 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
 
         self.setMinimumSize(200, 200)
-        
+
         self.language = lang
         self.statusBar = statusBar
         self.areaType = areaType
-        
+
         self.setCursor(QtCore.Qt.CrossCursor)
         self.scene().isModified = False
         self.bResizing = False
@@ -44,7 +44,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             item = self.resizingArea
             r = item.rect()
             pos = item.pos()
-            
+
             newWidth = r.width()
             newHeight = r.height()
             newX, newY = pos.x(), pos.y()
@@ -55,11 +55,11 @@ class QOcrWidget(QtGui.QGraphicsView):
                             self.resizingStartingPos.y())
                 newHeight = self.resizingAreaRect.height() + \
                             self.resizingAreaPos.y() - newY
-                
+
             elif self.resizingEdge & 2: #bit mask: bottom is moving
                 newHeight = self.resizingAreaRect.height() + sp.y() - \
                             self.resizingStartingPos.y()
-                
+
                 #force area to be inside the scene
                 if newY + newHeight > self.scene().height():
                     newHeight = self.scene().height() - newY
@@ -72,11 +72,11 @@ class QOcrWidget(QtGui.QGraphicsView):
             elif self.resizingEdge & 8: #bit mask: right is moving
                 newWidth = self.resizingAreaRect.width() + sp.x() - \
                             self.resizingStartingPos.x()
-                
+
                 #force area to be inside the scene
                 if newX + newWidth > self.scene().width():
                     newWidth = self.scene().width() - newX
-            
+
             #check that height >= OcrArea.resizeBorder
             if newHeight < 2*OcrArea.resizeBorder:
                 newHeight = r.height()
@@ -148,7 +148,6 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         QtGui.QGraphicsView.mousePressEvent(self,event)
 
-
     def mouseReleaseEvent(self, event):
         if self.bResizing: ## stop resizing
             self.bResizing = False
@@ -180,7 +179,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         for item in self.scene().items():
             self.scene().removeItem(item)
         self.scene().areas = []
-        
+
         #open image
         self.scene().im = Image.open(self.filename)
 
@@ -223,7 +222,7 @@ class QOcrWidget(QtGui.QGraphicsView):
 
     def rotateLeft(self):
         self.rotate(90)
-        
+
     def rotateFull(self):
         self.rotate(180)
 
@@ -265,29 +264,29 @@ class QOcrWidget(QtGui.QGraphicsView):
         for i, item in enumerate(aItems):
             if progress.wasCanceled():
                 break
-                
+
             progress.setValue(i)
             rect = item.rect()
             pos = item.scenePos()
-            
+
             box = (int(pos.x()), int(pos.y()), int(rect.width() + pos.x()), \
                     int(rect.height() + pos.y()))
             filename = "/tmp/out.%d.tif" % i
 
             region = self.scene().im.crop(box)
-            
+
             if item.type == 1:
                 ## Improve quality of text for tesseract
                 ## TODO: put it as option for OCR because of longer duration
                 nx, ny = rect.width(), rect.height()
                 region = region.resize((int(nx*3), int(ny*3)), \
-                            Image.BICUBIC).convert('L') 
+                            Image.BICUBIC).convert('L')
                 region.save(filename, dpi=(600, 600))
 
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
                                                               self.language)
                 os.popen(command)
-            
+
                 s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
                 self.textBrowser.append(s)
             else:
