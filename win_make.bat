@@ -11,14 +11,13 @@ IF "%1"=="build" GOTO build
   pyuic4 ui/ui_settings.ui > ui/ui_settings.py
   pylupdate4 lector.pro
   lrelease lector.pro
-  lrelease ts/qt_it_IT.ts
   pyrcc4 -o ui/resources_rc.py ui/resources.qrc
   GOTO end
   REM EXIT /B 0
 )
 
 :clean
-  rm -f ui/ui_*.py ui/resources*.py ts/qt_it_IT.qm ts/lector_*.qm *.pyc
+  rm -f ui/ui_*.py ui/resources*.py ts/*.qm ts/lector_*.qm *.pyc ui_*.py resources*.py
 
 :end
   echo Done!

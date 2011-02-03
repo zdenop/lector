@@ -13,8 +13,8 @@
     <file>../icons/scanner.png</file>
   </qresource>
   <qresource prefix="/translations">
-    <file>../ts/lector_de_DE.ts</file>
-    <file>../ts/lector_sk_SK.ts</file>
+    <file>../ts/lector_de_DE.qm</file>
+    <file>../ts/lector_sk_SK.qm</file>
     <file>../ts/lector_it_IT.qm</file>
     <file>../ts/qt_it_IT.qm</file>
   </qresource>

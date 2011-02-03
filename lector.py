@@ -317,7 +317,8 @@ class Window(QMainWindow):
     def on_actionAbout_Lector_activated(self):
         QMessageBox.about(self, self.tr("About Lector"), self.tr(
           "<p>The <b>Lector</b> is a graphical ocr solution for GNU/"
-          "Linux based on Python, Qt4 and tessaract OCR.</p><p></p>"
+          "Linux and Windows based on Python, Qt4 and tessaract OCR.</p>"
+          "<p>Scanning option is available only on GNU/Linux via SANE.</p><p></p>"
           "<p><b>Author:</b> Davide Setti</p><p></p>"
           "<p><b>Contributors:</b> chopinX04, filip.dominec, zdposter</p>"
           "<p><b>Web site:</b> http://code.google.com/p/lector</p>"
@@ -352,7 +353,7 @@ if __name__ == "__main__":
     ## TODO: check for settings first. If they do not exists initialize them!
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
-    if lecTranslator.load("lector_" + locale, 'ts'):
+    if lecTranslator.load(":/translations/ts/lector_" + locale, 'ts'):
         app.installTranslator(lecTranslator)
 
     qtTranslator = QTranslator()
