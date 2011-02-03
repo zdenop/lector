@@ -6,14 +6,17 @@ import os
 
 
 def pilImage2Qt(im):
-    ## TODO: check if it's necessary to convert to RGB (maybe only for grayscale images)
-    s = im.convert("RGB").tostring("jpeg","RGB")
+    if im.mode != 'RGB':
+        im = im.convert('RGB')
+    s = im.tostring("jpeg", "RGB")
 
     qtimage = QImage()
-    qtimage.loadFromData(QByteArray(s))
+    qtimage.loadFromData(s)
     return qtimage
 
-    #self.ocrImage = ImageQt.ImageQt(self.im.convert("RGB"))
+    #from PIL import ImageQt
+    #qtimage = ImageQt.ImageQt(im)
+    #return qtimage
 
 
 def extract_tesseract_languages_path(error_message):
