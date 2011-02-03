@@ -292,7 +292,7 @@ class Window(QMainWindow):
     def on_actionSaveDocumentAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                         self.tr("Save document"), self.curDir,
-                                        self.tr("ODT document") + " (*.odt)"
+                                        self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)")
                                         ))
         if not fn: return
 
@@ -303,7 +303,7 @@ class Window(QMainWindow):
     def on_actionSaveImageAs_activated(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                             self.tr("Save image"), self.curDir,
-                                            self.tr("PNG image") + " (*.png)"
+                                            self.tr("PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)")
                                             ))
         if not fn: return
 

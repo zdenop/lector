@@ -19,7 +19,14 @@ class TextWidget(QtGui.QTextBrowser):
 
     def saveAs(self, filename):
         dw = QtGui.QTextDocumentWriter()
-        dw.setFormat('ODF')
+        dw.setFormat('ODF')  # Default format
+
+        # Check for alternative output format
+        if filename.rsplit('.', 1)[1] == "txt":
+            dw.setFormat('plaintext')
+        if filename.rsplit('.', 1)[1] in ("html", "htm"):
+            dw.setFormat('HTML')
+
         dw.setFileName(filename)
         dw.write(self.document())
 
