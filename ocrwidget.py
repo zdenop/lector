@@ -195,7 +195,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         vh = float(self.height())
         iw = float(scene.im.size[0])
         ih = float(scene.im.size[1])
-        ratio = min (vw/iw, vh/ih)
+        ratio = min(vw/iw, vh/ih)
 
         self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
 
