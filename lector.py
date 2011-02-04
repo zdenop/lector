@@ -142,6 +142,9 @@ class Window(QMainWindow):
         ##SANE
         try:
             import sane
+        except ImportError:
+            pass
+        else:
             sane.init()
             sane_list = sane.get_devices()
 
@@ -149,24 +152,18 @@ class Window(QMainWindow):
                 #TODO: if one scanner - automatically select
                 scanner_desc_list = [scanner[2] for scanner in sane_list]
 
-                ss = ScannerSelect()
-                idx = ss.getSelectedIndex(self.tr('Select scanner'),
-                                          scanner_desc_list, 0)
-                try:
-                    self.selectedScanner = sane_list[idx][0]
-                except KeyError:
-                    pass
-                else:
-                    self.thread = ScannerThread(self, self.selectedScanner)
-                    QObject.connect(self.thread, SIGNAL("scannedImage()"),
+                ss = ScannerSelect(sane_list, parent=self)
+                ss.show()
+
+                ##TODO: enable only if accepted the ScannerSelect dialog
+                self.thread = ScannerThread(self)
+                QObject.connect(self.thread, SIGNAL("scannedImage()"),
                                     self.on_scannedImage)
-                    self.ui.actionScan.setEnabled(True)
+                self.ui.actionScan.setEnabled(True)
 
 
             else: # sane found no scanner - disable scanning;
                 print "No scanner found!"
-        except:
-            pass
 
     def on_scannedImage(self):
         self.ocrWidget.scene().im = self.thread.im
@@ -283,10 +280,7 @@ class Window(QMainWindow):
         ret = QMessageBox.warning(self, "Lector",
                                   self.tr("Are you sure you want to exit?"),
                                   QMessageBox.Yes | QMessageBox.No)
-        if ret == QMessageBox.No:
-            return False
-        elif ret == QMessageBox.Yes:
-            return True
+        return ret == QMessageBox.Yes
 
     @pyqtSignature('')
     def on_actionSaveDocumentAs_activated(self):

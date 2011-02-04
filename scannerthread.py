@@ -12,10 +12,11 @@ from PyQt4 import QtGui
 from utils import settings
 
 class ScanimageProcess(QProcess):
-    def __init__(self, mode, resolution, size):
+    def __init__(self, device, mode, resolution, size):
         super(QProcess, self).__init__()
 
-        self.start("scanimage", ('-p', '--format=tiff',
+        self.start("scanimage", ('-d', device,
+                                 '-p', '--format=tiff',
                                  '--mode', mode,
                                  '--resolution', str(resolution),
                                  '-x', str(size[0]),
@@ -42,7 +43,6 @@ class ScannerThread(QThread):
 
     def __init__(self, parent=None, selectedScanner=None):
         QThread.__init__(self, parent)
-        self.selectedScanner = selectedScanner
         self.im = None
 
     def run(self):
@@ -54,8 +54,10 @@ class ScannerThread(QThread):
 
         resolution = settings.get('scanner:resolution')
         mode = settings.get('scanner:mode')
+        device = settings.get('scanner:device')
 
-        self.process = ScanimageProcess(mode, resolution, (br_x, br_y))
+
+        self.process = ScanimageProcess(device, mode, resolution, (br_x, br_y))
         QObject.connect(self.process, SIGNAL("finished(int)"),
                         self.scanned)
         QObject.connect(self.process, SIGNAL("readyReadStandardError()"),
