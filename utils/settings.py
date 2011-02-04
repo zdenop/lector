@@ -14,3 +14,5 @@ def get(name):
         return settings.value(name, QVariant(300)).toInt()[0]
     elif name == 'scanner:mode':
         return str(settings.value(name, QVariant("Color")).toString())
+    elif name == 'scanner:device':
+        return str(settings.value(name).toString())

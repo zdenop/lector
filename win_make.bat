@@ -9,6 +9,7 @@ IF "%1"=="build" GOTO build
   echo Building Lector...
   pyuic4 ui/ui_lector.ui > ui/ui_lector.py
   pyuic4 ui/ui_settings.ui > ui/ui_settings.py
+  pyuic4 ui/ui_scanner.ui > ui/ui_scanner.py
   pylupdate4 lector.pro
   lrelease lector.pro
   pyrcc4 -o ui/resources_rc.py ui/resources.qrc
