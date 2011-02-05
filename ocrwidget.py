@@ -255,6 +255,8 @@ class QOcrWidget(QtGui.QGraphicsView):
                                          self.tr("Abort"), 0, numItems)
         progress.setWindowTitle(self.tr("Processing images..."))
         progress.setWindowModality(QtCore.Qt.WindowModal)
+        # on MS Windows dialog has no icon
+        progress.setWindowIcon(QtGui.QIcon(":/icons/icons/L.png"))
         progress.setMinimumDuration(0)
         progress.setValue(0)
         progress.setAutoClose(True)
