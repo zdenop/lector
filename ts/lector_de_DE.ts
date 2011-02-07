@@ -207,6 +207,64 @@
     </message>
 </context>
 <context>
+    <name>Scanner</name>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="14"/>
+        <source>Select scanner</source>
+        <translation type="unfinished">Scanner wählen</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="23"/>
+        <source>Scanner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="35"/>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="41"/>
+        <source>Width (mm)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="58"/>
+        <source>Height (mm)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="78"/>
+        <source>Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="84"/>
+        <source>Resolution</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="91"/>
+        <source>Color mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="106"/>
+        <source>Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="111"/>
+        <source>Gray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="116"/>
+        <source>Lineart</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Settings</name>
     <message>
         <location filename="ui/ui_settings.ui" line="14"/>
@@ -277,7 +335,7 @@
         <translation>Bereit</translation>
     </message>
     <message>
-        <location filename="lector.py" line="183"/>
+        <location filename="lector.py" line="180"/>
         <source>Open image</source>
         <translation>Bild öffnen</translation>
     </message>
@@ -287,12 +345,12 @@
         <translation type="obsolete">Bildern (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="283"/>
+        <location filename="lector.py" line="280"/>
         <source>Are you sure you want to exit?</source>
         <translation>Bist du sicher zu beenden?</translation>
     </message>
     <message>
-        <location filename="lector.py" line="293"/>
+        <location filename="lector.py" line="287"/>
         <source>Save document</source>
         <translation>Document speichern</translation>
     </message>
@@ -334,7 +392,7 @@
     <message>
         <location filename="lector.py" line="153"/>
         <source>Select scanner</source>
-        <translation>Scanner wählen</translation>
+        <translation type="obsolete">Scanner wählen</translation>
     </message>
     <message>
         <location filename="lector.py" line="78"/>
@@ -492,17 +550,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="183"/>
+        <location filename="lector.py" line="180"/>
         <source>Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="304"/>
+        <location filename="lector.py" line="298"/>
         <source>Save image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="318"/>
+        <location filename="lector.py" line="312"/>
         <source>About Lector</source>
         <translation type="unfinished"></translation>
     </message>
@@ -512,17 +570,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="293"/>
+        <location filename="lector.py" line="287"/>
         <source>ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="304"/>
+        <location filename="lector.py" line="298"/>
         <source>PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="318"/>
+        <location filename="lector.py" line="312"/>
         <source>&lt;p&gt;The &lt;b&gt;Lector&lt;/b&gt; is a graphical ocr solution for GNU/Linux and Windows based on Python, Qt4 and tessaract OCR.&lt;/p&gt;&lt;p&gt;Scanning option is available only on GNU/Linux via SANE.&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Author:&lt;/b&gt; Davide Setti&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributors:&lt;/b&gt; chopinX04, filip.dominec, zdposter&lt;/p&gt;&lt;p&gt;&lt;b&gt;Web site:&lt;/b&gt; http://code.google.com/p/lector&lt;/p&gt;&lt;p&gt;&lt;b&gt;Source code:&lt;/b&gt; http://code.google.com/p/lector/source/checkout&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>

@@ -222,6 +222,64 @@
     </message>
 </context>
 <context>
+    <name>Scanner</name>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="14"/>
+        <source>Select scanner</source>
+        <translation type="unfinished">Výber skenera</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="23"/>
+        <source>Scanner</source>
+        <translation type="unfinished">Skenner</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="35"/>
+        <source>Size</source>
+        <translation type="unfinished">Veľkosť</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="41"/>
+        <source>Width (mm)</source>
+        <translation type="unfinished">Šírka (mm)</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="58"/>
+        <source>Height (mm)</source>
+        <translation type="unfinished">Výška (mm)</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="78"/>
+        <source>Quality</source>
+        <translation type="unfinished">Kvalita</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="84"/>
+        <source>Resolution</source>
+        <translation type="unfinished">Rozlíšenie</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="91"/>
+        <source>Color mode</source>
+        <translation type="unfinished">Farebný režim</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="106"/>
+        <source>Color</source>
+        <translation type="unfinished">Farebne</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="111"/>
+        <source>Gray</source>
+        <translation type="unfinished">V odtieňoch šedej</translation>
+    </message>
+    <message>
+        <location filename="ui/ui_scanner.ui" line="116"/>
+        <source>Lineart</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Settings</name>
     <message>
         <location filename="ui/ui_settings.ui" line="14"/>
@@ -292,7 +350,7 @@
         <translation>Pripravený</translation>
     </message>
     <message>
-        <location filename="lector.py" line="183"/>
+        <location filename="lector.py" line="180"/>
         <source>Open image</source>
         <translation>Otvoriť obrázok</translation>
     </message>
@@ -302,12 +360,12 @@
         <translation type="obsolete">Obrázky (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="283"/>
+        <location filename="lector.py" line="280"/>
         <source>Are you sure you want to exit?</source>
         <translation>Skutočne chcete skončiť?</translation>
     </message>
     <message>
-        <location filename="lector.py" line="293"/>
+        <location filename="lector.py" line="287"/>
         <source>Save document</source>
         <translation>Uložiť dokument</translation>
     </message>
@@ -349,10 +407,10 @@
     <message>
         <location filename="lector.py" line="153"/>
         <source>Select scanner</source>
-        <translation>Výber skenera</translation>
+        <translation type="obsolete">Výber skenera</translation>
     </message>
     <message>
-        <location filename="lector.py" line="304"/>
+        <location filename="lector.py" line="298"/>
         <source>Save image</source>
         <translation>Uložiť obrázok</translation>
     </message>
@@ -522,12 +580,12 @@
         <translation>Švédsky (Fraktur)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="183"/>
+        <location filename="lector.py" line="180"/>
         <source>Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</source>
         <translation>Obrázky (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="318"/>
+        <location filename="lector.py" line="312"/>
         <source>About Lector</source>
         <translation>O programe</translation>
     </message>
@@ -537,17 +595,17 @@
         <translation>Tesseract nie je dostupný. Skontrolujte, či spĺňate požiadavky</translation>
     </message>
     <message>
-        <location filename="lector.py" line="293"/>
+        <location filename="lector.py" line="287"/>
         <source>ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)</source>
         <translation>ODT dokument (*.odt);;Textový súbor (*.txt);;HTML súbor(*.html)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="304"/>
+        <location filename="lector.py" line="298"/>
         <source>PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)</source>
         <translation>PNG obrázok (*.png);;TIFF obrázok (*.tif *.tiff);;BMP obrázok (*.bmp)</translation>
     </message>
     <message>
-        <location filename="lector.py" line="318"/>
+        <location filename="lector.py" line="312"/>
         <source>&lt;p&gt;The &lt;b&gt;Lector&lt;/b&gt; is a graphical ocr solution for GNU/Linux and Windows based on Python, Qt4 and tessaract OCR.&lt;/p&gt;&lt;p&gt;Scanning option is available only on GNU/Linux via SANE.&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Author:&lt;/b&gt; Davide Setti&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributors:&lt;/b&gt; chopinX04, filip.dominec, zdposter&lt;/p&gt;&lt;p&gt;&lt;b&gt;Web site:&lt;/b&gt; http://code.google.com/p/lector&lt;/p&gt;&lt;p&gt;&lt;b&gt;Source code:&lt;/b&gt; http://code.google.com/p/lector/source/checkout&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;b&gt;Lector&lt;/b&gt; je grafické OCR riešenie pre GNU/Linux a Windows založené na jazyku Python, knižnici Qt4 a programe tessaract OCR.&lt;/p&gt;
 &lt;p&gt;Skenovanie je dostupné iba na GNU/Linux cez projekt SANE.&lt;/p&gt;

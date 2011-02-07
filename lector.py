@@ -22,8 +22,6 @@ from ui.ui_lector import Ui_Lector
 from settingsdialog import Settings
 from ocrwidget import QOcrWidget
 from textwidget import TextWidget
-from scannerselect import ScannerSelect
-from scannerthread import ScannerThread
 from utils import get_tesseract_languages
 
 class Window(QMainWindow):
@@ -142,9 +140,13 @@ class Window(QMainWindow):
         ##SANE
         try:
             import sane
+            from scannerselect import ScannerSelect
+            from scannerthread import ScannerThread
+            sane_present = True
         except ImportError:
-            pass
-        else:
+            sane_present = False
+
+        if (sane_present == True):
             sane.init()
             sane_list = sane.get_devices()
 
