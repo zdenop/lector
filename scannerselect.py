@@ -27,7 +27,16 @@ class ScannerSelect(QDialog):
         self.sane_list = sane_list
 
         self.ui.combScanner.addItems([scanner[2] for scanner in sane_list])
+        sane_devices = [scanner[0] for scanner in sane_list]
 
+        scanner_setting = settings.get('scanner:device')
+        #TODO: also load color mode, resolution and size
+        try:
+            self.ui.combScanner.setCurrentIndex(
+                    sane_devices.index(scanner_setting)
+            )
+        except ValueError:
+            pass
         self.updateForm()
         self.connect(self.ui.combScanner, SIGNAL("currentIndexChanged(int)"),
                      self.updateForm)
@@ -38,6 +47,7 @@ class ScannerSelect(QDialog):
 
         #this is a list with a lot of info
         options = saneScanner.get_options()
+        saneScanner.close()
 
         #extract just the info we want and put them in a dict
         dOptions = dict([(opt[1], opt[-1]) for opt in options])

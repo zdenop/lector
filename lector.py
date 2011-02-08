@@ -26,6 +26,7 @@ from utils import get_tesseract_languages
 
 class Window(QMainWindow):
     ocrAvailable = True
+    thread = None
 
     def __init__(self, parent = None, scanner=True):
         QMainWindow.__init__(self)
@@ -118,8 +119,7 @@ class Window(QMainWindow):
                 except KeyError:
                     continue
 
-                ##TODO:change this layout to a more human name
-                self.ui.rbtn_lang_select.addItem(lang_ext, QVariant(lang))
+                self.ui.rbtn_lang_select.addItem(lang_ext, lang)
                 QObject.connect(self.ui.rbtn_lang_select,
                     SIGNAL('currentIndexChanged(int)'), self.changeLanguage)
 
@@ -130,42 +130,40 @@ class Window(QMainWindow):
         self.readSettings()
 
         if scanner:
-            self.check_scanner_env()
+            self.on_actionChangeDevice_activated()
         else:
             self.ui.actionScan.setEnabled(False)
 
-
-    def check_scanner_env(self):
+    @pyqtSignature('')
+    def on_actionChangeDevice_activated(self):
         self.ui.actionScan.setEnabled(False)
         ##SANE
         try:
             import sane
-            from scannerselect import ScannerSelect
-            from scannerthread import ScannerThread
-            sane_present = True
         except ImportError:
-            sane_present = False
-
-        if (sane_present == True):
+            # sane found no scanner - disable scanning;
+            print "No scanner found!"
+        else:
+            from scannerselect import ScannerSelect
             sane.init()
             sane_list = sane.get_devices()
 
-            if sane_list:  # sane found scanner
-                #TODO: if one scanner - automatically select
-                scanner_desc_list = [scanner[2] for scanner in sane_list]
+            if not sane_list:
+                # sane found scanner
+                return
 
-                ss = ScannerSelect(sane_list, parent=self)
-                ss.show()
+            #TODO: if one scanner - automatically select
+            ss = ScannerSelect(sane_list, parent=self)
+            ss.show()
 
-                ##TODO: enable only if accepted the ScannerSelect dialog
+            ##TODO: enable only if accepted the ScannerSelect dialog
+            if self.thread is None:
+                from scannerthread import ScannerThread
+
                 self.thread = ScannerThread(self)
                 QObject.connect(self.thread, SIGNAL("scannedImage()"),
-                                    self.on_scannedImage)
-                self.ui.actionScan.setEnabled(True)
-
-
-            else: # sane found no scanner - disable scanning;
-                print "No scanner found!"
+                                self.on_scannedImage)
+            self.ui.actionScan.setEnabled(True)
 
     def on_scannedImage(self):
         self.ocrWidget.scene().im = self.thread.im
@@ -327,7 +325,7 @@ class Window(QMainWindow):
 
             if _type == 1:
                 self.ui.rbtn_areato_text.setChecked(True)
-            elif _type == 2:
+            else: #_type = 2
                 self.ui.rbtn_areato_image.setChecked(True)
         else:
             self.ui.rbtn_areato_text.setCheckable(False)
@@ -346,7 +344,6 @@ if __name__ == "__main__":
         scanner = True
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
-    ## TODO: check for settings first. If they do not exists initialize them!
     locale = QLocale.system().name()
     lecTranslator = QTranslator()
     if lecTranslator.load(":/translations/ts/lector_" + locale, 'ts'):

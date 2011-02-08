@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -54,6 +54,7 @@
     <addaction name="actionRotateFull"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
+    <addaction name="actionChangeDevice"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -371,8 +372,19 @@
    </property>
   </action>
   <action name="actionSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Settings</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionChangeDevice">
+   <property name="text">
+    <string>Change Device</string>
    </property>
   </action>
  </widget>
