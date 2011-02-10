@@ -129,20 +129,18 @@ class Window(QMainWindow):
         ## load saved settings
         self.readSettings()
 
+        self.ui.actionScan.setEnabled(False)
         if scanner:
             self.on_actionChangeDevice_activated()
-        else:
-            self.ui.actionScan.setEnabled(False)
 
     @pyqtSignature('')
     def on_actionChangeDevice_activated(self):
-        self.ui.actionScan.setEnabled(False)
         ##SANE
         try:
             import sane
         except ImportError:
             # sane found no scanner - disable scanning;
-            print "No scanner found!"
+            print "Sane not found!"
         else:
             from scannerselect import ScannerSelect
             sane.init()
@@ -152,18 +150,19 @@ class Window(QMainWindow):
                 # sane found scanner
                 return
 
-            #TODO: if one scanner - automatically select
             ss = ScannerSelect(sane_list, parent=self)
+            QObject.connect(ss, SIGNAL('accepted()'), self.scannerSelected)
             ss.show()
 
-            ##TODO: enable only if accepted the ScannerSelect dialog
-            if self.thread is None:
-                from scannerthread import ScannerThread
+    def scannerSelected(self):
+        self.ui.actionScan.setEnabled(True)
 
-                self.thread = ScannerThread(self)
-                QObject.connect(self.thread, SIGNAL("scannedImage()"),
-                                self.on_scannedImage)
-            self.ui.actionScan.setEnabled(True)
+        if self.thread is None:
+            from scannerthread import ScannerThread
+
+            self.thread = ScannerThread(self)
+            QObject.connect(self.thread, SIGNAL("scannedImage()"),
+                            self.on_scannedImage)
 
     def on_scannedImage(self):
         self.ocrWidget.scene().im = self.thread.im
