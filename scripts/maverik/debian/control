@@ -1,0 +1,17 @@
+Source: lector
+Section: misc
+Priority: extra
+Maintainer: Gabriele Modena <gabriele.modena@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), python (>= 2.6), python-support, python-central
+XS-Python-Version: >= 2.6
+Standards-Version: 3.9.1
+Homepage: http://code.google.com/p/lector/
+#Vcs-Git: git://git.debian.org/collab-maint/lector.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/lector.git;a=summary
+
+Package: lector
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-qt4 (>= 4.3), python-imaging-sane (>= 1.1.7), sane-utils (>= 1.0.21), tesseract-ocr (>= 2.04), tesseract-ocr-eng (>= 2.00)
+XB-Python-Version: >= 2.6
+Description: pyQt tesseract frontend
+ A graphical ocr solution for GNU/Linux based on Python, Qt4 and tessaract OCR.
