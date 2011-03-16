@@ -43,17 +43,17 @@ class Window(QMainWindow):
 
         self.statusBar().showMessage(self.tr("Ready"))
         QObject.connect(self.ui.actionRotateRight,
-            SIGNAL("activated()"), self.ocrWidget.rotateRight)
+            SIGNAL("triggered()"), self.ocrWidget.rotateRight)
         QObject.connect(self.ui.actionRotateLeft,
-            SIGNAL("activated()"), self.ocrWidget.rotateLeft)
+            SIGNAL("triggered()"), self.ocrWidget.rotateLeft)
         QObject.connect(self.ui.actionRotateFull,
-            SIGNAL("activated()"), self.ocrWidget.rotateFull)
+            SIGNAL("triggered()"), self.ocrWidget.rotateFull)
         QObject.connect(self.ui.actionZoomIn,
-            SIGNAL("activated()"), self.ocrWidget.zoomIn)
+            SIGNAL("triggered()"), self.ocrWidget.zoomIn)
         QObject.connect(self.ui.actionZoomOut,
-            SIGNAL("activated()"), self.ocrWidget.zoomOut)
+            SIGNAL("triggered()"), self.ocrWidget.zoomOut)
         QObject.connect(self.ui.actionOcr,
-            SIGNAL("activated()"), self.ocrWidget.doOcr)
+            SIGNAL("triggered()"), self.ocrWidget.doOcr)
         QObject.connect(self.ocrWidget.scene(),
             SIGNAL("changedSelectedAreaType(int)"),
             self.changedSelectedAreaType)
@@ -170,12 +170,12 @@ class Window(QMainWindow):
         self.enableActions()
 
     @pyqtSignature('')
-    def on_actionSettings_activated(self):
+    def on_actionSettings_triggered(self):
         settings = Settings(self)
         settings.show()
 
     @pyqtSignature('')
-    def on_actionOpen_activated(self):
+    def on_actionOpen_triggered(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
                 self.tr("Open image"), self.curDir,
                 self.tr("Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)")
@@ -201,7 +201,7 @@ class Window(QMainWindow):
         self.ui.actionOcr.setEnabled(enable and self.ocrAvailable)
 
     @pyqtSignature('')
-    def on_actionScan_activated(self):
+    def on_actionScan_triggered(self):
         self.thread.run()
         ##TODO: check thread end before the submission of a new task
         #self.thread.wait()
@@ -282,7 +282,7 @@ class Window(QMainWindow):
         return ret == QMessageBox.Yes
 
     @pyqtSignature('')
-    def on_actionSaveDocumentAs_activated(self):
+    def on_actionSaveDocumentAs_triggered(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                         self.tr("Save document"), self.curDir,
                                         self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)")
@@ -293,7 +293,7 @@ class Window(QMainWindow):
         self.textBrowser.saveAs(fn)
 
     @pyqtSignature('')
-    def on_actionSaveImageAs_activated(self):
+    def on_actionSaveImageAs_triggered(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                             self.tr("Save image"), self.curDir,
                                             self.tr("PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)")
@@ -307,7 +307,7 @@ class Window(QMainWindow):
         #self.textBrowser.saveAs(fn)
 
     @pyqtSignature('')
-    def on_actionAbout_Lector_activated(self):
+    def on_actionAbout_Lector_triggered(self):
         QMessageBox.about(self, self.tr("About Lector"), self.tr(
           "<p>The <b>Lector</b> is a graphical ocr solution for GNU/"
           "Linux and Windows based on Python, Qt4 and tessaract OCR.</p>"
