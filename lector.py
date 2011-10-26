@@ -131,10 +131,10 @@ class Window(QMainWindow):
 
         self.ui.actionScan.setEnabled(False)
         if scanner:
-            self.on_actionChangeDevice_activated()
+            self.on_actionChangeDevice_triggered()
 
     @pyqtSignature('')
-    def on_actionChangeDevice_activated(self):
+    def on_actionChangeDevice_triggered(self):
         ##SANE
         try:
             import sane
@@ -172,8 +172,14 @@ class Window(QMainWindow):
     @pyqtSignature('')
     def on_actionSettings_triggered(self):
         settings = Settings(self)
+        QObject.connect(settings, SIGNAL('accepted()'),
+                    self.updateTextEditor)
         settings.show()
 
+
+    def updateTextEditor(self):
+        self.textBrowser.setupEditor()
+        
     @pyqtSignature('')
     def on_actionOpen_triggered(self):
         fn = unicode(QFileDialog.getOpenFileName(self,

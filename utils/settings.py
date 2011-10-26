@@ -1,4 +1,5 @@
 from PyQt4.QtCore import QSettings, QVariant
+from PyQt4.QtGui import QFont
 
 def set(name, value):
     settings = QSettings("Davide Setti", "Lector")
@@ -16,3 +17,5 @@ def get(name):
         return str(settings.value(name, QVariant("Color")).toString())
     elif name == 'scanner:device':
         return str(settings.value(name).toString())
+    elif name == 'editor:font':
+        return settings.value(name, QFont(QFont("Courier New", 10)))
