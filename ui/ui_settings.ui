@@ -133,6 +133,59 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="editor">
+        <attribute name="title">
+         <string>Editor</string>
+        </attribute>
+        <widget class="QGroupBox" name="fontGroupBox">
+         <property name="geometry">
+          <rect>
+           <x>5</x>
+           <y>10</y>
+           <width>426</width>
+           <height>60</height>
+          </rect>
+         </property>
+         <property name="title">
+          <string>Font</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_1">
+          <item row="0" column="0">
+           <widget class="QLabel" name="fontLabel">
+            <property name="text">
+             <string>Consolas, 12 pt</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="fontButton">
+            <property name="maximumSize">
+             <size>
+              <width>75</width>
+              <height>26</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Change...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <spacer name="horizontalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
        <widget class="QWidget" name="tesseract">
         <attribute name="title">
          <string>Tesseract</string>

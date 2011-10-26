@@ -9,13 +9,21 @@
 
 from __future__ import with_statement
 from PyQt4 import QtGui
+from utils import settings
 
-
-class TextWidget(QtGui.QTextBrowser):
+class TextWidget(QtGui.QTextEdit):
     def __init__(self, parent = None):
-        QtGui.QTextBrowser.__init__(self)
+        QtGui.QTextEdit.__init__(self)
 
         self.setReadOnly(False)
+        self.setupEditor()
+
+    def setupEditor(self):
+        '''
+        Init editor settings
+        '''
+        self.setFont(QtGui.QFont(settings.get('editor:font')))
+
 
     def saveAs(self, filename):
         dw = QtGui.QTextDocumentWriter()

@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>25</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -102,7 +102,10 @@
    <addaction name="actionZoomOut"/>
    <addaction name="separator"/>
    <addaction name="actionScan"/>
+   <addaction name="actionOpen"/>
    <addaction name="actionOcr"/>
+   <addaction name="separator"/>
+   <addaction name="actionExit"/>
   </widget>
   <widget class="QDockWidget" name="textBrowserDock">
    <property name="sizePolicy">
@@ -371,7 +374,7 @@
     <string>About Lector...</string>
    </property>
   </action>
-  <action name="actionSettings">
+  <action name="actionSettings_x">
    <property name="enabled">
     <bool>false</bool>
    </property>
@@ -387,6 +390,11 @@
     <string>Change Device</string>
    </property>
   </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="resources.qrc"/>
@@ -394,7 +402,7 @@
  <connections>
   <connection>
    <sender>actionExit</sender>
-   <signal>activated()</signal>
+   <signal>triggered()</signal>
    <receiver>Lector</receiver>
    <slot>close()</slot>
    <hints>
