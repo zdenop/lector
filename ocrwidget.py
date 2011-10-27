@@ -172,6 +172,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         elif (event.modifiers() == QtCore.Qt.ControlModifier and delta < 0):
             factor = 1.41 ** (event.delta() / 240.0)
             self.scale(factor,  factor)
+        else:
+            return QtGui.QGraphicsView.wheelEvent(self, event)
 
 
     def cambiaImmagine(self):
