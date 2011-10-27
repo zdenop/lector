@@ -9,11 +9,12 @@
 """
 
 from __future__ import with_statement
+import os
 import re
 
 from PyQt4 import QtGui,QtCore
 from PyQt4.Qt import Qt, QMenu
-from PyQt4.QtGui import QFont
+from PyQt4.QtGui import QFont,  QFileDialog,  QPrinter,  QPrintPreviewDialog
 
 from utils import settings
 
@@ -43,7 +44,9 @@ class TextWidget(QtGui.QTextEdit):
             dw.setFormat('plaintext')
         if filename.rsplit('.', 1)[1] in ("html", "htm"):
             dw.setFormat('HTML')
-
+        if filename.rsplit('.', 1)[1] in ("PDF", "pdf"):
+            self.filePrintPdf(filename)
+            return
         dw.setFileName(filename)
         dw.write(self.document())
 
@@ -165,6 +168,9 @@ class TextWidget(QtGui.QTextEdit):
             elif event.key() == Qt.Key_U:
                 self.toggleUnderline()
                 handled = True
+            elif event.key() == Qt.Key_O and event.modifiers() & Qt.AltModifier:
+                self.openFile()
+                handled = True
             else:
                 return QtGui.QTextEdit.keyPressEvent(self, event)
             if handled:
@@ -172,3 +178,36 @@ class TextWidget(QtGui.QTextEdit):
                 return
         else:
             QtGui.QTextEdit.keyPressEvent(self, event)
+
+    def openFile(self):
+        if settings.get("file_dialog_dir"):
+            self.curDir = '~/'
+        else:
+            self.curDir = settings.get("file_dialog_dir")
+        fn = unicode(QFileDialog.getOpenFileName(self,
+                self.tr("Open File..."), self.curDir,
+                self.tr("HTML-Files (*.htm *.html);;All Files (*)")))
+        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+        if fn:
+            self.lastFolder = os.path.dirname(fn)
+            if os.path.exists(fn):
+                if os.path.isfile(fn):
+                    f = QtCore.QFile(fn)
+                    if not f.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text):
+                        QtGui.QMessageBox.information(self.parent(), "Error - Lector",
+                    "Can't open %s."%fn)
+                    else:
+                        stream = QtCore.QTextStream(f)
+                        text = unicode(stream.readAll())
+                        self.setText(text)
+                else:
+                    QtGui.QMessageBox.information(self.parent(), "Error - Lector",
+                    "%s is not a file."%fn)
+        QtGui.QApplication.restoreOverrideCursor()
+
+    def filePrintPdf(self, fn):
+        printer = QPrinter(QPrinter.HighResolution)
+        printer.setPageSize(QPrinter.A4)
+        printer.setOutputFileName(fn)
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        self.document().print_(printer)
