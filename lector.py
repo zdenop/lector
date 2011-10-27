@@ -178,7 +178,7 @@ class Window(QMainWindow):
 
     def updateTextEditor(self):
         self.textEditor.setEditorFont()
-        
+
     @pyqtSignature('')
     def on_actionOpen_triggered(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
@@ -242,6 +242,8 @@ class Window(QMainWindow):
                                      ).toString()
         self.resize(size)
         self.move(pos)
+        self.restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
+        self.restoreState(settings.value("mainWindowState").toByteArray());
 
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
@@ -252,23 +254,14 @@ class Window(QMainWindow):
         except KeyError:
             pass
 
-        #TODO: ridimensionamento della dock non funziona
-        #pos = settings.value("textEditor/pos").toPoint()
-        #size = settings.value("textEditor/size", QVariant(QSize(200, 200))
-        #        ).toSize()
-        #self.ui.textEditor.resize(size)
-        #self.ui.textEditor.move(pos)
-
     def writeSettings(self):
         from utils import settings
 
         settings.set("pos", self.pos())
         settings.set("size", self.size())
         settings.set("file_dialog_dir", self.curDir)
-        #settings.setValue("textEditor/pos", QVariant(
-        #            self.ui.textEditorDock.pos()))
-        #settings.setValue("textEditor/size", QVariant(
-        #            self.ui.textEditorDock.size()))
+        settings.set("mainWindowGeometry", self.saveGeometry());
+        settings.set("mainWindowState", self.saveState());
 
         ## save language
         settings.set("rbtn/lang", self.ocrWidget.language)
