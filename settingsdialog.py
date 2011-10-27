@@ -28,6 +28,7 @@ class Settings(QDialog):
             self.colors.index(settings.get('scanner:mode')))
 
         self.changeFont(QFont(settings.get('editor:font')))
+        self.ui.checkBoxClear.setChecked(settings.get('editor:clear') )
 
 
     @pyqtSignature('')
@@ -46,6 +47,8 @@ class Settings(QDialog):
                      self.colors[self.ui.combColor.currentIndex()])
 
         settings.set('editor:font', self.ui.fontLabel.font())
+        print  "checkBoxClear:",  self.ui.checkBoxClear.isChecked()
+        settings.set('editor:clear', self.ui.checkBoxClear.isChecked())
 
         QDialog.accept(self)
 
