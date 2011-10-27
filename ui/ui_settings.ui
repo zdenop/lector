@@ -19,7 +19,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="scanner">
         <attribute name="title">
@@ -184,6 +184,22 @@
            </spacer>
           </item>
          </layout>
+        </widget>
+        <widget class="QCheckBox" name="checkBoxClear">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>80</y>
+           <width>171</width>
+           <height>19</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Clear editor before OCR</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
         </widget>
        </widget>
        <widget class="QWidget" name="tesseract">

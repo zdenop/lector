@@ -13,7 +13,7 @@ from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
 from ocrarea import OcrArea
 from ocrscene import OcrScene
-
+from utils import settings
 
 class QOcrWidget(QtGui.QGraphicsView):
     def __init__(self, lang, areaType, statusBar):
@@ -249,7 +249,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         aItems = self.scene().areas
         numItems = len(aItems)
 
-        self.textEditor.clear()
+        if settings.get('editor:clear') :
+            self.textEditor.clear()
 
         progress = QtGui.QProgressDialog(self.tr("Processing images..."),
                                          self.tr("Abort"), 0, numItems)
