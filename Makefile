@@ -1,13 +1,11 @@
-all: ui translation res
-
-ui:
-	pyuic4 ui/ui_lector.ui -o ui/ui_lector.py
-	pyuic4 ui/ui_settings.ui -o ui/ui_settings.py
-	pyuic4 ui/ui_scanner.ui -o ui/ui_scanner.py
+all: res translation
 
 resources:
 	pyrcc4 -o ui/resources_rc.py ui/resources.qrc
-
+	pyuic4 -o ui/ui_lector.py ui/ui_lector.ui
+	pyuic4 -o ui/ui_settings.py ui/ui_settings.ui
+	pyuic4 -o ui/ui_scanner.py ui/ui_scanner.ui
+	
 res: resources
 
 translation:
