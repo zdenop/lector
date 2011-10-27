@@ -249,7 +249,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         aItems = self.scene().areas
         numItems = len(aItems)
 
-        self.textBrowser.clear()
+        self.textEditor.clear()
 
         progress = QtGui.QProgressDialog(self.tr("Processing images..."),
                                          self.tr("Abort"), 0, numItems)
@@ -290,13 +290,13 @@ class QOcrWidget(QtGui.QGraphicsView):
                 os.popen(command)
 
                 s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
-                self.textBrowser.append(s)
+                self.textEditor.append(s)
             else:
                 region = region.resize((region.size[0]/4,region.size[1]/4))
                 region.save(filename)
 
                 s = "<img src='%s'>" % filename
-                self.textBrowser.append(s)
+                self.textEditor.append(s)
 
         progress.setValue(numItems)
 

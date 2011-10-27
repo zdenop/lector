@@ -35,9 +35,9 @@ class Window(QMainWindow):
         self.ui.setupUi(self)
 
         self.ocrWidget = QOcrWidget("eng", 1, self.statusBar())
-        self.textBrowser = TextWidget()
-        self.ui.textBrowserDock.setWidget(self.textBrowser)
-        self.ocrWidget.textBrowser = self.textBrowser
+        self.textEditor = TextWidget()
+        self.ui.textEditorDock.setWidget(self.textEditor)
+        self.ocrWidget.textEditor = self.textEditor
 
         self.setCentralWidget(self.ocrWidget)
 
@@ -176,9 +176,8 @@ class Window(QMainWindow):
                     self.updateTextEditor)
         settings.show()
 
-
     def updateTextEditor(self):
-        self.textBrowser.setupEditor()
+        self.textEditor.setEditorFont()
         
     @pyqtSignature('')
     def on_actionOpen_triggered(self):
@@ -254,11 +253,11 @@ class Window(QMainWindow):
             pass
 
         #TODO: ridimensionamento della dock non funziona
-        #pos = settings.value("textbrowser/pos").toPoint()
-        #size = settings.value("textbrowser/size", QVariant(QSize(200, 200))
+        #pos = settings.value("textEditor/pos").toPoint()
+        #size = settings.value("textEditor/size", QVariant(QSize(200, 200))
         #        ).toSize()
-        #self.ui.textBrowser.resize(size)
-        #self.ui.textBrowser.move(pos)
+        #self.ui.textEditor.resize(size)
+        #self.ui.textEditor.move(pos)
 
     def writeSettings(self):
         from utils import settings
@@ -266,10 +265,10 @@ class Window(QMainWindow):
         settings.set("pos", self.pos())
         settings.set("size", self.size())
         settings.set("file_dialog_dir", self.curDir)
-        #settings.setValue("textbrowser/pos", QVariant(
-        #            self.ui.textBrowserDock.pos()))
-        #settings.setValue("textbrowser/size", QVariant(
-        #            self.ui.textBrowserDock.size()))
+        #settings.setValue("textEditor/pos", QVariant(
+        #            self.ui.textEditorDock.pos()))
+        #settings.setValue("textEditor/size", QVariant(
+        #            self.ui.textEditorDock.size()))
 
         ## save language
         settings.set("rbtn/lang", self.ocrWidget.language)
@@ -296,7 +295,7 @@ class Window(QMainWindow):
         if not fn: return
 
         self.curDir = os.path.dirname(fn)
-        self.textBrowser.saveAs(fn)
+        self.textEditor.saveAs(fn)
 
     @pyqtSignature('')
     def on_actionSaveImageAs_triggered(self):
@@ -310,7 +309,7 @@ class Window(QMainWindow):
         ## TODO: move this to the Scene?
         ## TODO: if im is a jpeg, will pil convert it?
         self.ocrWidget.scene().im.save(fn)
-        #self.textBrowser.saveAs(fn)
+        #self.textEditor.saveAs(fn)
 
     @pyqtSignature('')
     def on_actionAbout_Lector_triggered(self):
