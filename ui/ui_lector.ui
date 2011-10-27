@@ -107,7 +107,7 @@
    <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
-  <widget class="QDockWidget" name="textBrowserDock">
+  <widget class="QDockWidget" name="textEditorDock">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
      <horstretch>0</horstretch>
