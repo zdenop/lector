@@ -283,7 +283,7 @@ class Window(QMainWindow):
     def on_actionSaveDocumentAs_triggered(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                                         self.tr("Save document"), self.curDir,
-                                        self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)")
+                                        self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)")
                                         ))
         if not fn: return
 
