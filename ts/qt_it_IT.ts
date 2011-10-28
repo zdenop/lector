@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="it">
+<!DOCTYPE TS><TS version="2.0" language="it" sourcelanguage="">
 <context>
     <name>Lector</name>
     <message>
@@ -33,143 +33,153 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="214"/>
+        <location filename="ui/ui_lector.ui" line="234"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="148"/>
+        <location filename="ui/ui_lector.ui" line="168"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="157"/>
+        <location filename="ui/ui_lector.ui" line="177"/>
         <source>Please select language for OCR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="167"/>
+        <location filename="ui/ui_lector.ui" line="187"/>
         <source>New area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="221"/>
+        <location filename="ui/ui_lector.ui" line="241"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="199"/>
+        <location filename="ui/ui_lector.ui" line="219"/>
         <source>Change selected area type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="202"/>
+        <location filename="ui/ui_lector.ui" line="222"/>
         <source>Edit area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="250"/>
+        <location filename="ui/ui_lector.ui" line="270"/>
         <source>&amp;Open image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="253"/>
+        <location filename="ui/ui_lector.ui" line="273"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="262"/>
+        <location filename="ui/ui_lector.ui" line="282"/>
         <source>Exit</source>
         <translation type="unfinished">Esci</translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="271"/>
+        <location filename="ui/ui_lector.ui" line="291"/>
         <source>Rotate right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="274"/>
+        <location filename="ui/ui_lector.ui" line="294"/>
         <source>Ctrl+Right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="283"/>
+        <location filename="ui/ui_lector.ui" line="303"/>
         <source>Rotate left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="286"/>
+        <location filename="ui/ui_lector.ui" line="306"/>
         <source>Ctrl+Left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="295"/>
+        <location filename="ui/ui_lector.ui" line="315"/>
         <source>Flip</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="298"/>
+        <location filename="ui/ui_lector.ui" line="318"/>
         <source>Ctrl+Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="307"/>
+        <location filename="ui/ui_lector.ui" line="327"/>
         <source>Zoom in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="310"/>
+        <location filename="ui/ui_lector.ui" line="330"/>
         <source>Ctrl++</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="319"/>
+        <location filename="ui/ui_lector.ui" line="339"/>
         <source>Zoom out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="322"/>
+        <location filename="ui/ui_lector.ui" line="342"/>
         <source>Ctrl+-</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="331"/>
+        <location filename="ui/ui_lector.ui" line="351"/>
         <source>Read</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="340"/>
+        <location filename="ui/ui_lector.ui" line="360"/>
         <source>Save text &amp;as</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="343"/>
+        <location filename="ui/ui_lector.ui" line="363"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="352"/>
+        <location filename="ui/ui_lector.ui" line="372"/>
         <source>Scan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="361"/>
+        <location filename="ui/ui_lector.ui" line="381"/>
         <source>Save image as</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="371"/>
+        <location filename="ui/ui_lector.ui" line="391"/>
         <source>About Lector...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="379"/>
+        <location filename="ui/ui_lector.ui" line="401"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_lector.ui" line="387"/>
+        <location filename="ui/ui_lector.ui" line="396"/>
         <source>Change Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_lector.ui" line="121"/>
+        <source>OCR results</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_lector.ui" line="129"/>
+        <source>editorToolBar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -784,12 +794,12 @@ Vuoi cancellarlo lo stesso?</translation>
 <context>
     <name>QOcrWidget</name>
     <message>
-        <location filename="ocrwidget.py" line="256"/>
+        <location filename="ocrwidget.py" line="259"/>
         <source>Processing images...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ocrwidget.py" line="254"/>
+        <location filename="ocrwidget.py" line="257"/>
         <source>Abort</source>
         <translation type="unfinished">Termina</translation>
     </message>
@@ -1327,251 +1337,289 @@ Seleziona un file differente.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ui/ui_settings.ui" line="138"/>
+        <location filename="ui/ui_settings.ui" line="207"/>
         <source>Tesseract</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_settings.ui" line="150"/>
+        <source>Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_settings.ui" line="156"/>
+        <source>Consolas, 12 pt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_settings.ui" line="169"/>
+        <source>Change...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_settings.ui" line="138"/>
+        <source>Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ui/ui_settings.ui" line="198"/>
+        <source>Clear editor before OCR</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextWidget</name>
+    <message>
+        <location filename="textwidget.py" line="189"/>
+        <source>Open File...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="textwidget.py" line="189"/>
+        <source>HTML-Files (*.htm *.html);;All Files (*)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Window</name>
     <message>
-        <location filename="lector.py" line="44"/>
+        <location filename="lector.py" line="91"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="77"/>
+        <location filename="lector.py" line="124"/>
         <source>Bulgarian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="78"/>
+        <location filename="lector.py" line="125"/>
         <source>Catalan</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="79"/>
+        <location filename="lector.py" line="126"/>
         <source>Czech</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="80"/>
+        <location filename="lector.py" line="127"/>
         <source>Chinese (Traditional)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="81"/>
+        <location filename="lector.py" line="128"/>
         <source>Chinese (Simplified)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="82"/>
+        <location filename="lector.py" line="129"/>
         <source>Danish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="83"/>
+        <location filename="lector.py" line="130"/>
         <source>Danish (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="84"/>
+        <location filename="lector.py" line="131"/>
         <source>Dutch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="85"/>
+        <location filename="lector.py" line="132"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="86"/>
+        <location filename="lector.py" line="133"/>
         <source>Finnish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="87"/>
+        <location filename="lector.py" line="134"/>
         <source>French</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="88"/>
+        <location filename="lector.py" line="135"/>
         <source>German</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="89"/>
+        <location filename="lector.py" line="136"/>
         <source>German (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="90"/>
+        <location filename="lector.py" line="137"/>
         <source>Greek</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="91"/>
+        <location filename="lector.py" line="138"/>
         <source>Hungarian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="92"/>
+        <location filename="lector.py" line="139"/>
         <source>Indonesian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="93"/>
+        <location filename="lector.py" line="140"/>
         <source>Italian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="94"/>
+        <location filename="lector.py" line="141"/>
         <source>Japanese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="95"/>
+        <location filename="lector.py" line="142"/>
         <source>Korean</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="96"/>
+        <location filename="lector.py" line="143"/>
         <source>Latvian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="97"/>
+        <location filename="lector.py" line="144"/>
         <source>Lithuanian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="98"/>
+        <location filename="lector.py" line="145"/>
         <source>Norwegian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="99"/>
+        <location filename="lector.py" line="146"/>
         <source>Polish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="100"/>
+        <location filename="lector.py" line="147"/>
         <source>Portuguese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="101"/>
+        <location filename="lector.py" line="148"/>
         <source>Romanian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="102"/>
+        <location filename="lector.py" line="149"/>
         <source>Russian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="103"/>
+        <location filename="lector.py" line="150"/>
         <source>Slovak</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="104"/>
+        <location filename="lector.py" line="151"/>
         <source>Slovak (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="105"/>
+        <location filename="lector.py" line="152"/>
         <source>Slovenian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="106"/>
+        <location filename="lector.py" line="153"/>
         <source>Spanish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="107"/>
+        <location filename="lector.py" line="154"/>
         <source>Serbian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="108"/>
+        <location filename="lector.py" line="155"/>
         <source>Swedish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="109"/>
+        <location filename="lector.py" line="156"/>
         <source>Swedish (Fraktur)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="110"/>
+        <location filename="lector.py" line="157"/>
         <source>Tagalog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="111"/>
+        <location filename="lector.py" line="158"/>
         <source>Turkish</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="112"/>
+        <location filename="lector.py" line="159"/>
         <source>Ukrainian</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="113"/>
+        <location filename="lector.py" line="160"/>
         <source>Vietnamese</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="180"/>
+        <location filename="lector.py" line="231"/>
         <source>Open image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="180"/>
+        <location filename="lector.py" line="231"/>
         <source>Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="280"/>
+        <location filename="lector.py" line="324"/>
         <source>Are you sure you want to exit?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="287"/>
+        <location filename="lector.py" line="331"/>
         <source>Save document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="298"/>
+        <location filename="lector.py" line="342"/>
         <source>Save image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="312"/>
+        <location filename="lector.py" line="356"/>
         <source>About Lector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="69"/>
+        <location filename="lector.py" line="116"/>
         <source>Tessaract not available. Please check requirements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="287"/>
-        <source>ODT document (*.odt);;Text file (*.txt);;HTML file (*.html)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="lector.py" line="298"/>
+        <location filename="lector.py" line="342"/>
         <source>PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="lector.py" line="312"/>
+        <location filename="lector.py" line="356"/>
         <source>&lt;p&gt;The &lt;b&gt;Lector&lt;/b&gt; is a graphical ocr solution for GNU/Linux and Windows based on Python, Qt4 and tessaract OCR.&lt;/p&gt;&lt;p&gt;Scanning option is available only on GNU/Linux via SANE.&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Author:&lt;/b&gt; Davide Setti&lt;/p&gt;&lt;p&gt;&lt;/p&gt;&lt;p&gt;&lt;b&gt;Contributors:&lt;/b&gt; chopinX04, filip.dominec, zdposter&lt;/p&gt;&lt;p&gt;&lt;b&gt;Web site:&lt;/b&gt; http://code.google.com/p/lector&lt;/p&gt;&lt;p&gt;&lt;b&gt;Source code:&lt;/b&gt; http://code.google.com/p/lector/source/checkout&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="lector.py" line="331"/>
+        <source>ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

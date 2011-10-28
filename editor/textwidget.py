@@ -14,10 +14,10 @@ import re
 
 from PyQt4 import QtGui,QtCore
 from PyQt4.Qt import Qt, QMenu
-from PyQt4.QtGui import QFont,  QFileDialog,  QPrinter,  QPrintPreviewDialog
+from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QPrintPreviewDialog
 
 from utils import settings
-
+from ui.ui_lector import Ui_Lector
 class TextWidget(QtGui.QTextEdit):
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
@@ -53,12 +53,12 @@ class TextWidget(QtGui.QTextEdit):
     def contextMenuEvent(self, event):
         contextMenu = self.createStandardContextMenu()
 
-        clearAction = QtGui.QAction("Clear", contextMenu)
+        self.clearAction = QtGui.QAction("Clear", contextMenu)
         contextMenu.addSeparator()
-        contextMenu.addAction(clearAction)
-        if not len(self.toPlainText()):
-            clearAction.setEnabled(False)
-        QtCore.QObject.connect(clearAction, QtCore.SIGNAL("triggered()"), self.clear)
+        contextMenu.addAction(self.clearAction)
+        # if not len(self.toPlainText()):
+            # clearAction.setEnabled(False)
+        QtCore.QObject.connect(self.clearAction, QtCore.SIGNAL("triggered()"), self.clear)
 
         textOpsMenu = QMenu('Text change...')
         if not self.textCursor().hasSelection():
@@ -66,8 +66,6 @@ class TextWidget(QtGui.QTextEdit):
 
         removeEOLAction = QtGui.QAction("Join lines", textOpsMenu, )
         textOpsMenu.addAction(removeEOLAction)
-        if not len(self.toPlainText()):
-            clearAction.setEnabled(False)
         QtCore.QObject.connect(removeEOLAction, QtCore.SIGNAL("triggered()"), self.removeEOL)
 
         textOpsMenu.addSeparator()

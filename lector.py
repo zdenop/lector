@@ -15,13 +15,14 @@ from PyQt4.QtCore import SIGNAL, QObject, QSettings, QVariant, \
     QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
     QTranslator
 from PyQt4.QtGui import QMainWindow, QRadioButton, QFileDialog, \
-    QMessageBox, QApplication, QComboBox
+    QMessageBox, QApplication, QComboBox, QToolBar, QToolButton, QDockWidget
+from PyQt4.Qt import Qt, QMenu
 
 ## Lector
 from ui.ui_lector import Ui_Lector
 from settingsdialog import Settings
 from ocrwidget import QOcrWidget
-from textwidget import TextWidget
+from editor.textwidget import TextWidget
 from utils import get_tesseract_languages
 
 class Window(QMainWindow):
@@ -35,8 +36,9 @@ class Window(QMainWindow):
         self.ui.setupUi(self)
 
         self.ocrWidget = QOcrWidget("eng", 1, self.statusBar())
+
         self.textEditor = TextWidget()
-        self.ui.textEditorDock.setWidget(self.textEditor)
+        self.ui.mwTextEditor.setCentralWidget(self.textEditor)
         self.ocrWidget.textEditor = self.textEditor
 
         self.setCentralWidget(self.ocrWidget)

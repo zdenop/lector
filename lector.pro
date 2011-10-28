@@ -4,7 +4,18 @@
 #INCLUDEPATH += .
 
 # Input
-SOURCES         += lector.py ocrwidget.py textwidget.py ocrscene.py
-FORMS           += ui/ui_lector.ui ui/ui_settings.ui ui/ui_scanner.ui
-TRANSLATIONS    =  ts/lector_it_IT.ts ts/lector_sk_SK.ts ts/lector_de_DE.ts ts/qt_it_IT.ts
-RESOURCES       =  resources.qrc
+SOURCES         += lector.py \
+                   ocrarea.py ocrscene.py ocrwidget.py \
+                   scannerselect.py scannerthread.py \
+                   editor/textwidget.py \
+                   utils/settings.py
+                   
+FORMS           += ui/ui_lector.ui \
+                   ui/ui_settings.ui \
+                   ui/ui_scanner.ui
+                   
+TRANSLATIONS    =  ts/lector_it_IT.ts ts/qt_it_IT.ts \
+                   ts/lector_de_DE.ts \
+                   ts/lector_sk_SK.ts
+
+RESOURCES       =  ui/resources.qrc
