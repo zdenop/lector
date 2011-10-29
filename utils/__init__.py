@@ -1,3 +1,15 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+    Lector utils
+
+    Copyright (C) 2011 Davide Setti, Zdenko Podobný
+    Website: http://code.google.com/p/lector
+
+    This program is released under the GNU GPLv2
+
+"""
 from PyQt4.QtGui import QImage
 from PyQt4.QtCore import QByteArray
 from subprocess import Popen, PIPE
@@ -49,3 +61,21 @@ def get_tesseract_languages():
 
     langdata = glob(tessdata_path + os.path.sep + '*' + langdata_ext)
     return [os.path.splitext(os.path.split(uc)[1])[0] for uc in langdata]
+
+def get_spellchecker_languages(directory = None):
+    """
+    Check if spellchecker is installed and provide list of languages
+    """
+    try:
+        import enchant
+        
+        if (directory):
+            enchant.set_param("enchant.myspell.dictionary.path", directory)
+        langs = enchant.list_languages()
+        return sorted(langs)
+
+    except:
+        print "can not start spellchecker!!!"
+        import traceback
+        traceback.print_exc()
+        return None
