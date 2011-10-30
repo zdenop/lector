@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/icons">
+    <file>../icons/configure.png</file>
     <file>../icons/L.png</file>
     <file>../icons/exit.png</file>
     <file>../icons/fileopen.png</file>
@@ -16,6 +17,5 @@
     <file>../ts/lector_de_DE.qm</file>
     <file>../ts/lector_sk_SK.qm</file>
     <file>../ts/lector_it_IT.qm</file>
-    <file>../ts/qt_it_IT.qm</file>
   </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-all: res translation
+all: translation res
 
 resources:
 	pyrcc4 -o ui/resources_rc.py ui/resources.qrc

@@ -25,12 +25,12 @@
     <message>
         <location filename="ui/ui_lector.ui" line="291"/>
         <source>Rotate right</source>
-        <translation>Otočiť doprava</translation>
+        <translation>Otočiť +90°</translation>
     </message>
     <message>
         <location filename="ui/ui_lector.ui" line="303"/>
         <source>Rotate left</source>
-        <translation>Otočiť doľava</translation>
+        <translation>Otočiť -90°</translation>
     </message>
     <message>
         <location filename="ui/ui_lector.ui" line="315"/>

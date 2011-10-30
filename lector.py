@@ -344,16 +344,11 @@ if __name__ == "__main__":
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
     locale = QLocale.system().name()
-    lecTranslator = QTranslator()
-    if lecTranslator.load(":/translations/ts/lector_" + locale, 'ts'):
-        app.installTranslator(lecTranslator)
-
     qtTranslator = QTranslator()
-    if qtTranslator.load("qt_" + locale, 'ts'):
+    if qtTranslator.load(":/translations/ts/lector_" + locale, 'ts'):
         app.installTranslator(qtTranslator)
 
     window = Window(scanner=scanner)
-
     window.show()
 
     sys.exit(app.exec_())
