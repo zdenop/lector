@@ -1,1 +1,6 @@
 Icons come from the nuvola project and some KDE icons.
+
+spellchecker.py code is from John Schember <john@nachtimwald.com>. This 
+code is realease under MIT licence. Please check his blog 
+http://john.nachtimwald.com/2009/08/22/qplaintextedit-with-in-line-spell-check/
+or his great project http://code.google.com/p/marave/
