@@ -18,11 +18,14 @@ from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QPrintPreviewDialog
 
 from utils import settings
 from ui.ui_lector import Ui_Lector
+from spellchecker import *
+
 class TextWidget(QtGui.QTextEdit):
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
 
         self.setupEditor()
+        self.initSpellchecker()
 
     def setupEditor(self):
         '''
@@ -32,37 +35,81 @@ class TextWidget(QtGui.QTextEdit):
         self.setReadOnly(False)
         self.setEditorFont()
 
+    def initSpellchecker(self):
+        try: 
+            import enchant
+            spellDictDir = settings.get('spellchecker:directory')
+            if spellDictDir:
+                print "additianal directory with dictionaries:", spellDictDir
+                enchant.set_param("enchant.myspell.dictionary.path", spellDictDir)
+
+            spellLang = settings.get('spellchecker:lang')
+            if enchant.dict_exists(spellLang):
+                print "spellLang:", spellLang
+                self.dict = enchant.Dict(spellLang)
+            else:
+                # try dictionary based on the current locale
+                self.dict = enchant.Dict()
+
+            self.highlighter = Highlighter(self.document())
+            self.highlighter.setDict(self.dict)
+        except:
+            print "can not start spellchecker!!!"
+            import traceback
+            traceback.print_exc()
+            return None
+
+    def mousePressEvent(self, event):
+        """
+        Select misspelled word after right click
+        otherwise left clik + right click is needed.
+        
+        Originally from John Schember spellchecker
+        """
+        if event.button() == Qt.RightButton:
+            # Rewrite the mouse event to a left button event so the cursor is
+            # moved to the location of the pointer.
+            event = QMouseEvent(QEvent.MouseButtonPress, event.pos(),
+                Qt.LeftButton, Qt.LeftButton, Qt.NoModifier)
+        QtGui.QTextEdit.mousePressEvent(self, event)
+        
     def setEditorFont(self):
         self.setFont(QtGui.QFont(settings.get('editor:font')))
 
-    def saveAs(self, filename):
-        dw = QtGui.QTextDocumentWriter()
-        dw.setFormat('ODF')  # Default format
-
-        # Check for alternative output format
-        if filename.rsplit('.', 1)[1] == "txt":
-            dw.setFormat('plaintext')
-        if filename.rsplit('.', 1)[1] in ("html", "htm"):
-            dw.setFormat('HTML')
-        if filename.rsplit('.', 1)[1] in ("PDF", "pdf"):
-            self.filePrintPdf(filename)
-            return
-        dw.setFileName(filename)
-        dw.write(self.document())
+    def keyPressEvent(self, event):
+        if event.modifiers() & Qt.ControlModifier:
+            handled = False
+            if event.key() == Qt.Key_B:
+                self.toggleBold()
+                handled = True
+            elif event.key() == Qt.Key_I:
+                self.toggleItalic()
+                handled = True
+            elif event.key() == Qt.Key_U:
+                self.toggleUnderline()
+                handled = True
+            elif event.key() == Qt.Key_O and event.modifiers() & Qt.AltModifier:
+                self.openFile()
+                handled = True
+            else:
+                return QtGui.QTextEdit.keyPressEvent(self, event)
+            if handled:
+                event.accept()
+                return
+        else:
+            QtGui.QTextEdit.keyPressEvent(self, event)
 
     def contextMenuEvent(self, event):
         contextMenu = self.createStandardContextMenu()
-
+        
         self.clearAction = QtGui.QAction("Clear", contextMenu)
         contextMenu.addSeparator()
         contextMenu.addAction(self.clearAction)
-        # if not len(self.toPlainText()):
-            # clearAction.setEnabled(False)
+        if not len(self.toPlainText()):
+            clearAction.setEnabled(False)
         QtCore.QObject.connect(self.clearAction, QtCore.SIGNAL("triggered()"), self.clear)
 
         textOpsMenu = QMenu('Text change...')
-        if not self.textCursor().hasSelection():
-            textOpsMenu.setEnabled(False)
 
         removeEOLAction = QtGui.QAction("Join lines", textOpsMenu, )
         textOpsMenu.addAction(removeEOLAction)
@@ -88,6 +135,30 @@ class TextWidget(QtGui.QTextEdit):
 
         contextMenu.insertSeparator(contextMenu.actions()[0])
         contextMenu.insertMenu(contextMenu.actions()[0], textOpsMenu)
+
+        if not self.textCursor().hasSelection():
+            textOpsMenu.setEnabled(False)
+            
+            # Select the word under the cursor for spellchecker
+            cursor = self.textCursor()
+            cursor.select(QTextCursor.WordUnderCursor)
+            self.setTextCursor(cursor)
+            
+            # Check if the selected word is misspelled and offer spelling
+            # suggestions if it is.
+            if self.textCursor().hasSelection():
+                text = unicode(self.textCursor().selectedText())
+                if not self.dict.check(text):
+                    spell_menu = QMenu('Spelling Suggestions')
+                    for word in self.dict.suggest(text):
+                        action = SpellAction(word, spell_menu)
+                        action.correct.connect(self.changeText)
+                        spell_menu.addAction(action)
+                    # Only add the spelling suggests to the menu if there are
+                    # suggestions.
+                    if len(spell_menu.actions()) != 0:
+                        contextMenu.insertSeparator(contextMenu.actions()[0])
+                        contextMenu.insertMenu(contextMenu.actions()[0], spell_menu)
 
         contextMenu.exec_(event.globalPos())
         event.accept()
@@ -154,28 +225,20 @@ class TextWidget(QtGui.QTextEdit):
         self.setFontWeight(QFont.Normal
                 if self.fontWeight() > QFont.Normal else QFont.Bold)
 
-    def keyPressEvent(self, event):
-        if event.modifiers() & Qt.ControlModifier:
-            handled = False
-            if event.key() == Qt.Key_B:
-                self.toggleBold()
-                handled = True
-            elif event.key() == Qt.Key_I:
-                self.toggleItalic()
-                handled = True
-            elif event.key() == Qt.Key_U:
-                self.toggleUnderline()
-                handled = True
-            elif event.key() == Qt.Key_O and event.modifiers() & Qt.AltModifier:
-                self.openFile()
-                handled = True
-            else:
-                return QtGui.QTextEdit.keyPressEvent(self, event)
-            if handled:
-                event.accept()
-                return
-        else:
-            QtGui.QTextEdit.keyPressEvent(self, event)
+    def saveAs(self, filename):
+        dw = QtGui.QTextDocumentWriter()
+        dw.setFormat('ODF')  # Default format
+
+        # Check for alternative output format
+        if filename.rsplit('.', 1)[1] == "txt":
+            dw.setFormat('plaintext')
+        if filename.rsplit('.', 1)[1] in ("html", "htm"):
+            dw.setFormat('HTML')
+        if filename.rsplit('.', 1)[1] in ("PDF", "pdf"):
+            self.filePrintPdf(filename)
+            return
+        dw.setFileName(filename)
+        dw.write(self.document())
 
     def openFile(self):
         if settings.get("file_dialog_dir"):
