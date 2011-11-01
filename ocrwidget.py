@@ -7,10 +7,11 @@
     This program is released under the GNU GPLv2
 """
 
+import glob
 import Image
 import os
+
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QApplication as qa
 from ocrarea import OcrArea
 from ocrscene import OcrScene
 from utils import settings
@@ -254,6 +255,10 @@ class QOcrWidget(QtGui.QGraphicsView):
         if settings.get('editor:clear') :
             self.textEditor.clear()
 
+        # clean temp to avoid false imports
+        for oldOutPut in glob.glob('/tmp/out.[0-9]*.txt'):
+            os.remove(oldOutPut)
+
         progress = QtGui.QProgressDialog(self.tr("Processing images..."),
                                          self.tr("Abort"), 0, numItems)
         progress.setWindowTitle(self.tr("Processing images..."))
@@ -276,24 +281,34 @@ class QOcrWidget(QtGui.QGraphicsView):
 
             box = (int(pos.x()), int(pos.y()), int(rect.width() + pos.x()), \
                     int(rect.height() + pos.y()))
+            # TODO: make random filename if we do not debug lector ;-)
+            # TODO: use png if tesseract version is > 3.00
             filename = "/tmp/out.%d.tif" % i
 
             region = self.scene().im.crop(box)
 
             if item.type == 1:
-                ## Improve quality of text for tesseract
-                ## TODO: put it as option for OCR because of longer duration
+                # Improve quality of text for tesseract
+                # TODO: put it as option for OCR because of longer duration
                 nx, ny = rect.width(), rect.height()
                 region = region.resize((int(nx*3), int(ny*3)), \
                             Image.BICUBIC).convert('L')
                 region.save(filename, dpi=(600, 600))
-
+                # TODO: use html/hocr if tesseract version is > 3.01
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
                                                               self.language)
                 os.popen(command)
-
-                s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
-                self.textEditor.append(s)
+                
+                if os.path.exists("/tmp/out.%d.txt" % i):
+                    s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
+                    self.textEditor.append(s)
+                    # TODO: delete image & OCR result if we do not debug lector ;-)
+                else:
+                    ## TODO: tesseract failed.
+                    ## 1. process/print error message
+                    ## 2. mark area as problematic
+                    print "Tesseract was unabled to process area!"
+                    # this can happend if left side of text is blury
             else:
                 region = region.resize((region.size[0]/4,region.size[1]/4))
                 region.save(filename)
