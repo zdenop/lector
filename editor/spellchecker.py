@@ -10,12 +10,8 @@
 
 import re
 
-from PyQt4.Qt import QAction, QEvent, QMenu, QMouseEvent
-
-from PyQt4.Qt import QSyntaxHighlighter
-from PyQt4.Qt import QTextCharFormat
-from PyQt4.Qt import QTextCursor
-from PyQt4.Qt import Qt
+from PyQt4.Qt import Qt,  QAction, QEvent, QMenu, QMouseEvent
+from PyQt4.Qt import QSyntaxHighlighter, QTextCharFormat, QTextCursor
 from PyQt4.QtCore import pyqtSignal
  
 class Highlighter(QSyntaxHighlighter):
@@ -47,7 +43,6 @@ class Highlighter(QSyntaxHighlighter):
  
  
 class SpellAction(QAction):
- 
     '''
     A special QAction that returns the text in a signal.
     '''
