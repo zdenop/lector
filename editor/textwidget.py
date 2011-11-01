@@ -15,10 +15,11 @@ import re
 
 from PyQt4 import QtGui, QtCore
 from PyQt4.Qt import Qt, QMenu, QApplication, QMainWindow, QToolBar
-from PyQt4.Qt import QSize, QObject, SIGNAL, QString
-from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QPrintPreviewDialog
+from PyQt4.Qt import QSize, QAction, QObject, SIGNAL, QString
+from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
+from PyQt4.QtCore import pyqtSignal, QEvent
 
-from spellchecker import *
+from spellchecker import Highlighter, SpellAction
 
 # workaroung to run textwidget outside of Lector
 cmd_folder = os.path.dirname(os.path.abspath(__file__))
@@ -29,10 +30,10 @@ if cmd_folder not in sys.path:
 import ui.resources_rc
 from utils import settings
 from settingsdialog import Settings
-from ui.ui_lector import Ui_Lector
 
 class EditorBar(QToolBar):
     saveDocAsSignal = pyqtSignal()
+    spellSignal = pyqtSignal(bool)
     boldSignal = pyqtSignal()
     italicSignal = pyqtSignal()
     underlineSignal = pyqtSignal()
@@ -56,6 +57,15 @@ class EditorBar(QToolBar):
         self.saveDocAsAction.triggered.connect(self.SaveDocumentAs)
         self.saveDocAsAction.setIcon(QtGui.QIcon(":/icons/icons/filesave.png"))
         self.addAction(self.saveDocAsAction)
+        
+        self.spellAction = QAction('Spellchecking', self)
+        self.spellAction.setIcon(QtGui.QIcon(":/icons/icons/tools-check-spelling.png"))
+        self.spellAction.setCheckable(True)
+        # TODO: based on settings!
+        self.spellAction.setChecked(True)
+        self.spellAction.toggled.connect(self.spell)
+        self.insertSeparator(self.spellAction)
+        self.addAction(self.spellAction)
         
         self.BoldAction = QAction('Bold', self)
         self.BoldAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-bold.png"))
@@ -87,6 +97,20 @@ class EditorBar(QToolBar):
         self.SuperscriptAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-superscript.png"))
         self.SuperscriptAction.triggered.connect(self.superscript)
         self.addAction(self.SuperscriptAction)
+
+    def settings(self):
+        lectorSettings = Settings(self, 1)
+#        QObject.connect(lectorSettings, SIGNAL('accepted()'),
+#                    self.updateTextEditor)
+        lectorSettings.show()
+
+    def SaveDocumentAs(self):
+        self.saveDocAsSignal.emit()
+
+    def spell(self):
+        state = self.spellAction.isChecked()
+        print "self.spellAction.isChecked", state
+        self.spellSignal.emit(state)
         
     def bold(self):
         self.boldSignal.emit()
@@ -106,14 +130,6 @@ class EditorBar(QToolBar):
     def superscript(self):
         self.superscriptSignal.emit()
 
-    def settings(self):
-        settings = Settings(self, 1)
-#        QObject.connect(settings, SIGNAL('accepted()'),
-#                    self.updateTextEditor)
-        settings.show()
-
-    def SaveDocumentAs(self):
-        self.saveDocAsSignal.emit()
 
 class TextWidget(QtGui.QTextEdit):
 
@@ -153,6 +169,16 @@ class TextWidget(QtGui.QTextEdit):
             traceback.print_exc()
             return None
 
+    def stopSpellchecker(self):
+        self.highlighter.setDocument(None)
+        self.dict = None
+
+    def toggleSpell(self, state):
+        if state:
+            self.initSpellchecker()
+        else:
+            self.stopSpellchecker()
+        
     def mousePressEvent(self, event):
         """
         Select misspelled word after right click
@@ -173,6 +199,12 @@ class TextWidget(QtGui.QTextEdit):
     def keyPressEvent(self, event):
         if event.modifiers() & Qt.ControlModifier:
             handled = False
+            if event.key() == Qt.Key_Q:
+                self.stopSpellchecker()
+                handled = True
+            if event.key() == Qt.Key_E:
+                self.initSpellchecker()
+                handled = True
             if event.key() == Qt.Key_B:
                 self.toggleBold()
                 handled = True
@@ -414,6 +446,7 @@ def main(args=sys.argv):
     textEditor = TextWidget(textEditorBar)
 
     textEditorBar.saveDocAsSignal.connect(textEditor.saveAs)
+    textEditorBar.spellSignal.connect(textEditor.toggleSpell)
     textEditorBar.boldSignal.connect(textEditor.toggleBold)
     textEditorBar.italicSignal.connect(textEditor.toggleItalic)
     textEditorBar.underlineSignal.connect(textEditor.toggleUnderline)
