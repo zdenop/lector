@@ -1,0 +1,11 @@
+0.3.0
+- editor improvements:
+  * spellchecker support
+  * formating: bold/italic/undelined
+  * case operation: UPPERCASE, lowercase, Title, Capitalize
+  * joining lines (creating paragraphs)
+  * export to pdf via "Save As"
+
+0.2.91
+- added support for scanning (under linux) via SANE
+- remove abiword dependency

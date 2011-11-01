@@ -1,0 +1,11 @@
+Requirements:
+
+    tesseract >= 2.00 (with language packages)
+    python
+    pil
+    pyqt4 >= 4.3
+
+Optional:
+    pil-sane
+    sane-utils (for scanning under linux)
+    pyenchant (for spellchecking)
