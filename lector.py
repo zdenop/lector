@@ -14,9 +14,7 @@ import os
 from PyQt4.QtCore import SIGNAL, QObject, QSettings, QVariant, \
     QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
     QTranslator
-from PyQt4.QtGui import QMainWindow, QRadioButton, QFileDialog, \
-    QMessageBox, QApplication, QComboBox, QToolBar, QToolButton, QDockWidget
-from PyQt4.Qt import Qt, QMenu
+from PyQt4.QtGui import QMainWindow, QFileDialog, QMessageBox, QApplication
 
 ## Lector
 from ui.ui_lector import Ui_Lector
