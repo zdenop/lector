@@ -14,7 +14,9 @@ import os
 from PyQt4.QtCore import SIGNAL, QObject, QSettings, QVariant, \
     QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
     QTranslator
-from PyQt4.QtGui import QMainWindow, QFileDialog, QMessageBox, QApplication
+from PyQt4.QtGui import QMainWindow, QRadioButton, QFileDialog, \
+    QMessageBox, QApplication, QComboBox, QToolBar, QToolButton, QDockWidget
+from PyQt4.Qt import Qt, QMenu
 
 ## Lector
 from ui.ui_lector import Ui_Lector
@@ -39,6 +41,12 @@ class Window(QMainWindow):
         self.textEditorBar = EditorBar()
         self.textEditorBar.saveDocAsSignal.connect(self.textEditor.saveAs)
         self.textEditorBar.boldSignal.connect(self.textEditor.toggleBold)
+        self.textEditorBar.italicSignal.connect(self.textEditor.toggleItalic)
+        self.textEditorBar.underlineSignal.connect(self.textEditor.toggleUnderline)
+        self.textEditorBar.strikethroughSignal.connect(self.textEditor.toggleStrikethrough)
+        self.textEditorBar.subscriptSignal.connect(self.textEditor.toggleSubscript)
+        self.textEditorBar.superscriptSignal.connect(self.textEditor.toggleSuperscript)
+
         self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
         self.ocrWidget.textEditor = self.textEditor
