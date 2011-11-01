@@ -25,7 +25,7 @@
      <x>0</x>
      <y>0</y>
      <width>776</width>
-     <height>23</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -123,27 +123,7 @@
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
-   <widget class="QMainWindow" name="mwTextEditor">
-    <widget class="QToolBar" name="editorToolBar">
-     <property name="windowTitle">
-      <string>editorToolBar</string>
-     </property>
-     <property name="movable">
-      <bool>true</bool>
-     </property>
-     <property name="floatable">
-      <bool>true</bool>
-     </property>
-     <attribute name="toolBarArea">
-      <enum>TopToolBarArea</enum>
-     </attribute>
-     <attribute name="toolBarBreak">
-      <bool>false</bool>
-     </attribute>
-     <addaction name="actionSaveDocumentAs"/>
-     <addaction name="actionSettings"/>
-    </widget>
-   </widget>
+   <widget class="QMainWindow" name="mwTextEditor"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget">
    <property name="minimumSize">

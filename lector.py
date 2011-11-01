@@ -20,7 +20,7 @@ from PyQt4.QtGui import QMainWindow, QFileDialog, QMessageBox, QApplication
 from ui.ui_lector import Ui_Lector
 from settingsdialog import Settings
 from ocrwidget import QOcrWidget
-from editor.textwidget import TextWidget
+from editor.textwidget import TextWidget, EditorBar
 from utils import get_tesseract_languages
 
 class Window(QMainWindow):
@@ -36,6 +36,10 @@ class Window(QMainWindow):
         self.ocrWidget = QOcrWidget("eng", 1, self.statusBar())
 
         self.textEditor = TextWidget()
+        self.textEditorBar = EditorBar()
+        self.textEditorBar.saveDocAsSignal.connect(self.textEditor.saveAs)
+        self.textEditorBar.boldSignal.connect(self.textEditor.toggleBold)
+        self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
         self.ocrWidget.textEditor = self.textEditor
 
@@ -281,14 +285,7 @@ class Window(QMainWindow):
 
     @pyqtSignature('')
     def on_actionSaveDocumentAs_triggered(self):
-        fn = unicode(QFileDialog.getSaveFileName(self,
-                                        self.tr("Save document"), self.curDir,
-                                        self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)")
-                                        ))
-        if not fn: return
-
-        self.curDir = os.path.dirname(fn)
-        self.textEditor.saveAs(fn)
+        self.textEditor.saveAs()
 
     @pyqtSignature('')
     def on_actionSaveImageAs_triggered(self):
