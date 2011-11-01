@@ -23,11 +23,13 @@ from distutils.core import setup
     
 setup(name = 'Lector',
     description = 'Graphical OCR solution',
-    version = '0.3.0',
+    version = '0.3.0-alpha1',
     author = 'Davide Setti',
     url = 'http://code.google.com/p/lector/',
     package_dir = {'lector': './'},
     packages = ['editor', 'icons', 'ui', 'utils', 'ts'],
+    data_files = ['AUTHORS', 'CREDITS', 'ChangeLog', 'LICENSE', 
+        'README'],
     scripts = ['./lector.py', 'ocrarea.py', 'ocrscene.py', 
         'ocrwidget.py', 'scannerselect.py', 
         'scannerthread.py', 'settingsdialog.py'],
@@ -52,6 +54,6 @@ setup(name = 'Lector',
         'Topic :: Multimedia',
         'Topic :: Multimedia :: Graphics'
         ],
-          
+ 
     )
 
