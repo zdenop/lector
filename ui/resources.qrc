@@ -19,6 +19,7 @@
     <file>../icons/format-text-superscript.png</file>
     <file>../icons/format-text-underline.png</file>
     <file>../icons/format-text-color.png</file>
+    <file>../icons/tools-check-spelling.png</file>
   </qresource>
   <qresource prefix="/translations">
     <file>../ts/lector_de_DE.qm</file>
