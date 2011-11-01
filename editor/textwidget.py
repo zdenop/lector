@@ -34,12 +34,19 @@ from ui.ui_lector import Ui_Lector
 class EditorBar(QToolBar):
     saveDocAsSignal = pyqtSignal()
     boldSignal = pyqtSignal()
-    
+    italicSignal = pyqtSignal()
+    underlineSignal = pyqtSignal()
+    strikethroughSignal = pyqtSignal()
+    subscriptSignal = pyqtSignal()
+    superscriptSignal = pyqtSignal()
+
     def __init__(self, parent = None):
         QtGui.QToolBar.__init__(self,  parent)
         self.setWindowTitle('EditorBar')
         self.setIconSize(QSize(16,16))
-        
+        self.createActions()
+
+    def createActions(self):
         self.settingsAction = QAction('Settings', self)
         self.settingsAction.setIcon(QtGui.QIcon(":/icons/icons/configure.png"))
         self.settingsAction.triggered.connect(self.settings)
@@ -55,9 +62,49 @@ class EditorBar(QToolBar):
         self.BoldAction.triggered.connect(self.bold)
         self.insertSeparator(self.BoldAction)
         self.addAction(self.BoldAction)
+        
+        self.ItalicAction = QAction('Italic', self)
+        self.ItalicAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-italic.png"))
+        self.ItalicAction.triggered.connect(self.italic)
+        self.addAction(self.ItalicAction)
+         
+        self.UnderlineAction = QAction('Underline', self)
+        self.UnderlineAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-underline.png"))
+        self.UnderlineAction.triggered.connect(self.underline)
+        self.addAction(self.UnderlineAction)
+        
+        self.StrikethroughAction = QAction('Strikethrough', self)
+        self.StrikethroughAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-strikethrough.png"))
+        self.StrikethroughAction.triggered.connect(self.strikethrough)
+        self.addAction(self.StrikethroughAction)
 
+        self.SubscriptAction = QAction('Subscript', self)
+        self.SubscriptAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-subscript.png"))
+        self.SubscriptAction.triggered.connect(self.subscript)
+        self.addAction(self.SubscriptAction)
+        
+        self.SuperscriptAction = QAction('Superscript', self)
+        self.SuperscriptAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-superscript.png"))
+        self.SuperscriptAction.triggered.connect(self.superscript)
+        self.addAction(self.SuperscriptAction)
+        
     def bold(self):
         self.boldSignal.emit()
+
+    def italic(self):
+        self.italicSignal.emit()
+
+    def underline(self):
+        self.underlineSignal.emit()
+
+    def strikethrough(self):
+        self.strikethroughSignal.emit()
+
+    def subscript(self):
+        self.subscriptSignal.emit()
+
+    def superscript(self):
+        self.superscriptSignal.emit()
 
     def settings(self):
         settings = Settings(self, 1)
@@ -269,15 +316,34 @@ class TextWidget(QtGui.QTextEdit):
         cursor.insertText(newText)
         cursor.endEditBlock()
 
+
+    def toggleBold(self):
+        self.setFontWeight(QFont.Normal
+                if self.fontWeight() > QFont.Normal else QFont.Bold)
+
     def toggleItalic(self):
         self.setFontItalic(not self.fontItalic())
 
     def toggleUnderline(self):
         self.setFontUnderline(not self.fontUnderline())
 
-    def toggleBold(self):
-        self.setFontWeight(QFont.Normal
-                if self.fontWeight() > QFont.Normal else QFont.Bold)
+    def toggleStrikethrough(self):
+        format = self.currentCharFormat() 
+        format.setFontStrikeOut(not format.fontStrikeOut())
+        self.mergeCurrentCharFormat(format) 
+
+    def toggleSubscript(self):
+        format = self.currentCharFormat() 
+        format.setVerticalAlignment(
+                        QTextCharFormat.AlignSubScript)
+        self.mergeCurrentCharFormat(format)
+
+    def toggleSuperscript(self):
+        format = self.currentCharFormat() 
+        format.setVerticalAlignment(
+                        QTextCharFormat.AlignSuperScript)
+        self.mergeCurrentCharFormat(format)
+
 
     def saveAs(self):
         #TODO: self.curDir
@@ -344,12 +410,18 @@ def main(args=sys.argv):
 
 
     mwTextEditor = QMainWindow() 
-    viewToolBar = EditorBar(mwTextEditor)
-    textEditor = TextWidget()
+    textEditorBar = EditorBar(mwTextEditor)
+    textEditor = TextWidget(textEditorBar)
 
-    viewToolBar.saveDocAsSignal.connect(textEditor.saveAs)
-    viewToolBar.boldSignal.connect(textEditor.toggleBold)
-    mwTextEditor.addToolBar(viewToolBar) 
+    textEditorBar.saveDocAsSignal.connect(textEditor.saveAs)
+    textEditorBar.boldSignal.connect(textEditor.toggleBold)
+    textEditorBar.italicSignal.connect(textEditor.toggleItalic)
+    textEditorBar.underlineSignal.connect(textEditor.toggleUnderline)
+    textEditorBar.strikethroughSignal.connect(textEditor.toggleStrikethrough)
+    textEditorBar.subscriptSignal.connect(textEditor.toggleSubscript)
+    textEditorBar.superscriptSignal.connect(textEditor.toggleSuperscript)
+    
+    mwTextEditor.addToolBar(textEditorBar) 
     mwTextEditor.setCentralWidget(textEditor)
 
     mwTextEditor.show()
