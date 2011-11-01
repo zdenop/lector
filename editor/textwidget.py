@@ -10,17 +10,66 @@
 
 from __future__ import with_statement
 import os
+import sys
 import re
 
-from PyQt4 import QtGui,QtCore
-from PyQt4.Qt import Qt, QMenu
+from PyQt4 import QtGui, QtCore
+from PyQt4.Qt import Qt, QMenu, QApplication, QMainWindow, QToolBar
+from PyQt4.Qt import QSize, QObject, SIGNAL, QString
 from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QPrintPreviewDialog
 
-from utils import settings
-from ui.ui_lector import Ui_Lector
 from spellchecker import *
 
+# workaroung to run textwidget outside of Lector
+cmd_folder = os.path.dirname(os.path.abspath(__file__))
+cmd_folder += "/../"
+if cmd_folder not in sys.path:
+    sys.path.insert(0, cmd_folder)
+
+import ui.resources_rc
+from utils import settings
+from settingsdialog import Settings
+from ui.ui_lector import Ui_Lector
+
+class EditorBar(QToolBar):
+    saveDocAsSignal = pyqtSignal()
+    boldSignal = pyqtSignal()
+    
+    def __init__(self, parent = None):
+        QtGui.QToolBar.__init__(self,  parent)
+        self.setWindowTitle('EditorBar')
+        self.setIconSize(QSize(16,16))
+        
+        self.settingsAction = QAction('Settings', self)
+        self.settingsAction.setIcon(QtGui.QIcon(":/icons/icons/configure.png"))
+        self.settingsAction.triggered.connect(self.settings)
+        self.addAction(self.settingsAction)
+        
+        self.saveDocAsAction = QAction('Save As', self)
+        self.saveDocAsAction.triggered.connect(self.SaveDocumentAs)
+        self.saveDocAsAction.setIcon(QtGui.QIcon(":/icons/icons/filesave.png"))
+        self.addAction(self.saveDocAsAction)
+        
+        self.BoldAction = QAction('Bold', self)
+        self.BoldAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-bold.png"))
+        self.BoldAction.triggered.connect(self.bold)
+        self.insertSeparator(self.BoldAction)
+        self.addAction(self.BoldAction)
+
+    def bold(self):
+        self.boldSignal.emit()
+
+    def settings(self):
+        settings = Settings(self, 1)
+#        QObject.connect(settings, SIGNAL('accepted()'),
+#                    self.updateTextEditor)
+        settings.show()
+
+    def SaveDocumentAs(self):
+        self.saveDocAsSignal.emit()
+
 class TextWidget(QtGui.QTextEdit):
+
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
 
@@ -40,12 +89,10 @@ class TextWidget(QtGui.QTextEdit):
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
             if spellDictDir:
-                print "additianal directory with dictionaries:", spellDictDir
                 enchant.set_param("enchant.myspell.dictionary.path", spellDictDir)
 
             spellLang = settings.get('spellchecker:lang')
             if enchant.dict_exists(spellLang):
-                print "spellLang:", spellLang
                 self.dict = enchant.Dict(spellLang)
             else:
                 # try dictionary based on the current locale
@@ -106,32 +153,38 @@ class TextWidget(QtGui.QTextEdit):
         contextMenu.addSeparator()
         contextMenu.addAction(self.clearAction)
         if not len(self.toPlainText()):
-            clearAction.setEnabled(False)
-        QtCore.QObject.connect(self.clearAction, QtCore.SIGNAL("triggered()"), self.clear)
+            self.clearAction.setEnabled(False)
+        QtCore.QObject.connect(self.clearAction,
+                               QtCore.SIGNAL("triggered()"), self.clear)
 
         textOpsMenu = QMenu('Text change...')
 
         removeEOLAction = QtGui.QAction("Join lines", textOpsMenu, )
         textOpsMenu.addAction(removeEOLAction)
-        QtCore.QObject.connect(removeEOLAction, QtCore.SIGNAL("triggered()"), self.removeEOL)
+        QtCore.QObject.connect(removeEOLAction,
+                               QtCore.SIGNAL("triggered()"), self.removeEOL)
 
         textOpsMenu.addSeparator()
 
         toUppercaseAction = QtGui.QAction("to UPPERCASE", textOpsMenu)
         textOpsMenu.addAction(toUppercaseAction)
-        QtCore.QObject.connect(toUppercaseAction, QtCore.SIGNAL("triggered()"), self.toUppercase)
+        QtCore.QObject.connect(toUppercaseAction,
+                               QtCore.SIGNAL("triggered()"), self.toUppercase)
 
         toLowercaseAction = QtGui.QAction("to lowercase", textOpsMenu)
         textOpsMenu.addAction(toLowercaseAction)
-        QtCore.QObject.connect(toLowercaseAction, QtCore.SIGNAL("triggered()"), self.toLowercase)
+        QtCore.QObject.connect(toLowercaseAction,
+                               QtCore.SIGNAL("triggered()"), self.toLowercase)
 
         toTitleAction = QtGui.QAction("to Title", textOpsMenu)
         textOpsMenu.addAction(toTitleAction)
-        QtCore.QObject.connect(toTitleAction, QtCore.SIGNAL("triggered()"), self.toTitlecase)
+        QtCore.QObject.connect(toTitleAction,
+                               QtCore.SIGNAL("triggered()"), self.toTitlecase)
 
         toCapsAction = QtGui.QAction("to Capitalize", textOpsMenu, )
         textOpsMenu.addAction(toCapsAction)
-        QtCore.QObject.connect(toCapsAction, QtCore.SIGNAL("triggered()"), self.toCaps)
+        QtCore.QObject.connect(toCapsAction,
+                               QtCore.SIGNAL("triggered()"), self.toCaps)
 
         contextMenu.insertSeparator(contextMenu.actions()[0])
         contextMenu.insertMenu(contextMenu.actions()[0], textOpsMenu)
@@ -158,7 +211,8 @@ class TextWidget(QtGui.QTextEdit):
                     # suggestions.
                     if len(spell_menu.actions()) != 0:
                         contextMenu.insertSeparator(contextMenu.actions()[0])
-                        contextMenu.insertMenu(contextMenu.actions()[0], spell_menu)
+                        contextMenu.insertMenu(contextMenu.actions()[0], 
+                                               spell_menu)
 
         contextMenu.exec_(event.globalPos())
         event.accept()
@@ -225,7 +279,16 @@ class TextWidget(QtGui.QTextEdit):
         self.setFontWeight(QFont.Normal
                 if self.fontWeight() > QFont.Normal else QFont.Bold)
 
-    def saveAs(self, filename):
+    def saveAs(self):
+        #TODO: self.curDir
+        filename = unicode(QFileDialog.getSaveFileName(self,
+                #self.tr("Save document"), self.curDir,
+                self.tr("Save document"), "",
+                self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)")
+                ))
+        if not filename: return
+        #self.curDir = os.path.dirname(fn)
+        
         dw = QtGui.QTextDocumentWriter()
         dw.setFormat('ODF')  # Default format
 
@@ -254,15 +317,18 @@ class TextWidget(QtGui.QTextEdit):
             if os.path.exists(fn):
                 if os.path.isfile(fn):
                     f = QtCore.QFile(fn)
-                    if not f.open(QtCore.QIODevice.ReadOnly | QtCore.QIODevice.Text):
-                        QtGui.QMessageBox.information(self.parent(), "Error - Lector",
-                    "Can't open %s."%fn)
+                    if not f.open(QtCore.QIODevice.ReadOnly |
+                                  QtCore.QIODevice.Text):
+                        QtGui.QMessageBox.information(self.parent(),
+                        "Error - Lector",
+                        "Can't open %s."%fn)
                     else:
                         stream = QtCore.QTextStream(f)
                         text = unicode(stream.readAll())
                         self.setText(text)
                 else:
-                    QtGui.QMessageBox.information(self.parent(), "Error - Lector",
+                    QtGui.QMessageBox.information(self.parent(),
+                    "Error - Lector",
                     "%s is not a file."%fn)
         QtGui.QApplication.restoreOverrideCursor()
 
@@ -272,3 +338,23 @@ class TextWidget(QtGui.QTextEdit):
         printer.setOutputFileName(fn)
         printer.setOutputFormat(QPrinter.PdfFormat)
         self.document().print_(printer)
+
+def main(args=sys.argv):
+    app = QApplication(args)
+
+
+    mwTextEditor = QMainWindow() 
+    viewToolBar = EditorBar(mwTextEditor)
+    textEditor = TextWidget()
+
+    viewToolBar.saveDocAsSignal.connect(textEditor.saveAs)
+    viewToolBar.boldSignal.connect(textEditor.toggleBold)
+    mwTextEditor.addToolBar(viewToolBar) 
+    mwTextEditor.setCentralWidget(textEditor)
+
+    mwTextEditor.show()
+
+    return app.exec_()
+    
+if __name__ == '__main__':
+    sys.exit(main())
