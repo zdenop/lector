@@ -8,11 +8,12 @@ from utils import get_spellchecker_languages
 class Settings(QDialog):
     colors = ['Color', 'Gray', 'Lineart']
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, tabIndex = 0):
         QDialog.__init__(self, parent)
 
         self.ui = Ui_Settings()
         self.ui.setupUi(self)
+        self.ui.tabWidget.setCurrentIndex(tabIndex); 
         self.initSettings()
 
     def changeFont(self, editorFont):
