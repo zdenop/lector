@@ -14,7 +14,8 @@ FORMS           += ui/ui_lector.ui \
                    ui/ui_settings.ui \
                    ui/ui_scanner.ui
 
-TRANSLATIONS    =  ts/lector_it_IT.ts \
+TRANSLATIONS    =  ts/lector_en_GB.ts \
+                   ts/lector_it_IT.ts \
                    ts/lector_de_DE.ts \
                    ts/lector_sk_SK.ts
 
