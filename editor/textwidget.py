@@ -17,6 +17,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4.Qt import Qt, QMenu, QApplication, QMainWindow, QToolBar
 from PyQt4.Qt import QSize, QAction, QObject, SIGNAL, QString
 from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
+from PyQt4.QtGui import QTextCharFormat
 from PyQt4.QtCore import pyqtSignal, QEvent
 
 from spellchecker import Highlighter, SpellAction
@@ -61,8 +62,8 @@ class EditorBar(QToolBar):
         self.spellAction = QAction('Spellchecking', self)
         self.spellAction.setIcon(QtGui.QIcon(":/icons/icons/tools-check-spelling.png"))
         self.spellAction.setCheckable(True)
-        # TODO: based on settings!
-        self.spellAction.setChecked(True)
+
+        self.spellAction.setChecked(settings.get('editor:spell'))
         self.spellAction.toggled.connect(self.spell)
         self.insertSeparator(self.spellAction)
         self.addAction(self.spellAction)
@@ -109,7 +110,6 @@ class EditorBar(QToolBar):
 
     def spell(self):
         state = self.spellAction.isChecked()
-        print "self.spellAction.isChecked", state
         self.spellSignal.emit(state)
         
     def bold(self):
@@ -137,7 +137,11 @@ class TextWidget(QtGui.QTextEdit):
         QtGui.QTextEdit.__init__(self)
 
         self.setupEditor()
-        self.initSpellchecker()
+        state = settings.get('editor:spell')
+        if state == "":  # no settings
+            state = True
+        self.toggleSpell(state)
+        
 
     def setupEditor(self):
         '''
@@ -170,14 +174,16 @@ class TextWidget(QtGui.QTextEdit):
             return None
 
     def stopSpellchecker(self):
-        self.highlighter.setDocument(None)
-        self.dict = None
+        if hasattr (self, 'highlighter'):
+            self.highlighter.setDocument(None)
+            self.dict = None
 
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
         else:
             self.stopSpellchecker()
+        settings.set('editor:spell', state)
         
     def mousePressEvent(self, event):
         """
@@ -378,14 +384,19 @@ class TextWidget(QtGui.QTextEdit):
 
 
     def saveAs(self):
-        #TODO: self.curDir
+        if settings.get("file_dialog_dir"):
+            self.curDir = '~/'
+        else:
+            self.curDir = settings.get("file_dialog_dir")
+            
         filename = unicode(QFileDialog.getSaveFileName(self,
-                #self.tr("Save document"), self.curDir,
-                self.tr("Save document"), "",
+                self.tr("Save document"), self.curDir,
                 self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)")
                 ))
         if not filename: return
-        #self.curDir = os.path.dirname(fn)
+
+        self.curDir = os.path.dirname(fn)
+        settings.set("file_dialog_dir", self.curDir)
         
         dw = QtGui.QTextDocumentWriter()
         dw.setFormat('ODF')  # Default format
@@ -439,7 +450,6 @@ class TextWidget(QtGui.QTextEdit):
 
 def main(args=sys.argv):
     app = QApplication(args)
-
 
     mwTextEditor = QMainWindow() 
     textEditorBar = EditorBar(mwTextEditor)

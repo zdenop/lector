@@ -21,6 +21,8 @@ def get(name):
         return settings.value(name, QFont(QFont("Courier New", 10)))
     elif name == 'editor:clear':
         return str(settings.value(name, "true").toString()).lower() == "true"
+    elif name == 'editor:spell':
+        return str(settings.value(name, "true").toString()).lower() == "true"
     else:
         return str(settings.value(name).toString())
 
