@@ -15,9 +15,9 @@ import re
 
 from PyQt4 import QtGui, QtCore
 from PyQt4.Qt import Qt, QMenu, QApplication, QMainWindow, QToolBar
-from PyQt4.Qt import QSize, QAction, QObject, SIGNAL, QString
+from PyQt4.Qt import QSize, QAction
 from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
-from PyQt4.QtGui import QTextCharFormat
+from PyQt4.QtGui import QTextCharFormat, QTextOption
 from PyQt4.QtCore import pyqtSignal, QEvent
 
 from spellchecker import Highlighter, SpellAction
@@ -35,6 +35,7 @@ from settingsdialog import Settings
 class EditorBar(QToolBar):
     saveDocAsSignal = pyqtSignal()
     spellSignal = pyqtSignal(bool)
+    whiteSpaceSignal = pyqtSignal(bool)    
     boldSignal = pyqtSignal()
     italicSignal = pyqtSignal()
     underlineSignal = pyqtSignal()
@@ -62,11 +63,17 @@ class EditorBar(QToolBar):
         self.spellAction = QAction('Spellchecking', self)
         self.spellAction.setIcon(QtGui.QIcon(":/icons/icons/tools-check-spelling.png"))
         self.spellAction.setCheckable(True)
-
         self.spellAction.setChecked(settings.get('editor:spell'))
         self.spellAction.toggled.connect(self.spell)
         self.insertSeparator(self.spellAction)
         self.addAction(self.spellAction)
+        
+        self.whiteSpaceAction = QAction('Show whitespace', self)
+        self.whiteSpaceAction.setIcon(QtGui.QIcon(":/icons/icons/whiteSpace.png"))
+        self.whiteSpaceAction.setCheckable(True)
+        self.whiteSpaceAction.setChecked(settings.get('editor:whiteSpace'))
+        self.whiteSpaceAction.toggled.connect(self.whiteSpace)
+        self.addAction(self.whiteSpaceAction)
         
         self.BoldAction = QAction('Bold', self)
         self.BoldAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-bold.png"))
@@ -112,6 +119,10 @@ class EditorBar(QToolBar):
         state = self.spellAction.isChecked()
         self.spellSignal.emit(state)
         
+    def whiteSpace(self):
+        state = self.whiteSpaceAction.isChecked()
+        self.whiteSpaceSignal.emit(state)
+        
     def bold(self):
         self.boldSignal.emit()
 
@@ -142,7 +153,11 @@ class TextWidget(QtGui.QTextEdit):
             state = True
         self.toggleSpell(state)
         
-
+        on = settings.get('editor:whiteSpace')
+        if on == "":  # no settings
+            on = True
+        self.togglewhiteSpace(on) 
+       
     def setupEditor(self):
         '''
         Init editor settings
@@ -184,6 +199,18 @@ class TextWidget(QtGui.QTextEdit):
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
+        
+    def togglewhiteSpace(self, on=True):
+        """
+        Show or hide whitespace and line ending markers
+        """
+        option = QTextOption()
+        if on:
+            option.setFlags(QTextOption.ShowTabsAndSpaces | QTextOption.ShowLineAndParagraphSeparators)
+        else:
+            option.setFlags(option.flags() & ~option.ShowTabsAndSpaces & ~option.ShowLineAndParagraphSeparators)
+        self.document().setDefaultTextOption(option)
+        settings.set('editor:whiteSpace', on)
         
     def mousePressEvent(self, event):
         """
@@ -348,7 +375,6 @@ class TextWidget(QtGui.QTextEdit):
             newText = ''.join([each.capitalize() for each in rtn])
             #TODO(zdposter): '."' '.\n' ignore after '"' ')'
         if conversion == 5:
-            tempText = QtCore.QString()
             newText = newText.replace(u"\u2029", ' ')  # unicode "\n"
 
         cursor.insertText(newText)
@@ -395,7 +421,7 @@ class TextWidget(QtGui.QTextEdit):
                 ))
         if not filename: return
 
-        self.curDir = os.path.dirname(fn)
+        self.curDir = os.path.dirname(filename)
         settings.set("file_dialog_dir", self.curDir)
         
         dw = QtGui.QTextDocumentWriter()
@@ -442,6 +468,7 @@ class TextWidget(QtGui.QTextEdit):
         QtGui.QApplication.restoreOverrideCursor()
 
     def filePrintPdf(self, fn):
+        self.showWhiteSpace(False)
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFileName(fn)
@@ -457,6 +484,7 @@ def main(args=sys.argv):
 
     textEditorBar.saveDocAsSignal.connect(textEditor.saveAs)
     textEditorBar.spellSignal.connect(textEditor.toggleSpell)
+    textEditorBar.whiteSpaceSignal.connect(textEditor.togglewhiteSpace)    
     textEditorBar.boldSignal.connect(textEditor.toggleBold)
     textEditorBar.italicSignal.connect(textEditor.toggleItalic)
     textEditorBar.underlineSignal.connect(textEditor.toggleUnderline)
