@@ -1,0 +1,11 @@
+syntax: glob
+# python
+*.pyc
+
+# pyqt
+ui/ui_*.py
+ui/resources_*.py
+ts/*.qm
+
+# VIM
+*.swp
