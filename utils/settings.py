@@ -23,6 +23,8 @@ def get(name):
         return str(settings.value(name, "true").toString()).lower() == "true"
     elif name == 'editor:spell':
         return str(settings.value(name, "true").toString()).lower() == "true"
+    elif name == 'editor:whiteSpace':
+        return str(settings.value(name, "true").toString()).lower() == "true"
     else:
         return str(settings.value(name).toString())
 

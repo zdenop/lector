@@ -41,12 +41,15 @@ class Window(QMainWindow):
         self.textEditorBar = EditorBar()
         self.textEditorBar.saveDocAsSignal.connect(self.textEditor.saveAs)
         self.textEditorBar.spellSignal.connect(self.textEditor.toggleSpell)
+        self.textEditorBar.whiteSpaceSignal.connect(self.textEditor.togglewhiteSpace)   
         self.textEditorBar.boldSignal.connect(self.textEditor.toggleBold)
         self.textEditorBar.italicSignal.connect(self.textEditor.toggleItalic)
         self.textEditorBar.underlineSignal.connect(self.textEditor.toggleUnderline)
         self.textEditorBar.strikethroughSignal.connect(self.textEditor.toggleStrikethrough)
         self.textEditorBar.subscriptSignal.connect(self.textEditor.toggleSubscript)
         self.textEditorBar.superscriptSignal.connect(self.textEditor.toggleSuperscript)
+        
+        self.textEditor.fontFormatSignal.connect(self.textEditorBar.toggleFormat)    
     
         self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
