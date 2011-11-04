@@ -48,6 +48,8 @@ class Window(QMainWindow):
         self.textEditorBar.strikethroughSignal.connect(self.textEditor.toggleStrikethrough)
         self.textEditorBar.subscriptSignal.connect(self.textEditor.toggleSubscript)
         self.textEditorBar.superscriptSignal.connect(self.textEditor.toggleSuperscript)
+        
+        self.textEditor.fontFormatSignal.connect(self.textEditorBar.toggleFormat)    
     
         self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
