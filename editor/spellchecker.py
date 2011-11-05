@@ -10,8 +10,8 @@
 
 import re
 
-from PyQt4.Qt import Qt,  QAction, QEvent, QMenu, QMouseEvent
-from PyQt4.Qt import QSyntaxHighlighter, QTextCharFormat, QTextCursor
+from PyQt4.Qt import Qt, QAction
+from PyQt4.Qt import QSyntaxHighlighter, QTextCharFormat
 from PyQt4.QtCore import pyqtSignal
  
 class Highlighter(QSyntaxHighlighter):
