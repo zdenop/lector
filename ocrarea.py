@@ -9,7 +9,6 @@
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
-from PyQt4.QtCore import pyqtSignature
 
 
 class OcrArea(QtGui.QGraphicsRectItem):

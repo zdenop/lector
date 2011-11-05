@@ -7,10 +7,8 @@
     This program is released under the GNU GPLv2
 """ 
 
-from PyQt4.QtGui import QDialog, QVBoxLayout, QGroupBox, QRadioButton, \
-         QHBoxLayout, QPushButton
+from PyQt4.QtGui import QDialog
 from PyQt4.QtCore import SIGNAL
-from PyQt4.QtGui import QApplication as qa
 
 from ui.ui_scanner import Ui_Scanner
 import sane

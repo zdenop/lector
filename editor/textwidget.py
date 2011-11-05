@@ -77,7 +77,7 @@ class EditorBar(QToolBar):
         
         self.BoldAction = QtGui.QAction(
                 QtGui.QIcon(":/icons/icons/format-text-bold.png"),
-                "&Bold", self, priority=QtGui.QAction.LowPriority,
+                "&Bold", self,
                 shortcut=QtCore.Qt.CTRL + QtCore.Qt.Key_B,
                 triggered=self.bold, checkable=True)
         self.addAction(self.BoldAction)
@@ -495,7 +495,8 @@ class TextWidget(QtGui.QTextEdit):
         QtGui.QApplication.restoreOverrideCursor()
 
     def filePrintPdf(self, fn):
-        self.showWhiteSpace(False)
+        if hasattr (self, 'showWhiteSpace'):
+            self.showWhiteSpace(False)
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFileName(fn)

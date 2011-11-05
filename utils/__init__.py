@@ -11,7 +11,6 @@
 
 """
 from PyQt4.QtGui import QImage
-from PyQt4.QtCore import QByteArray
 from subprocess import Popen, PIPE
 from glob import glob
 import os
