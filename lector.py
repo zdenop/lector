@@ -82,7 +82,7 @@ class Window(QMainWindow):
             #    self.tr("tessaract not available. Please check requirements"))
             QMessageBox.warning(self,
                 "Tesseract",
-                self.tr("Tessaract not available. Please check requirements"))
+                self.tr("Tessaract not available. Please check requirements."))
             self.ocrAvailable = False
         else:
             languages.sort()
@@ -340,6 +340,15 @@ class Window(QMainWindow):
 
 ## MAIN
 if __name__ == "__main__":
+    
+    ## Warning: this can cause problem to get_tesseract_languages
+    log_path = os.path.realpath(os.path.dirname(sys.argv[0]))
+    LOG_FILENAME = os.path.join(log_path, "lector.log")
+    print('Redirecting Stderr... to %s' % LOG_FILENAME)
+    logFile = open(os.path.join(LOG_FILENAME),"w")
+    sys.stderr = logFile
+    sys.stdout = logFile 
+    
     app = QApplication(sys.argv)
     opts = [str(arg) for arg in app.arguments()[1:]]
     if '--no-scanner' in opts:

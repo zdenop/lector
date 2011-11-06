@@ -47,11 +47,12 @@ def get_tesseract_languages():
     """
 
     try:
-        poTess = Popen(['tesseract', 'a', 'a', '-l', 'invalid'], -1,
-                        stderr=PIPE)
-        lTess = poTess.stderr.readline()
+        poTess = Popen(['tesseract', 'a', 'a', '-l', 'invalid'],
+                       shell=False, stdout=PIPE, stderr=PIPE)
+        stdout_message, lTess = poTess.communicate()
         tessdata_path, langdata_ext = extract_tesseract_languages_path(lTess)
-    except OSError:
+    except OSError, ex:
+        print "ex", ex
         return None
 
     # env. setting can help to handle path with spaces
