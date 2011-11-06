@@ -37,6 +37,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.setCursor(QtCore.Qt.CrossCursor)
         self.scene().isModified = False
         self.bResizing = False
+        Image.init()
 
     def mouseMoveEvent(self, event):
         sp = self.mapToScene(event.pos())
@@ -283,7 +284,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     int(rect.height() + pos.y()))
             # TODO: make random filename if we do not debug lector ;-)
             # TODO: use png if tesseract version is > 3.00
-            filename = "/tmp/out.%d.tif" % i
+            filename = "/tmp/out.%d.png" % i
 
             region = self.scene().im.crop(box)
 
