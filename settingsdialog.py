@@ -26,9 +26,9 @@ class Settings(QDialog):
         self.ui.dictBox.clear()
         langs = get_spellchecker_languages(spellDictDir)
         if langs == None:
-            self.ui.spellInfoLabel.settext(self.tr("Enchant not found. Check if pyenchant is installed!"))
+            self.ui.spellInfoLabel.setText(self.tr("Enchant not found. Check if pyenchant is installed!"))
         elif len(langs) == 0:
-            self.ui.spellInfoLabel.settext(self.tr("Enchant found. Check your dictionary directory."))
+            self.ui.spellInfoLabel.setText(self.tr("Enchant found. Check your dictionary directory."))
         else:
             for lang in langs:
                 self.ui.dictBox.addItem(lang)
