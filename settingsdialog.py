@@ -1,5 +1,5 @@
 from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog
-from PyQt4.QtCore import pyqtSignature
+from PyQt4.QtCore import pyqtSignature, pyqtSignal
 
 from ui.ui_settings import Ui_Settings
 from utils import settings
@@ -7,6 +7,7 @@ from utils import get_spellchecker_languages
 
 class Settings(QDialog):
     colors = ['Color', 'Gray', 'Lineart']
+    settingAccepted = pyqtSignal()
 
     def __init__(self, parent = None, tabIndex = 0):
         QDialog.__init__(self, parent)
@@ -28,18 +29,19 @@ class Settings(QDialog):
         if langs == None:
             self.ui.spellInfoLabel.setText(self.tr("Enchant not found. Check if pyenchant is installed!"))
         elif len(langs) == 0:
-            self.ui.spellInfoLabel.setText(self.tr("Enchant found. Check your dictionary directory."))
+            self.ui.spellInfoLabel.setText(self.tr("Enchant found but no dictionary. Check your dictionary directory."))
         else:
             for lang in langs:
                 self.ui.dictBox.addItem(lang)
 
             spellLang = settings.get('spellchecker:lang')
-            try:
-                currentIndex=self.ui.dictBox.findText(spellLang)
+            currentIndex=self.ui.dictBox.findText(spellLang)
+            print "currentIndex", currentIndex
+            if currentIndex > -1:               
                 self.ui.dictBox.setCurrentIndex(currentIndex)
-            except KeyError:
-                print "'%s' was not found in available dictionaries." % spellLang
-
+            else:
+                self.ui.spellInfoLabel.setText(self.tr("'%s' was not found in available dictionaries. Using other dictionary." % spellLang ))
+    
     def initSettings(self):
         self.ui.sbHeight.setValue(settings.get('scanner:height'))
         self.ui.sbWidth.setValue(settings.get('scanner:width'))
@@ -86,6 +88,7 @@ class Settings(QDialog):
         langIdx =  self.ui.dictBox.currentIndex()
         settings.set('spellchecker:lang', self.ui.dictBox.itemText(langIdx))
         settings.set('spellchecker:directory', self.ui.directoryLine.text())
-
+        self.settingAccepted.emit()
+        
         QDialog.accept(self)
 
