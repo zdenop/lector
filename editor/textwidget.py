@@ -118,6 +118,7 @@ class EditorBar(QToolBar):
         lectorSettings = Settings(self, 1)
 #        QObject.connect(lectorSettings, SIGNAL('accepted()'),
 #                    self.updateTextEditor)
+        lectorSettings.settingAccepted.connect(self.resetSpell)
         lectorSettings.show()
 
     def SaveDocumentAs(self):
@@ -126,6 +127,15 @@ class EditorBar(QToolBar):
     def spell(self):
         state = self.spellAction.isChecked()
         self.spellSignal.emit(state)
+
+    def resetSpell(self):
+        '''
+        Turn off and on spellcheckig to use correct dictionary
+        '''
+        state = self.spellAction.isChecked()
+        if state:
+            self.spellSignal.emit(False)
+            self.spellSignal.emit(state)
         
     def whiteSpace(self):
         state = self.whiteSpaceAction.isChecked()
@@ -230,6 +240,10 @@ class TextWidget(QtGui.QTextEdit):
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
+            print self.dict.tag
+            if self.dict == None:
+                self.stopSpellchecker()
+                print "dictionary not found"
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
