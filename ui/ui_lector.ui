@@ -49,8 +49,8 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
-    <addaction name="actionRotateRight"/>
     <addaction name="actionRotateLeft"/>
+    <addaction name="actionRotateRight"/>
     <addaction name="actionRotateFull"/>
     <addaction name="separator"/>
     <addaction name="actionSettings"/>
@@ -94,8 +94,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionRotateRight"/>
    <addaction name="actionRotateLeft"/>
+   <addaction name="actionRotateRight"/>   
    <addaction name="actionRotateFull"/>
    <addaction name="separator"/>
    <addaction name="actionZoomIn"/>
