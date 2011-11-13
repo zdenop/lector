@@ -25,6 +25,10 @@ def get(name):
         return str(settings.value(name, "true").toString()).lower() == "true"
     elif name == 'editor:whiteSpace':
         return str(settings.value(name, "true").toString()).lower() == "true"
+    elif name == 'spellchecker:pwlLang':
+        return str(settings.value(name, "true").toString()).lower() == "true"
+    elif name == 'spellchecker:pwlDict':
+        return str(settings.value(name, "my-dict.txt").toString())
     else:
         return str(settings.value(name).toString())
 

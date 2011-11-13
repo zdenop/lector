@@ -337,13 +337,15 @@ class Window(QMainWindow):
             self.ui.rbtn_areato_image.setCheckable(False)
             self.ui.rbtn_areato_image.update()
 
-
 ## MAIN
 if __name__ == "__main__":
     
     ## Warning: this can cause problem to get_tesseract_languages
-    log_path = os.path.realpath(os.path.dirname(sys.argv[0]))
-    LOG_FILENAME = os.path.join(log_path, "lector.log")
+    if (os.path.split(sys.executable)[1]).lower().startswith('python'):
+        logPath =  os.path.abspath( os.path.dirname(sys.executable) )
+    else:
+        logPath = os.path.abspath(os.path.dirname(__file__))
+    LOG_FILENAME = os.path.join(logPath, "lector.log")
     print('Redirecting Stderr... to %s' % LOG_FILENAME)
     logFile = open(os.path.join(LOG_FILENAME),"w")
     sys.stderr = logFile

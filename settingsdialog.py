@@ -36,7 +36,6 @@ class Settings(QDialog):
 
             spellLang = settings.get('spellchecker:lang')
             currentIndex=self.ui.dictBox.findText(spellLang)
-            print "currentIndex", currentIndex
             if currentIndex > -1:               
                 self.ui.dictBox.setCurrentIndex(currentIndex)
             else:
@@ -55,6 +54,10 @@ class Settings(QDialog):
         spellDictDir = settings.get('spellchecker:directory')
         self.ui.directoryLine.setText(spellDictDir)
         self.langList(spellDictDir)
+        self.ui.checkBoxPWL.setChecked(settings.get('spellchecker:pwlLang'))
+        pwlDict = settings.get('spellchecker:pwlDict')
+        self.ui.lineEditPWL.setText(pwlDict)
+        
 
     @pyqtSignature('')
     def on_fontButton_clicked(self):
@@ -75,6 +78,33 @@ class Settings(QDialog):
             self.ui.directoryLine.setText(dir)
             self.langList(dir)
 
+    @pyqtSignature('')
+    def on_pushButtonPWL_clicked(self):
+#       fd = QFileDialog(self, "select an output Med file",
+#                        self.ui.directoryLine.text(),
+#                        "MED-Files (*.med);;All Files (*)")
+#       if fd.exec():
+#           self.ui.lineEditPWL.setText(fd.selectedFiles()[0])
+        #QFileDialog::setDefaultSuffix():
+        #fd = QFileDialog(self)
+        #self.filename = fd.getSaveFileName()
+        #self.ui.lineEditPWL.setText(self.filename)
+        #filename = unicode(QFileDialog.getOpenFileName(self,
+        filename = unicode(QFileDialog.getSaveFileName(self,
+                self.tr("Select your private dictionary"),
+                self.ui.lineEditPWL.text(),
+                self.tr("Dictionary (*.txt *.dic);;All files (*);;")
+                ))
+        if not filename:
+            return
+        else:
+            self.ui.lineEditPWL.setText(filename)
+        
+#        dir = QFileDialog.getExistingDirectory(self,
+#                  self.tr("Choose your dictionary directory..."),
+#                  self.ui.directoryLine.text(),
+#                  QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly)
+            
     def accept(self):
         settings.set('scanner:height', self.ui.sbHeight.value())
         settings.set('scanner:width', self.ui.sbWidth.value())
@@ -88,6 +118,8 @@ class Settings(QDialog):
         langIdx =  self.ui.dictBox.currentIndex()
         settings.set('spellchecker:lang', self.ui.dictBox.itemText(langIdx))
         settings.set('spellchecker:directory', self.ui.directoryLine.text())
+        settings.set('spellchecker:pwlDict', self.ui.lineEditPWL.text())
+        settings.set('spellchecker:pwlLang', self.ui.checkBoxPWL.isChecked())
         self.settingAccepted.emit()
         
         QDialog.accept(self)
