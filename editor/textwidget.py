@@ -184,6 +184,7 @@ class EditorBar(QToolBar):
 
 class TextWidget(QtGui.QTextEdit):
     fontFormatSignal = pyqtSignal(QtGui.QTextCharFormat)
+    spell = False
     
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
@@ -210,7 +211,7 @@ class TextWidget(QtGui.QTextEdit):
         self.setReadOnly(False)
         self.setEditorFont()
 
-    def initSpellchecker(self):
+    def initSpellchecker(self):      
         try: 
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
@@ -223,9 +224,11 @@ class TextWidget(QtGui.QTextEdit):
             else:
                 # try dictionary based on the current locale
                 self.dict = enchant.Dict()
-
-            self.highlighter = Highlighter(self.document())
-            self.highlighter.setDict(self.dict)
+                if self.dict.tag:
+                    settings.set('spellchecker:lang', self.dict.tag)
+            if self.dict:
+                self.usePWL(self.dict)
+            
         except:
             print "can not start spellchecker!!!"
             import traceback
@@ -236,18 +239,18 @@ class TextWidget(QtGui.QTextEdit):
         if hasattr (self, 'highlighter'):
             self.highlighter.setDocument(None)
             self.dict = None
+            self.spell = False
 
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
-            print self.dict.tag
             if self.dict == None:
                 self.stopSpellchecker()
-                print "dictionary not found"
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
-        
+       
+            
     def togglewhiteSpace(self, on=True):
         """
         Show or hide whitespace and line ending markers
@@ -347,27 +350,61 @@ class TextWidget(QtGui.QTextEdit):
             cursor = self.textCursor()
             cursor.select(QTextCursor.WordUnderCursor)
             self.setTextCursor(cursor)
-            
+
             # Check if the selected word is misspelled and offer spelling
             # suggestions if it is.
             if self.textCursor().hasSelection():
                 text = unicode(self.textCursor().selectedText())
                 if not self.dict.check(text):
                     spell_menu = QMenu('Spelling Suggestions')
+                    addWordAcction = QAction('Add word...', spell_menu)
+                    QtCore.QObject.connect(addWordAcction,
+                               QtCore.SIGNAL("triggered()"), self.addWord)
+                    #addWordAcction.triggered.connect(self.addWord)
+                    spell_menu.addAction(addWordAcction)                  
                     for word in self.dict.suggest(text):
                         action = SpellAction(word, spell_menu)
                         action.correct.connect(self.changeText)
                         spell_menu.addAction(action)
                     # Only add the spelling suggests to the menu if there are
                     # suggestions.
-                    if len(spell_menu.actions()) != 0:
-                        contextMenu.insertSeparator(contextMenu.actions()[0])
-                        contextMenu.insertMenu(contextMenu.actions()[0], 
+                    if len(spell_menu.actions()) != 1:
+                        contextMenu.insertSeparator(contextMenu.actions()[1])
+                        contextMenu.insertMenu(contextMenu.actions()[0],
                                                spell_menu)
+                        spell_menu.insertSeparator(spell_menu.actions()[1])
+                        
 
         contextMenu.exec_(event.globalPos())
         event.accept()
 
+    def usePWL(self, dictionary):
+        """ Restart spellchecker with personal private list
+        """
+        import enchant
+        
+        pwlDict = settings.get('spellchecker:pwlDict')
+        pwlLang = settings.get('spellchecker:pwlLang')
+        pwlDictPath = os.path.abspath(os.path.dirname(pwlDict))
+        if pwlLang:
+            try:
+                (name, extension) = pwlDict.rsplit('.', 1)
+                pwlDict = name + '_'  + dictionary.tag + "." + extension
+            except:
+                pwlDict = name + '_'  + dictionary.tag
+
+        self.dict = enchant.DictWithPWL(dictionary.tag, pwlDict)         
+        self.highlighter = Highlighter(self.document())
+        self.highlighter.setDict(self.dict)
+
+    def addWord(self):
+        """ Add word to personal private list
+        """
+        self.dict.add_to_pwl(self.getSelectedText())
+        # reset lang
+        self.stopSpellchecker()
+        self.initSpellchecker()
+        
     def toUppercase(self):
         self.changeText(self.getSelectedText(), 1)
 

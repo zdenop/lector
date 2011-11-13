@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>469</width>
-    <height>317</height>
+    <height>334</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,7 +141,7 @@
          <property name="geometry">
           <rect>
            <x>5</x>
-           <y>10</y>
+           <y>0</y>
            <width>426</width>
            <height>61</height>
           </rect>
@@ -195,7 +195,7 @@
          <property name="geometry">
           <rect>
            <x>5</x>
-           <y>190</y>
+           <y>230</y>
            <width>426</width>
            <height>19</height>
           </rect>
@@ -211,37 +211,37 @@
          <property name="geometry">
           <rect>
            <x>5</x>
-           <y>75</y>
+           <y>65</y>
            <width>426</width>
-           <height>106</height>
+           <height>161</height>
           </rect>
          </property>
          <property name="title">
           <string>Spell checker</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="dictionaryLabel">
             <property name="text">
              <string>Dictionary:</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="2" column="1">
            <widget class="QComboBox" name="dictBox">
             <property name="toolTip">
              <string>Here is list of found distionaries</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="7" column="0">
            <widget class="QLabel" name="directoryLabel">
             <property name="text">
              <string>Directory:</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="7" column="1">
            <widget class="QLineEdit" name="directoryLine">
             <property name="mouseTracking">
              <bool>false</bool>
@@ -261,7 +261,7 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
+          <item row="7" column="2">
            <widget class="QPushButton" name="dictDirButton">
             <property name="toolTip">
              <string>Click here to set directory with your spellchecking dictionaries.</string>
@@ -271,7 +271,38 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="0" column="0" colspan="3">
+          <item row="3" column="0">
+           <widget class="QLabel" name="labePWL">
+            <property name="text">
+             <string>Personal Word Lists:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="lineEditPWL"/>
+          </item>
+          <item row="3" column="2">
+           <widget class="QPushButton" name="pushButtonPWL">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" colspan="2">
+           <widget class="QCheckBox" name="checkBoxPWL">
+            <property name="toolTip">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;If this option is checked and your &lt;span style=&quot; font-style:italic;&quot;&gt;Personal Word List&lt;/span&gt; is e.g. &amp;quot;/home/user/my_dict.txt&amp;quot;, than Lector will use as &lt;span style=&quot; font-style:italic;&quot;&gt;Personal Word List &lt;/span&gt; &amp;quot;/home/user/en_GB_my_dict.txt&amp;quot;, so you will have individual &lt;span style=&quot; font-style:italic;&quot;&gt;Personal Word List&lt;/span&gt;  file per used dictionary.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Personal Word List based on dictionary</string>
+            </property>
+           </widget>
+          </item>
+          <item row="8" column="0" colspan="3">
            <widget class="QLabel" name="spellInfoLabel">
             <property name="text">
              <string>Enchant found. Spellchecker is enabled.</string>
