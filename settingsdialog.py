@@ -14,7 +14,7 @@ class Settings(QDialog):
 
         self.ui = Ui_Settings()
         self.ui.setupUi(self)
-        self.ui.tabWidget.setCurrentIndex(tabIndex); 
+        self.ui.tabWidget.setCurrentIndex(tabIndex)
         self.initSettings()
 
     def changeFont(self, editorFont):
@@ -27,20 +27,23 @@ class Settings(QDialog):
         self.ui.dictBox.clear()
         langs = get_spellchecker_languages(spellDictDir)
         if langs == None:
-            self.ui.spellInfoLabel.setText(self.tr("Enchant not found. Check if pyenchant is installed!"))
+            self.ui.spellInfoLabel.setText(self.tr(
+                "Enchant not found. Check if pyenchant is installed!"))
         elif len(langs) == 0:
-            self.ui.spellInfoLabel.setText(self.tr("Enchant found but no dictionary. Check your dictionary directory."))
+            self.ui.spellInfoLabel.setText(self.tr(
+             "Enchant found but no dictionary. Check your dictionary directory."
+             ))
         else:
             for lang in langs:
                 self.ui.dictBox.addItem(lang)
 
             spellLang = settings.get('spellchecker:lang')
-            currentIndex=self.ui.dictBox.findText(spellLang)
-            if currentIndex > -1:               
+            currentIndex = self.ui.dictBox.findText(spellLang)
+            if currentIndex > -1:
                 self.ui.dictBox.setCurrentIndex(currentIndex)
             else:
                 self.ui.spellInfoLabel.setText(self.tr("'%s' was not found in available dictionaries. Using other dictionary." % spellLang ))
-    
+
     def initSettings(self):
         self.ui.sbHeight.setValue(settings.get('scanner:height'))
         self.ui.sbWidth.setValue(settings.get('scanner:width'))
@@ -57,7 +60,6 @@ class Settings(QDialog):
         self.ui.checkBoxPWL.setChecked(settings.get('spellchecker:pwlLang'))
         pwlDict = settings.get('spellchecker:pwlDict')
         self.ui.lineEditPWL.setText(pwlDict)
-        
 
     @pyqtSignature('')
     def on_fontButton_clicked(self):
@@ -69,27 +71,17 @@ class Settings(QDialog):
 
     @pyqtSignature('')
     def on_dictDirButton_clicked(self):
-        dir = QFileDialog.getExistingDirectory(self,
+        dictDir = QFileDialog.getExistingDirectory(self,
                   self.tr("Choose your dictionary directory..."),
                   self.ui.directoryLine.text(),
                   QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly)
 
-        if not dir.isEmpty():
-            self.ui.directoryLine.setText(dir)
-            self.langList(dir)
+        if not dictDir.isEmpty():
+            self.ui.directoryLine.setText(dictDir)
+            self.langList(dictDir)
 
     @pyqtSignature('')
     def on_pushButtonPWL_clicked(self):
-#       fd = QFileDialog(self, "select an output Med file",
-#                        self.ui.directoryLine.text(),
-#                        "MED-Files (*.med);;All Files (*)")
-#       if fd.exec():
-#           self.ui.lineEditPWL.setText(fd.selectedFiles()[0])
-        #QFileDialog::setDefaultSuffix():
-        #fd = QFileDialog(self)
-        #self.filename = fd.getSaveFileName()
-        #self.ui.lineEditPWL.setText(self.filename)
-        #filename = unicode(QFileDialog.getOpenFileName(self,
         filename = unicode(QFileDialog.getSaveFileName(self,
                 self.tr("Select your private dictionary"),
                 self.ui.lineEditPWL.text(),
@@ -99,12 +91,7 @@ class Settings(QDialog):
             return
         else:
             self.ui.lineEditPWL.setText(filename)
-        
-#        dir = QFileDialog.getExistingDirectory(self,
-#                  self.tr("Choose your dictionary directory..."),
-#                  self.ui.directoryLine.text(),
-#                  QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly)
-            
+
     def accept(self):
         settings.set('scanner:height', self.ui.sbHeight.value())
         settings.set('scanner:width', self.ui.sbWidth.value())
@@ -121,6 +108,6 @@ class Settings(QDialog):
         settings.set('spellchecker:pwlDict', self.ui.lineEditPWL.text())
         settings.set('spellchecker:pwlLang', self.ui.checkBoxPWL.isChecked())
         self.settingAccepted.emit()
-        
+
         QDialog.accept(self)
 

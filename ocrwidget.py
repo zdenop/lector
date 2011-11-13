@@ -113,7 +113,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             else: # mouse not over an area
                 self.setCursor(QtCore.Qt.CrossCursor)
 
-        QtGui.QGraphicsView.mouseMoveEvent(self,event)
+        QtGui.QGraphicsView.mouseMoveEvent(self, event)
 
 
     def mousePressEvent(self, event):
@@ -148,7 +148,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
 
-        QtGui.QGraphicsView.mousePressEvent(self,event)
+        QtGui.QGraphicsView.mousePressEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if self.bResizing: ## stop resizing
@@ -156,13 +156,13 @@ class QOcrWidget(QtGui.QGraphicsView):
             r = self.resizingArea.rect()
 
             ## set min size
-            self.resizingArea.setRect(0,0,max(r.width(),
+            self.resizingArea.setRect(0, 0, max(r.width(),
                 2*OcrArea.resizeBorder), max(r.height(),
                 2*OcrArea.resizeBorder))
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable,
                 True)
 
-        QtGui.QGraphicsView.mouseReleaseEvent(self,event)
+        QtGui.QGraphicsView.mouseReleaseEvent(self, event)
 
 
     def wheelEvent(self, event):
@@ -299,11 +299,12 @@ class QOcrWidget(QtGui.QGraphicsView):
                 command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
                                                               self.language)
                 os.popen(command)
-                
+
                 if os.path.exists("/tmp/out.%d.txt" % i):
-                    s = codecs.open("/tmp/out.%d.txt"% (i, ) ,'r','utf-8').read()
+                    s = codecs.open("/tmp/out.%d.txt" % \
+                        (i, ) , 'r', 'utf-8').read()
                     self.textEditor.append(s)
-                    # TODO: delete image & OCR result if we do not debug lector ;-)
+                    # TODO: delete image & OCR result if we do not debug lector
                 else:
                     ## TODO: tesseract failed.
                     ## 1. process/print error message

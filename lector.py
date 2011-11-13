@@ -27,9 +27,10 @@ class Window(QMainWindow):
     ocrAvailable = True
     thread = None
 
-    def __init__(self, parent = None, scanner=True):
+    def __init__(self, hasScanner=True):
         QMainWindow.__init__(self)
-
+        
+        self.curDir = ""
         self.ui = Ui_Lector()
         self.ui.setupUi(self)
 
@@ -39,15 +40,21 @@ class Window(QMainWindow):
         self.textEditorBar = EditorBar()
         self.textEditorBar.saveDocAsSignal.connect(self.textEditor.saveAs)
         self.textEditorBar.spellSignal.connect(self.textEditor.toggleSpell)
-        self.textEditorBar.whiteSpaceSignal.connect(self.textEditor.togglewhiteSpace)   
+        self.textEditorBar.whiteSpaceSignal.connect(
+            self.textEditor.togglewhiteSpace)   
         self.textEditorBar.boldSignal.connect(self.textEditor.toggleBold)
         self.textEditorBar.italicSignal.connect(self.textEditor.toggleItalic)
-        self.textEditorBar.underlineSignal.connect(self.textEditor.toggleUnderline)
-        self.textEditorBar.strikethroughSignal.connect(self.textEditor.toggleStrikethrough)
-        self.textEditorBar.subscriptSignal.connect(self.textEditor.toggleSubscript)
-        self.textEditorBar.superscriptSignal.connect(self.textEditor.toggleSuperscript)
+        self.textEditorBar.underlineSignal.connect(
+            self.textEditor.toggleUnderline)
+        self.textEditorBar.strikethroughSignal.connect(
+            self.textEditor.toggleStrikethrough)
+        self.textEditorBar.subscriptSignal.connect(
+            self.textEditor.toggleSubscript)
+        self.textEditorBar.superscriptSignal.connect(
+            self.textEditor.toggleSuperscript)
         
-        self.textEditor.fontFormatSignal.connect(self.textEditorBar.toggleFormat)    
+        self.textEditor.fontFormatSignal.connect(
+            self.textEditorBar.toggleFormat)    
     
         self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
@@ -144,7 +151,7 @@ class Window(QMainWindow):
         self.readSettings()
 
         self.ui.actionScan.setEnabled(False)
-        if scanner:
+        if hasScanner:
             self.on_actionChangeDevice_triggered()
 
     @pyqtSignature('')
@@ -256,13 +263,13 @@ class Window(QMainWindow):
                                      ).toString()
         self.resize(size)
         self.move(pos)
-        self.restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
-        self.restoreState(settings.value("mainWindowState").toByteArray());
+        self.restoreGeometry(settings.value("mainWindowGeometry").toByteArray())
+        self.restoreState(settings.value("mainWindowState").toByteArray())
 
         ## load saved language
         lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
         try:
-            currentIndex=self.ui.rbtn_lang_select.findData(lang)
+            currentIndex = self.ui.rbtn_lang_select.findData(lang)
             self.ui.rbtn_lang_select.setCurrentIndex(currentIndex)
             self.ocrWidget.language = lang
         except KeyError:
@@ -274,8 +281,8 @@ class Window(QMainWindow):
         settings.set("pos", self.pos())
         settings.set("size", self.size())
         settings.set("file_dialog_dir", self.curDir)
-        settings.set("mainWindowGeometry", self.saveGeometry());
-        settings.set("mainWindowState", self.saveState());
+        settings.set("mainWindowGeometry", self.saveGeometry())
+        settings.set("mainWindowState", self.saveState())
 
         ## save language
         settings.set("rbtn/lang", self.ocrWidget.language)
@@ -300,30 +307,32 @@ class Window(QMainWindow):
     @pyqtSignature('')
     def on_actionSaveImageAs_triggered(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
-                                            self.tr("Save image"), self.curDir,
-                                            self.tr("PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)")
-                                            ))
-        if not fn: return
+                        self.tr("Save image"), self.curDir,
+                        self.tr("PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)")
+                        ))
+        if not fn:
+            return
 
         self.curDir = os.path.dirname(fn)
         ## TODO: move this to the Scene?
         ## TODO: if im is a jpeg, will pil convert it?
         self.ocrWidget.scene().im.save(fn)
-        #self.textEditor.saveAs(fn)
 
     @pyqtSignature('')
     def on_actionAbout_Lector_triggered(self):
         QMessageBox.about(self, self.tr("About Lector"), self.tr(
           "<p>The <b>Lector</b> is a graphical ocr solution for GNU/"
           "Linux and Windows based on Python, Qt4 and tessaract OCR.</p>"
-          "<p>Scanning option is available only on GNU/Linux via SANE.</p><p></p>"
+          "<p>Scanning option is available only on GNU/Linux via SANE.</p>"
+          "<p></p>"
           "<p><b>Author:</b> Davide Setti</p><p></p>"
           "<p><b>Contributors:</b> chopinX04, filip.dominec, zdposter</p>"
           "<p><b>Web site:</b> http://code.google.com/p/lector</p>"
-          "<p><b>Source code:</b> http://code.google.com/p/lector/source/checkout</p>"))
+          "<p><b>Source code:</b> "
+          "http://code.google.com/p/lector/source/checkout</p>"))
 
     def changedSelectedAreaType(self, _type):
-        if _type in (1,2):
+        if _type in (1, 2):
             self.ui.rbtn_areato_text.setCheckable(True)
             self.ui.rbtn_areato_image.setCheckable(True)
 
@@ -342,11 +351,11 @@ if __name__ == "__main__":
     
     ## Warning: this can cause problem to get_tesseract_languages
     if (os.path.split(sys.executable)[1]).lower().startswith('python'):
-        logPath =  os.path.abspath( os.path.dirname(sys.executable) )
+        logPath = os.path.abspath(os.path.dirname(__file__))        
     else:
-        logPath = os.path.abspath(os.path.dirname(__file__))
+        logPath =  os.path.abspath( os.path.dirname(sys.executable) )
     LOG_FILENAME = os.path.join(logPath, "lector.log")
-    print('Redirecting Stderr... to %s' % LOG_FILENAME)
+    print('Redirecting stderr/stdout... to %s' % LOG_FILENAME)
     logFile = open(os.path.join(LOG_FILENAME),"w")
     sys.stderr = logFile
     sys.stdout = logFile 
@@ -364,7 +373,7 @@ if __name__ == "__main__":
     if qtTranslator.load(":/translations/ts/lector_" + locale, 'ts'):
         app.installTranslator(qtTranslator)
 
-    window = Window(scanner=scanner)
+    window = Window(scanner)
     window.show()
 
     sys.exit(app.exec_())

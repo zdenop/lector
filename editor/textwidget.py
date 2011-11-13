@@ -35,7 +35,7 @@ from settingsdialog import Settings
 class EditorBar(QToolBar):
     saveDocAsSignal = pyqtSignal()
     spellSignal = pyqtSignal(bool)
-    whiteSpaceSignal = pyqtSignal(bool)    
+    whiteSpaceSignal = pyqtSignal(bool)
     boldSignal = pyqtSignal(bool)
     italicSignal = pyqtSignal(bool)
     underlineSignal = pyqtSignal(bool)
@@ -54,12 +54,12 @@ class EditorBar(QToolBar):
         self.settingsAction.setIcon(QtGui.QIcon(":/icons/icons/configure.png"))
         self.settingsAction.triggered.connect(self.settings)
         self.addAction(self.settingsAction)
-        
+
         self.saveDocAsAction = QAction('Save As', self)
         self.saveDocAsAction.triggered.connect(self.SaveDocumentAs)
         self.saveDocAsAction.setIcon(QtGui.QIcon(":/icons/icons/filesave.png"))
         self.addAction(self.saveDocAsAction)
-        
+
         self.spellAction = QAction('Spellchecking', self)
         self.spellAction.setIcon(QtGui.QIcon(":/icons/icons/tools-check-spelling.png"))
         self.spellAction.setCheckable(True)
@@ -67,35 +67,35 @@ class EditorBar(QToolBar):
         self.spellAction.toggled.connect(self.spell)
         self.insertSeparator(self.spellAction)
         self.addAction(self.spellAction)
-        
+
         self.whiteSpaceAction = QAction('Show whitespace', self)
         self.whiteSpaceAction.setIcon(QtGui.QIcon(":/icons/icons/whiteSpace.png"))
         self.whiteSpaceAction.setCheckable(True)
         self.whiteSpaceAction.setChecked(settings.get('editor:whiteSpace'))
         self.whiteSpaceAction.toggled.connect(self.whiteSpace)
         self.addAction(self.whiteSpaceAction)
-        
+
         self.BoldAction = QtGui.QAction(
                 QtGui.QIcon(":/icons/icons/format-text-bold.png"),
                 "&Bold", self,
                 shortcut=QtCore.Qt.CTRL + QtCore.Qt.Key_B,
                 triggered=self.bold, checkable=True)
         self.addAction(self.BoldAction)
-        
+
         self.ItalicAction = QAction('Italic', self)
         self.ItalicAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-italic.png"))
-        self.ItalicAction.setShortcut(QtCore.Qt.CTRL + QtCore.Qt.Key_I)        
+        self.ItalicAction.setShortcut(QtCore.Qt.CTRL + QtCore.Qt.Key_I)
         self.ItalicAction.setCheckable(True)
         self.ItalicAction.triggered.connect(self.italic)
         self.addAction(self.ItalicAction)
-         
+
         self.UnderlineAction = QAction('Underline', self)
         self.UnderlineAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-underline.png"))
         self.UnderlineAction.setCheckable(True)
         self.UnderlineAction.setShortcut(QtCore.Qt.CTRL + QtCore.Qt.Key_U)
         self.UnderlineAction.triggered.connect(self.underline)
         self.addAction(self.UnderlineAction)
-        
+
         self.StrikethroughAction = QAction('Strikethrough', self)
         self.StrikethroughAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-strikethrough.png"))
         self.StrikethroughAction.setCheckable(True)
@@ -107,7 +107,7 @@ class EditorBar(QToolBar):
         self.SubscriptAction.setCheckable(True)
         self.SubscriptAction.triggered.connect(self.subscript)
         self.addAction(self.SubscriptAction)
-        
+
         self.SuperscriptAction = QAction('Superscript', self)
         self.SuperscriptAction.setIcon(QtGui.QIcon(":/icons/icons/format-text-superscript.png"))
         self.SuperscriptAction.setCheckable(True)
@@ -136,11 +136,11 @@ class EditorBar(QToolBar):
         if state:
             self.spellSignal.emit(False)
             self.spellSignal.emit(state)
-        
+
     def whiteSpace(self):
         state = self.whiteSpaceAction.isChecked()
         self.whiteSpaceSignal.emit(state)
-        
+
     def toggleFormat(self, CharFormat):
         font = CharFormat.font()
         self.BoldAction.setChecked(font.bold())
@@ -156,7 +156,7 @@ class EditorBar(QToolBar):
         else:
             self.SubscriptAction.setChecked(False)
             self.SuperscriptAction.setChecked(False)
-            
+
     def bold(self):
         state = self.BoldAction.isChecked()
         self.boldSignal.emit(state)
@@ -185,7 +185,7 @@ class EditorBar(QToolBar):
 class TextWidget(QtGui.QTextEdit):
     fontFormatSignal = pyqtSignal(QtGui.QTextCharFormat)
     spell = False
-    
+
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
 
@@ -194,15 +194,15 @@ class TextWidget(QtGui.QTextEdit):
         if state == "":  # no settings
             state = True
         self.toggleSpell(state)
-        
+
         on = settings.get('editor:whiteSpace')
         if on == "":  # no settings
             on = True
-        self.togglewhiteSpace(on)
+        self.togglewhiteSpace(True)
 
         self.currentCharFormatChanged.connect(
-                self.CharFormatChanged)       
-       
+                self.CharFormatChanged)
+
     def setupEditor(self):
         '''
         Init editor settings
@@ -211,8 +211,8 @@ class TextWidget(QtGui.QTextEdit):
         self.setReadOnly(False)
         self.setEditorFont()
 
-    def initSpellchecker(self):      
-        try: 
+    def initSpellchecker(self):
+        try:
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
             if spellDictDir:
@@ -228,7 +228,7 @@ class TextWidget(QtGui.QTextEdit):
                     settings.set('spellchecker:lang', self.dict.tag)
             if self.dict:
                 self.usePWL(self.dict)
-            
+
         except:
             print "can not start spellchecker!!!"
             import traceback
@@ -249,8 +249,8 @@ class TextWidget(QtGui.QTextEdit):
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
-       
-            
+
+
     def togglewhiteSpace(self, on=True):
         """
         Show or hide whitespace and line ending markers
@@ -261,13 +261,13 @@ class TextWidget(QtGui.QTextEdit):
         else:
             option.setFlags(option.flags() & ~option.ShowTabsAndSpaces & ~option.ShowLineAndParagraphSeparators)
         self.document().setDefaultTextOption(option)
-        settings.set('editor:whiteSpace', on)
-        
+        settings.set('editor:whiteSpace', True)
+
     def mousePressEvent(self, event):
         """
         Select misspelled word after right click
         otherwise left clik + right click is needed.
-        
+
         Originally from John Schember spellchecker
         """
         if event.button() == Qt.RightButton:
@@ -276,7 +276,7 @@ class TextWidget(QtGui.QTextEdit):
             event = QMouseEvent(QEvent.MouseButtonPress, event.pos(),
                 Qt.LeftButton, Qt.LeftButton, Qt.NoModifier)
         QtGui.QTextEdit.mousePressEvent(self, event)
-        
+
     def setEditorFont(self):
         self.setFont(QtGui.QFont(settings.get('editor:font')))
 
@@ -302,7 +302,7 @@ class TextWidget(QtGui.QTextEdit):
 
     def contextMenuEvent(self, event):
         contextMenu = self.createStandardContextMenu()
-        
+
         self.clearAction = QtGui.QAction("Clear", contextMenu)
         contextMenu.addSeparator()
         contextMenu.addAction(self.clearAction)
@@ -345,7 +345,7 @@ class TextWidget(QtGui.QTextEdit):
 
         if not self.textCursor().hasSelection():
             textOpsMenu.setEnabled(False)
-            
+
             # Select the word under the cursor for spellchecker
             cursor = self.textCursor()
             cursor.select(QTextCursor.WordUnderCursor)
@@ -361,7 +361,7 @@ class TextWidget(QtGui.QTextEdit):
                     QtCore.QObject.connect(addWordAcction,
                                QtCore.SIGNAL("triggered()"), self.addWord)
                     #addWordAcction.triggered.connect(self.addWord)
-                    spell_menu.addAction(addWordAcction)                  
+                    spell_menu.addAction(addWordAcction)
                     for word in self.dict.suggest(text):
                         action = SpellAction(word, spell_menu)
                         action.correct.connect(self.changeText)
@@ -373,7 +373,7 @@ class TextWidget(QtGui.QTextEdit):
                         contextMenu.insertMenu(contextMenu.actions()[0],
                                                spell_menu)
                         spell_menu.insertSeparator(spell_menu.actions()[1])
-                        
+
 
         contextMenu.exec_(event.globalPos())
         event.accept()
@@ -382,10 +382,9 @@ class TextWidget(QtGui.QTextEdit):
         """ Restart spellchecker with personal private list
         """
         import enchant
-        
+
         pwlDict = settings.get('spellchecker:pwlDict')
         pwlLang = settings.get('spellchecker:pwlLang')
-        pwlDictPath = os.path.abspath(os.path.dirname(pwlDict))
         if pwlLang:
             try:
                 (name, extension) = pwlDict.rsplit('.', 1)
@@ -393,7 +392,7 @@ class TextWidget(QtGui.QTextEdit):
             except:
                 pwlDict = name + '_'  + dictionary.tag
 
-        self.dict = enchant.DictWithPWL(dictionary.tag, pwlDict)         
+        self.dict = enchant.DictWithPWL(dictionary.tag, pwlDict)
         self.highlighter = Highlighter(self.document())
         self.highlighter.setDict(self.dict)
 
@@ -404,7 +403,7 @@ class TextWidget(QtGui.QTextEdit):
         # reset lang
         self.stopSpellchecker()
         self.initSpellchecker()
-        
+
     def toUppercase(self):
         self.changeText(self.getSelectedText(), 1)
 
@@ -458,7 +457,7 @@ class TextWidget(QtGui.QTextEdit):
 
     def CharFormatChanged(self, CharFormat):
         self.fontFormatSignal.emit(CharFormat)
-        
+
     def toggleBold(self, isChecked):
         self.setFontWeight(isChecked and QFont.Normal
                 if self.fontWeight() > QFont.Normal else QFont.Bold)
@@ -470,21 +469,21 @@ class TextWidget(QtGui.QTextEdit):
         self.setFontUnderline(isChecked and not self.fontUnderline())
 
     def toggleStrikethrough(self, isChecked):
-        format = self.currentCharFormat() 
-        format.setFontStrikeOut(isChecked and not format.fontStrikeOut())
-        self.mergeCurrentCharFormat(format) 
+        charFmt = self.currentCharFormat()
+        charFmt.setFontStrikeOut(isChecked and not charFmt.fontStrikeOut())
+        self.mergeCurrentCharFormat(charFmt)
 
     def toggleSubscript(self, isChecked):
-        format = self.currentCharFormat() 
-        format.setVerticalAlignment(isChecked and
+        charFmt = self.currentCharFormat()
+        charFmt.setVerticalAlignment(isChecked and
                         QTextCharFormat.AlignSubScript)
-        self.mergeCurrentCharFormat(format)
+        self.mergeCurrentCharFormat(charFmt)
 
     def toggleSuperscript(self, isChecked):
-        format = self.currentCharFormat() 
-        format.setVerticalAlignment(isChecked and 
+        charFmt = self.currentCharFormat()
+        charFmt.setVerticalAlignment(isChecked and
                         QTextCharFormat.AlignSuperScript)
-        self.mergeCurrentCharFormat(format)
+        self.mergeCurrentCharFormat(charFmt)
 
 
     def saveAs(self):
@@ -492,7 +491,7 @@ class TextWidget(QtGui.QTextEdit):
             self.curDir = '~/'
         else:
             self.curDir = settings.get("file_dialog_dir")
-            
+
         filename = unicode(QFileDialog.getSaveFileName(self,
                 self.tr("Save document"), self.curDir,
                 self.tr("ODT document (*.odt);;Text file (*.txt);;HTML file (*.html);;PDF file(*.pdf)")
@@ -501,7 +500,7 @@ class TextWidget(QtGui.QTextEdit):
 
         self.curDir = os.path.dirname(filename)
         settings.set("file_dialog_dir", self.curDir)
-        
+
         dw = QtGui.QTextDocumentWriter()
         dw.setFormat('ODF')  # Default format
 
@@ -546,8 +545,6 @@ class TextWidget(QtGui.QTextEdit):
         QtGui.QApplication.restoreOverrideCursor()
 
     def filePrintPdf(self, fn):
-        if hasattr (self, 'showWhiteSpace'):
-            self.showWhiteSpace(False)
         printer = QPrinter(QPrinter.HighResolution)
         printer.setPageSize(QPrinter.A4)
         printer.setOutputFileName(fn)
@@ -557,28 +554,28 @@ class TextWidget(QtGui.QTextEdit):
 def main(args=sys.argv):
     app = QApplication(args)
 
-    mwTextEditor = QMainWindow() 
+    mwTextEditor = QMainWindow()
     textEditorBar = EditorBar(mwTextEditor)
     textEditor = TextWidget(textEditorBar)
 
     textEditorBar.saveDocAsSignal.connect(textEditor.saveAs)
     textEditorBar.spellSignal.connect(textEditor.toggleSpell)
-    textEditorBar.whiteSpaceSignal.connect(textEditor.togglewhiteSpace)    
+    textEditorBar.whiteSpaceSignal.connect(textEditor.togglewhiteSpace)
     textEditorBar.boldSignal.connect(textEditor.toggleBold)
     textEditorBar.italicSignal.connect(textEditor.toggleItalic)
     textEditorBar.underlineSignal.connect(textEditor.toggleUnderline)
     textEditorBar.strikethroughSignal.connect(textEditor.toggleStrikethrough)
     textEditorBar.subscriptSignal.connect(textEditor.toggleSubscript)
     textEditorBar.superscriptSignal.connect(textEditor.toggleSuperscript)
-    
+
     textEditor.fontFormatSignal.connect(textEditorBar.toggleFormat)
-    
-    mwTextEditor.addToolBar(textEditorBar) 
+
+    mwTextEditor.addToolBar(textEditorBar)
     mwTextEditor.setCentralWidget(textEditor)
 
     mwTextEditor.show()
 
     return app.exec_()
-    
+
 if __name__ == '__main__':
     sys.exit(main())

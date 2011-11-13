@@ -35,7 +35,8 @@ def extract_tesseract_languages_path(error_message):
     >>> extract_tesseract_languages_path("Unable to load unicharset file /usr/share/tesseract-ocr/tessdata/invalid.unicharset")
     ('/usr/share/tesseract-ocr/tessdata', '.unicharset')
     """
-    invalid_path = error_message.split()[-1]  # problem if there is space in path
+    # problem if there is space in path
+    invalid_path = error_message.split()[-1]  
     path, invalid_fn = os.path.split(invalid_path)
     _, extension = os.path.splitext(invalid_fn)
     return path, extension
@@ -56,7 +57,7 @@ def get_tesseract_languages():
         return None
 
     # env. setting can help to handle path with spaces
-    if os.getenv('TESSDATA_PREFIX'):  
+    if os.getenv('TESSDATA_PREFIX'):
         tessdata_path = os.path.join(os.getenv('TESSDATA_PREFIX'), "tessdata")
 
     langdata = glob(tessdata_path + os.path.sep + '*' + langdata_ext)
@@ -68,7 +69,7 @@ def get_spellchecker_languages(directory = None):
     """
     try:
         import enchant
-        
+
         if (directory):
             enchant.set_param("enchant.myspell.dictionary.path", directory)
         langs = enchant.list_languages()

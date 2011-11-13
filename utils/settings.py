@@ -31,4 +31,3 @@ def get(name):
         return str(settings.value(name, "my-dict.txt").toString())
     else:
         return str(settings.value(name).toString())
-
