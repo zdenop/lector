@@ -14,7 +14,8 @@ import os
 from PyQt4.QtCore import SIGNAL, QObject, QSettings, QVariant, \
     QPoint, QSize, QString, QTime, qsrand, pyqtSignature, QLocale, \
     QTranslator
-from PyQt4.QtGui import QMainWindow, QFileDialog, QMessageBox, QApplication
+from PyQt4.QtGui import QMainWindow, QFileDialog, QMessageBox, QApplication, \
+    QIcon
 
 ## Lector
 from ui.ui_lector import Ui_Lector
@@ -295,10 +296,16 @@ class Window(QMainWindow):
             event.ignore()
 
     def areYouSureToExit(self):
-        ret = QMessageBox.warning(self, "Lector",
-                                  self.tr("Are you sure you want to exit?"),
-                                  QMessageBox.Yes | QMessageBox.No)
-        return ret == QMessageBox.Yes
+        ret = QMessageBox(self.tr("Lector"),
+                     self.tr("Are you sure you want to exit?"),
+                     QMessageBox.Warning,
+                     QMessageBox.Yes | QMessageBox.Default,
+                     QMessageBox.No | QMessageBox.Escape,
+                     QMessageBox.NoButton)
+        ret.setWindowIcon(QIcon(":/icons/icons/L.png"))
+        ret.setButtonText(QMessageBox.Yes, self.tr("Yes"))
+        ret.setButtonText(QMessageBox.No, self.tr("No"))
+        return ret.exec_() == QMessageBox.Yes
 
     @pyqtSignature('')
     def on_actionSaveDocumentAs_triggered(self):
