@@ -4,7 +4,7 @@ import glob
 import os.path
 import sys
 
-a = Analysis([os.path.join(HOMEPATH,'support\\_mountzlib.py'), os.path.join(HOMEPATH,'support\\useUnicode.py'), 'lector.py'],
+a = Analysis([os.path.join(HOMEPATH,'support\\_mountzlib.py'), os.path.join(HOMEPATH,'support\\useUnicode.py'), 'lector.pyw'],
             pathex=['c:\\usr\\projects\\lector.devel'],
             excludes=['_gtkagg', '_tkagg', 'bsddb', 'curses', 'email', 'gtk',
             'pywin.debugger', 'pywin.debugger.dbgcon', 'pywin.dialogs',

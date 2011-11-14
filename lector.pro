@@ -4,10 +4,10 @@
 #INCLUDEPATH += .
 
 # Input
-SOURCES         += lector.py \
+SOURCES         += lector.pyw \
                    ocrarea.py ocrscene.py ocrwidget.py \
-                   scannerselect.py scannerthread.py \
-                   editor/textwidget.py \
+                   scannerselect.py scannerthread.py settingsdialog.py \
+                   editor/textwidget.py editor/spellchecker.py \
                    utils/settings.py
 
 FORMS           += ui/ui_lector.ui \
