@@ -20,17 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #from distutils.command.install_scripts import install_scripts
 from distutils.core import setup
-    
-setup(name = 'Lector',
+
+setup(name = 'lector',
     description = 'Graphical OCR solution',
-    version = '0.3.0-alpha1',
+    version = '0.3.0',
     author = 'Davide Setti',
     url = 'http://code.google.com/p/lector/',
     package_dir = {'lector': './'},
     packages = ['editor', 'icons', 'ui', 'utils', 'ts'],
     data_files = ['AUTHORS', 'CREDITS', 'ChangeLog', 'LICENSE', 
         'README'],
-    scripts = ['./lector.py', 'ocrarea.py', 'ocrscene.py', 
+    scripts = ['./lector.pyw', 'ocrarea.py', 'ocrscene.py', 
         'ocrwidget.py', 'scannerselect.py', 
         'scannerthread.py', 'settingsdialog.py'],
     license = 'GPLv2',
@@ -38,7 +38,7 @@ setup(name = 'Lector',
         on Python, Qt4 and tessaract OCR''',
 
     classifiers=[
-        'Development Status :: 3 - Beta',
+        'Development Status :: 0.3.0',
         'Environment :: Win32 (MS Windows)',
         'Environment :: X11 Applications',
         'Intended Audience :: End Users/Desktop',
