@@ -205,7 +205,7 @@ class Window(QMainWindow):
     def on_actionOpen_triggered(self):
         fn = unicode(QFileDialog.getOpenFileName(self,
                 self.tr("Open image"), self.curDir,
-                self.tr("Images (*.tif *.tiff *.png *.jpg *.xpm)")
+                self.tr("Images (*.tif *.tiff *.png *.bmp *.jpg *.xpm)")
             ))
         if not fn: return
 

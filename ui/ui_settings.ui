@@ -159,7 +159,7 @@
              <string>Name of used font for document editor</string>
             </property>
             <property name="text">
-             <string notr="true">Consolas, 12 pt</string>
+             <string notr="true">Sans Serif, 12 pt</string>
             </property>
            </widget>
           </item>
