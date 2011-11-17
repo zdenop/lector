@@ -188,7 +188,7 @@ class TextWidget(QtGui.QTextEdit):
 
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
-
+        
         self.setupEditor()
         state = settings.get('editor:spell')
         if state == "":  # no settings
@@ -223,9 +223,11 @@ class TextWidget(QtGui.QTextEdit):
                 self.dict = enchant.Dict(spellLang)
             else:
                 # try dictionary based on the current locale
-                self.dict = enchant.Dict()
-                if self.dict.tag:
+                try:
+                    self.dict = enchant.Dict()
                     settings.set('spellchecker:lang', self.dict.tag)
+                except:  # we don not have working dictionary...
+                     return None
             if self.dict:
                 self.usePWL(self.dict)
 
@@ -244,8 +246,8 @@ class TextWidget(QtGui.QTextEdit):
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
-            if self.dict == None:
-                self.stopSpellchecker()
+#            if not hasattr(self, 'dict'):
+#                self.stopSpellchecker()
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)

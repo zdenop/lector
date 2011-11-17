@@ -16,7 +16,7 @@ pyz = PYZ(a.pure)
 exe = EXE(pyz,
         a.scripts,
         exclude_binaries=1,
-        name=os.path.join('build\\pyi.win32\\Lector', 'Lector.exe'),
+        name=os.path.join('build\\pyi.win32\\lector', 'lector.exe'),
         debug=False,
         strip=False,
         upx=True,
@@ -52,7 +52,7 @@ coll = COLLECT( exe,
             a.datas,
             strip=False,
             upx=True,
-            name=os.path.join('dist', 'Lector'))
+            name=os.path.join('dist', 'lector'))
 hiddenimports = ['sip', 'PyQt4.QtCore', 'PyQt4.QtGui', 'PyQt4._qt']
 app = BUNDLE(coll,
-            name=os.path.join('dist', 'Lector.app'))
+            name=os.path.join('dist', 'lector.app'))
