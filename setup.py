@@ -32,7 +32,7 @@ setup(name = 'lector',
         'README'],
     scripts = ['./lector.pyw', 'ocrarea.py', 'ocrscene.py', 
         'ocrwidget.py', 'scannerselect.py', 
-        'scannerthread.py', 'settingsdialog.py'],
+        'scannerthread.py', 'settingsdialog.py', 'Makefile'],
     license = 'GPLv2',
     long_description = '''A graphical ocr solution for GNU/Linux based 
         on Python, Qt4 and tessaract OCR''',
