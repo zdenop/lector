@@ -372,12 +372,12 @@ class TextWidget(QtGui.QTextEdit):
                         action = SpellAction(word, spell_menu)
                         action.correct.connect(self.changeText)
                         spell_menu.addAction(action)
+                    contextMenu.insertSeparator(contextMenu.actions()[1])
+                    contextMenu.insertMenu(contextMenu.actions()[0],
+                                            spell_menu)
                     # Only add the spelling suggests to the menu if there are
                     # suggestions.
                     if len(spell_menu.actions()) != 1:
-                        contextMenu.insertSeparator(contextMenu.actions()[1])
-                        contextMenu.insertMenu(contextMenu.actions()[0],
-                                               spell_menu)
                         spell_menu.insertSeparator(spell_menu.actions()[1])
 
 
