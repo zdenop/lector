@@ -362,10 +362,14 @@ if __name__ == "__main__":
     else:
         logPath =  os.path.abspath( os.path.dirname(sys.executable) )
     LOG_FILENAME = os.path.join(logPath, "lector.log")
-    print('Redirecting stderr/stdout... to %s' % LOG_FILENAME)
-    logFile = open(os.path.join(LOG_FILENAME),"w")
-    sys.stderr = logFile
-    sys.stdout = logFile 
+    print ('Redirecting stderr/stdout... to %s' % LOG_FILENAME)
+    # TODO: implement setting (where to log)
+    try:
+        logFile = open(os.path.join(LOG_FILENAME),"w")
+        sys.stderr = logFile
+        sys.stdout = logFile 
+    except:
+        print "Lector could not open log file! Redirecting will not work."
     
     app = QApplication(sys.argv)
     opts = [str(arg) for arg in app.arguments()[1:]]
