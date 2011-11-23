@@ -216,7 +216,11 @@ class TextWidget(QtGui.QTextEdit):
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
             if spellDictDir:
-                enchant.set_param("enchant.myspell.dictionary.path", spellDictDir)
+                if enchant.__ver_major__ >= 1 and enchant.__ver_minor__ >= 6:
+                    enchant.set_param("enchant.myspell.dictionary.path", spellDictDir)
+                else:
+                    print "Your pyenchant version is to old. Please upgrade to version 1.6.0 or higher, if you want to use spellchecker."
+                    return None
 
             spellLang = settings.get('spellchecker:lang')
             if enchant.dict_exists(spellLang):

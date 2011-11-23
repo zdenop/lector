@@ -1,11 +1,14 @@
-from PyQt4.QtCore import QSettings, QVariant
+from PyQt4.QtCore import QSettings, QVariant, QDir
 from PyQt4.QtGui import QFont
+from PyQt4.QtGui import QDesktopServices
 
 def set(name, value):
     settings = QSettings("Davide Setti", "Lector")
     settings.setValue(name, QVariant(value))
 
 def get(name):
+    home_dir = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)
+    stdPwlDict = unicode(home_dir + QDir.separator() +  "my-dict.txt")
     settings = QSettings("Davide Setti", "Lector")
     if name == 'scanner:height':
         return settings.value(name, QVariant(297)).toInt()[0]
@@ -28,6 +31,6 @@ def get(name):
     elif name == 'spellchecker:pwlLang':
         return str(settings.value(name, "true").toString()).lower() == "true"
     elif name == 'spellchecker:pwlDict':
-        return str(settings.value(name, "my-dict.txt").toString())
+        return str(settings.value(name, stdPwlDict).toString())
     else:
         return str(settings.value(name).toString())
