@@ -60,6 +60,10 @@ def get_tesseract_languages():
     if os.getenv('TESSDATA_PREFIX'):
         tessdata_path = os.path.join(os.getenv('TESSDATA_PREFIX'), "tessdata")
 
+    if not os.path.exists(tessdata_path):
+        print "Tesseract data path ('%s') do not exist!" % tessdata_path
+        return None
+        
     langdata = glob(tessdata_path + os.path.sep + '*' + langdata_ext)
     return [os.path.splitext(os.path.split(uc)[1])[0] for uc in langdata]
 
