@@ -212,6 +212,7 @@ class TextWidget(QtGui.QTextEdit):
         self.setEditorFont()
 
     def initSpellchecker(self):
+        # TODO: disable spellchecker icon in case of not working enchant
         try:
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
@@ -355,12 +356,21 @@ class TextWidget(QtGui.QTextEdit):
             # Select the word under the cursor for spellchecker
             cursor = self.textCursor()
             cursor.select(QTextCursor.WordUnderCursor)
-            self.setTextCursor(cursor)
 
+            self.setTextCursor(cursor)          
+            text = unicode(self.textCursor().selectedText())
+
+            #TODO: put to configuration list of ignored starting/ending chars          
+            if text.startswith(u"„"):  # remove u"„" from selection
+                text = text[1:]
+                selectionEnd = cursor.selectionEnd()
+                cursor.setPosition(cursor.position() - len(text));
+                cursor.setPosition(selectionEnd, QTextCursor.KeepAnchor)
+                self.setTextCursor(cursor)
+            
             # Check if the selected word is misspelled and offer spelling
             # suggestions if it is.
             if self.textCursor().hasSelection():
-                text = unicode(self.textCursor().selectedText())
                 if not self.dict.check(text):
                     spell_menu = QMenu(self.tr("Spelling Suggestions"))
                     addWordAcction = QAction(self.tr('Add word...'), spell_menu)
@@ -457,9 +467,11 @@ class TextWidget(QtGui.QTextEdit):
             #TODO(zdposter): '."' '.\n' ignore after '"' ')'
         if conversion == 5:
             newText = newText.replace(u"\u2029", ' ')  # unicode "\n"
+            newText = re.sub(' +', ' ', newText)  # replace  multiple spaces
 
         cursor.insertText(newText)
         cursor.endEditBlock()
+        ## TODO: keep selection of text
 
     def CharFormatChanged(self, CharFormat):
         self.fontFormatSignal.emit(CharFormat)
