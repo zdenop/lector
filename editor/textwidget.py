@@ -195,10 +195,10 @@ class TextWidget(QtGui.QTextEdit):
             state = True
         self.toggleSpell(state)
 
-        on = settings.get('editor:whiteSpace')
-        if on == "":  # no settings
-            on = True
-        self.togglewhiteSpace(True)
+        onOff = settings.get('editor:whiteSpace')
+        if onOff == "":  # no settings
+            onOff = True
+        self.togglewhiteSpace(onOff)
 
         self.currentCharFormatChanged.connect(
                 self.CharFormatChanged)
@@ -258,17 +258,17 @@ class TextWidget(QtGui.QTextEdit):
         settings.set('editor:spell', state)
 
 
-    def togglewhiteSpace(self, on=True):
+    def togglewhiteSpace(self, state=True):
         """
         Show or hide whitespace and line ending markers
         """
         option = QTextOption()
-        if on:
+        if state:
             option.setFlags(QTextOption.ShowTabsAndSpaces | QTextOption.ShowLineAndParagraphSeparators)
         else:
             option.setFlags(option.flags() & ~option.ShowTabsAndSpaces & ~option.ShowLineAndParagraphSeparators)
         self.document().setDefaultTextOption(option)
-        settings.set('editor:whiteSpace', on)
+        settings.set('editor:whiteSpace', state)
 
     def mousePressEvent(self, event):
         """
@@ -361,11 +361,17 @@ class TextWidget(QtGui.QTextEdit):
             text = unicode(self.textCursor().selectedText())
 
             #TODO: put to configuration list of ignored starting/ending chars          
-            if text.startswith(u"„"):  # remove u"„" from selection
+            if text.startswith(u"„") or text.startswith(u"“"):  # remove u"„" from selection
                 text = text[1:]
                 selectionEnd = cursor.selectionEnd()
                 cursor.setPosition(cursor.position() - len(text));
                 cursor.setPosition(selectionEnd, QTextCursor.KeepAnchor)
+                self.setTextCursor(cursor)
+            if text.endswith(u"”") or text.startswith(u"“"):  # remove u"”" from selection
+                selectionEnd = cursor.selectionEnd()
+                cursor.setPosition(cursor.position() - len(text));
+                cursor.setPosition(selectionEnd - 1, QTextCursor.KeepAnchor)
+                text = text[:-1]
                 self.setTextCursor(cursor)
             
             # Check if the selected word is misspelled and offer spelling
