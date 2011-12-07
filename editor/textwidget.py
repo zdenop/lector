@@ -268,7 +268,7 @@ class TextWidget(QtGui.QTextEdit):
         else:
             option.setFlags(option.flags() & ~option.ShowTabsAndSpaces & ~option.ShowLineAndParagraphSeparators)
         self.document().setDefaultTextOption(option)
-        settings.set('editor:whiteSpace', True)
+        settings.set('editor:whiteSpace', on)
 
     def mousePressEvent(self, event):
         """
