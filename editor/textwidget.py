@@ -251,8 +251,6 @@ class TextWidget(QtGui.QTextEdit):
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
-#            if not hasattr(self, 'dict'):
-#                self.stopSpellchecker()
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
@@ -422,9 +420,7 @@ class TextWidget(QtGui.QTextEdit):
         """ Add word to personal private list
         """
         self.dict.add_to_pwl(self.getSelectedText())
-        # reset lang
-        self.stopSpellchecker()
-        self.initSpellchecker()
+        self.highlighter.rehighlight()
 
     def toUppercase(self):
         self.changeText(self.getSelectedText(), 1)
