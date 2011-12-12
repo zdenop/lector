@@ -291,8 +291,14 @@ class TextWidget(QtGui.QTextEdit):
             if event.key() == Qt.Key_Q:
                 self.stopSpellchecker()
                 handled = True
-            if event.key() == Qt.Key_E:
+            elif event.key() == Qt.Key_E:
                 self.initSpellchecker()
+                handled = True
+            elif event.key() == Qt.Key_F1:
+                self.toCaps()
+                handled = True
+            elif event.key() == Qt.Key_F2:
+                self.removeEOL()
                 handled = True
             elif event.key() == Qt.Key_O and event.modifiers() & Qt.AltModifier:
                 self.openFile()
@@ -362,7 +368,7 @@ class TextWidget(QtGui.QTextEdit):
             if text.startswith(u"„") or text.startswith(u"“"):  # remove u"„" from selection
                 text = text[1:]
                 selectionEnd = cursor.selectionEnd()
-                cursor.setPosition(cursor.position() - len(text));
+                cursor.setPosition(cursor.position() - len(text))
                 cursor.setPosition(selectionEnd, QTextCursor.KeepAnchor)
                 self.setTextCursor(cursor)
             if text.endswith(u"”") or text.startswith(u"“"):  # remove u"”" from selection
@@ -454,6 +460,7 @@ class TextWidget(QtGui.QTextEdit):
         cursor = self.textCursor()
         cursor.beginEditBlock()
         cursor.removeSelectedText()
+        pos1 = cursor.position()
 
         if conversion == 1:
             newText = newText.upper()
@@ -472,8 +479,15 @@ class TextWidget(QtGui.QTextEdit):
             newText = re.sub(' +', ' ', newText)  # replace  multiple spaces
 
         cursor.insertText(newText)
+
+        # Restore text selection
+        pos2 = cursor.position()
+        cursor.setPosition(pos1);
+        cursor.setPosition(pos2, QTextCursor.KeepAnchor)
+        self.setTextCursor(cursor)                
+                
         cursor.endEditBlock()
-        ## TODO: keep selection of text
+
 
     def CharFormatChanged(self, CharFormat):
         self.fontFormatSignal.emit(CharFormat)
