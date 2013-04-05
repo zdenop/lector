@@ -36,7 +36,9 @@ def extract_tesseract_languages_path(error_message):
     ('/usr/share/tesseract-ocr/tessdata', '.unicharset')
     """
     # problem if there is space in path
-    invalid_path = error_message.split()[-1]  
+    # ensure there is only one line / needed for tesseract 3.02
+    error_message = error_message.splitlines()[0]
+    invalid_path = error_message.split()[-1]
     path, invalid_fn = os.path.split(invalid_path)
     _, extension = os.path.splitext(invalid_fn)
     return path, extension
