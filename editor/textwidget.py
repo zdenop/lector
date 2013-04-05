@@ -195,10 +195,10 @@ class TextWidget(QtGui.QTextEdit):
             state = True
         self.toggleSpell(state)
 
-        on = settings.get('editor:whiteSpace')
-        if on == "":  # no settings
-            on = True
-        self.togglewhiteSpace(True)
+        onOff = settings.get('editor:whiteSpace')
+        if onOff == "":  # no settings
+            onOff = True
+        self.togglewhiteSpace(onOff)
 
         self.currentCharFormatChanged.connect(
                 self.CharFormatChanged)
@@ -212,6 +212,7 @@ class TextWidget(QtGui.QTextEdit):
         self.setEditorFont()
 
     def initSpellchecker(self):
+        # TODO: disable spellchecker icon in case of not working enchant
         try:
             import enchant
             spellDictDir = settings.get('spellchecker:directory')
@@ -250,24 +251,22 @@ class TextWidget(QtGui.QTextEdit):
     def toggleSpell(self, state):
         if state:
             self.initSpellchecker()
-#            if not hasattr(self, 'dict'):
-#                self.stopSpellchecker()
         else:
             self.stopSpellchecker()
         settings.set('editor:spell', state)
 
 
-    def togglewhiteSpace(self, on=True):
+    def togglewhiteSpace(self, state=True):
         """
         Show or hide whitespace and line ending markers
         """
         option = QTextOption()
-        if on:
+        if state:
             option.setFlags(QTextOption.ShowTabsAndSpaces | QTextOption.ShowLineAndParagraphSeparators)
         else:
             option.setFlags(option.flags() & ~option.ShowTabsAndSpaces & ~option.ShowLineAndParagraphSeparators)
         self.document().setDefaultTextOption(option)
-        settings.set('editor:whiteSpace', True)
+        settings.set('editor:whiteSpace', state)
 
     def mousePressEvent(self, event):
         """
@@ -292,8 +291,14 @@ class TextWidget(QtGui.QTextEdit):
             if event.key() == Qt.Key_Q:
                 self.stopSpellchecker()
                 handled = True
-            if event.key() == Qt.Key_E:
+            elif event.key() == Qt.Key_E:
                 self.initSpellchecker()
+                handled = True
+            elif event.key() == Qt.Key_F1:
+                self.toCaps()
+                handled = True
+            elif event.key() == Qt.Key_F2:
+                self.removeEOL()
                 handled = True
             elif event.key() == Qt.Key_O and event.modifiers() & Qt.AltModifier:
                 self.openFile()
@@ -355,12 +360,27 @@ class TextWidget(QtGui.QTextEdit):
             # Select the word under the cursor for spellchecker
             cursor = self.textCursor()
             cursor.select(QTextCursor.WordUnderCursor)
-            self.setTextCursor(cursor)
 
+            self.setTextCursor(cursor)          
+            text = unicode(self.textCursor().selectedText())
+
+            #TODO: put to configuration list of ignored starting/ending chars          
+            if text.startswith(u"„") or text.startswith(u"“"):  # remove u"„" from selection
+                text = text[1:]
+                selectionEnd = cursor.selectionEnd()
+                cursor.setPosition(cursor.position() - len(text))
+                cursor.setPosition(selectionEnd, QTextCursor.KeepAnchor)
+                self.setTextCursor(cursor)
+            if text.endswith(u"”") or text.startswith(u"“"):  # remove u"”" from selection
+                selectionEnd = cursor.selectionEnd()
+                cursor.setPosition(cursor.position() - len(text));
+                cursor.setPosition(selectionEnd - 1, QTextCursor.KeepAnchor)
+                text = text[:-1]
+                self.setTextCursor(cursor)
+            
             # Check if the selected word is misspelled and offer spelling
             # suggestions if it is.
             if self.textCursor().hasSelection():
-                text = unicode(self.textCursor().selectedText())
                 if not self.dict.check(text):
                     spell_menu = QMenu(self.tr("Spelling Suggestions"))
                     addWordAcction = QAction(self.tr('Add word...'), spell_menu)
@@ -406,9 +426,7 @@ class TextWidget(QtGui.QTextEdit):
         """ Add word to personal private list
         """
         self.dict.add_to_pwl(self.getSelectedText())
-        # reset lang
-        self.stopSpellchecker()
-        self.initSpellchecker()
+        self.highlighter.rehighlight()
 
     def toUppercase(self):
         self.changeText(self.getSelectedText(), 1)
@@ -442,6 +460,7 @@ class TextWidget(QtGui.QTextEdit):
         cursor = self.textCursor()
         cursor.beginEditBlock()
         cursor.removeSelectedText()
+        pos1 = cursor.position()
 
         if conversion == 1:
             newText = newText.upper()
@@ -457,9 +476,18 @@ class TextWidget(QtGui.QTextEdit):
             #TODO(zdposter): '."' '.\n' ignore after '"' ')'
         if conversion == 5:
             newText = newText.replace(u"\u2029", ' ')  # unicode "\n"
+            newText = re.sub(' +', ' ', newText)  # replace  multiple spaces
 
         cursor.insertText(newText)
+
+        # Restore text selection
+        pos2 = cursor.position()
+        cursor.setPosition(pos1);
+        cursor.setPosition(pos2, QTextCursor.KeepAnchor)
+        self.setTextCursor(cursor)                
+                
         cursor.endEditBlock()
+
 
     def CharFormatChanged(self, CharFormat):
         self.fontFormatSignal.emit(CharFormat)
