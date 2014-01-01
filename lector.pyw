@@ -211,7 +211,7 @@ class Window(QMainWindow):
 
         self.ocrWidget.filename = fn
         self.curDir = os.path.dirname(fn)
-        self.ocrWidget.cambiaImmagine()
+        self.ocrWidget.changeImage()
         self.setWindowTitle("Lector: " + fn)
 
         self.enableActions(True)

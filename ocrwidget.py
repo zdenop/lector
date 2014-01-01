@@ -8,7 +8,7 @@
 """
 
 import glob
-import Image
+from PIL import Image
 import os
 
 from PyQt4 import QtCore, QtGui
@@ -178,7 +178,7 @@ class QOcrWidget(QtGui.QGraphicsView):
             return QtGui.QGraphicsView.wheelEvent(self, event)
 
 
-    def cambiaImmagine(self):
+    def changeImage(self):
         #delete old OcrArea
         for item in self.scene().items():
             self.scene().removeItem(item)
