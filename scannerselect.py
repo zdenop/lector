@@ -61,8 +61,8 @@ class ScannerSelect(QDialog):
 
         #set resolution
         try:
-            minimum = int(dOptions['resolution'][0])
-            maximum = int(dOptions['resolution'][1])
+            minimum = min(dOptions['resolution'])
+            maximum = max(dOptions['resolution'])
         except KeyError:
             pass
         else:
