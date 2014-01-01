@@ -46,6 +46,24 @@ def extract_tesseract_languages_path(error_message):
 
 def get_tesseract_languages():
     """
+    get list of lang
+    """
+    try:
+        poTess = Popen(['tesseract', '--list-langs'],
+                       shell=False, stdout=PIPE, stderr=PIPE)
+        stdout_message, lTess = poTess.communicate()
+        langlist = lTess.split('\n')
+        if langlist[0].startswith('List of'):
+            del langlist[0]
+            return langlist
+        else:
+            return get_tesseract_languages_old()
+    except OSError, ex:
+        print "ex", ex
+        return None
+
+def get_tesseract_languages_old():
+    """
     make a list of installed language data files
     """
 
@@ -65,7 +83,7 @@ def get_tesseract_languages():
     if not os.path.exists(tessdata_path):
         print "Tesseract data path ('%s') do not exist!" % tessdata_path
         return None
-        
+
     langdata = glob(tessdata_path + os.path.sep + '*' + langdata_ext)
     return [os.path.splitext(os.path.split(uc)[1])[0] for uc in langdata]
 
