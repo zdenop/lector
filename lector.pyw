@@ -30,7 +30,7 @@ class Window(QMainWindow):
 
     def __init__(self, hasScanner=True):
         QMainWindow.__init__(self)
-        
+
         self.curDir = ""
         self.ui = Ui_Lector()
         self.ui.setupUi(self)
@@ -42,7 +42,7 @@ class Window(QMainWindow):
         self.textEditorBar.saveDocAsSignal.connect(self.textEditor.saveAs)
         self.textEditorBar.spellSignal.connect(self.textEditor.toggleSpell)
         self.textEditorBar.whiteSpaceSignal.connect(
-            self.textEditor.togglewhiteSpace)   
+            self.textEditor.togglewhiteSpace)
         self.textEditorBar.boldSignal.connect(self.textEditor.toggleBold)
         self.textEditorBar.italicSignal.connect(self.textEditor.toggleItalic)
         self.textEditorBar.underlineSignal.connect(
@@ -53,10 +53,9 @@ class Window(QMainWindow):
             self.textEditor.toggleSubscript)
         self.textEditorBar.superscriptSignal.connect(
             self.textEditor.toggleSuperscript)
-        
         self.textEditor.fontFormatSignal.connect(
-            self.textEditorBar.toggleFormat)    
-    
+            self.textEditorBar.toggleFormat)
+
         self.ui.mwTextEditor.addToolBar(self.textEditorBar)
         self.ui.mwTextEditor.setCentralWidget(self.textEditor)
         self.ocrWidget.textEditor = self.textEditor
@@ -92,6 +91,7 @@ class Window(QMainWindow):
                 "Tesseract",
                 self.tr("Tessaract not available. Please check requirements."))
             self.ocrAvailable = False
+            self.on_actionSettings_triggered(2)
         else:
             languages.sort()
 
@@ -192,8 +192,8 @@ class Window(QMainWindow):
         self.enableActions()
 
     @pyqtSignature('')
-    def on_actionSettings_triggered(self):
-        settings = Settings(self)
+    def on_actionSettings_triggered(self, tabIndex = 0):
+        settings = Settings(self, tabIndex)
         QObject.connect(settings, SIGNAL('accepted()'),
                     self.updateTextEditor)
         settings.show()
@@ -355,22 +355,21 @@ class Window(QMainWindow):
 
 ## MAIN
 if __name__ == "__main__":
-    
     ## Warning: this can cause problem to get_tesseract_languages
     if (os.path.split(sys.executable)[1]).lower().startswith('python'):
-        logPath = os.path.abspath(os.path.dirname(__file__))        
+        logPath = os.path.abspath(os.path.dirname(__file__))
     else:
-        logPath =  os.path.abspath( os.path.dirname(sys.executable) )
+        logPath =  os.path.abspath(os.path.dirname(sys.executable))
     LOG_FILENAME = os.path.join(logPath, "lector.log")
     print ('Redirecting stderr/stdout... to %s' % LOG_FILENAME)
     # TODO: implement setting (where to log)
     try:
         logFile = open(os.path.join(LOG_FILENAME),"w")
         sys.stderr = logFile
-        sys.stdout = logFile 
+        sys.stdout = logFile
     except:
         print "Lector could not open log file! Redirecting will not work."
-    
+
     app = QApplication(sys.argv)
     opts = [str(arg) for arg in app.arguments()[1:]]
     if '--no-scanner' in opts:

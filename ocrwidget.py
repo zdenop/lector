@@ -272,6 +272,10 @@ class QOcrWidget(QtGui.QGraphicsView):
         progress.setAutoReset(True)
         progress.forceShow()
 
+        tess_exec = settings.get('tesseract-ocr:executable')
+        if not tess_exec:
+            tess_exec = 'tesseract'
+
         for i, item in enumerate(aItems):
             if progress.wasCanceled():
                 break
@@ -296,7 +300,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                             Image.BICUBIC).convert('L')
                 region.save(filename, dpi=(600, 600))
                 # TODO: use html/hocr if tesseract version is > 3.01
-                command = "tesseract %s /tmp/out.%d -l %s" % (filename, i,
+                command = tess_exec + " %s /tmp/out.%d -l %s" % (filename, i,
                                                               self.language)
                 os.popen(command)
 
