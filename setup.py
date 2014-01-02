@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
 Lector - A graphical ocr solution for GNU/Linux based on Python, Qt4 and
-tessaract OCR.
-Copyright (c) 2011 Davide Setti, Zdenko Podobny
+Tesseract OCR.
+Copyright (c) 2011-2013 Davide Setti, Zdenko Podobny
 
 This program is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
