@@ -22,14 +22,11 @@ def get(name):
         return str(settings.value(name).toString())
     elif name == 'editor:font':
         return settings.value(name, QFont(QFont("Courier New", 10)))
-    elif name == 'editor:clear':
+    elif name in ('editor:clear', 'editor:spell', 'editor:whiteSpace',
+                  'spellchecker:pwlLang',):
         return str(settings.value(name, "true").toString()).lower() == "true"
-    elif name == 'editor:spell':
-        return str(settings.value(name, "true").toString()).lower() == "true"
-    elif name == 'editor:whiteSpace':
-        return str(settings.value(name, "true").toString()).lower() == "true"
-    elif name == 'spellchecker:pwlLang':
-        return str(settings.value(name, "true").toString()).lower() == "true"
+    elif name in ('log:errors'):
+        return str(settings.value(name, "false").toString()).lower() == "true"
     elif name == 'spellchecker:pwlDict':
         return str(settings.value(name, stdPwlDict).toString())
     else:
