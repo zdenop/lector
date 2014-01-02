@@ -23,6 +23,7 @@ from settingsdialog import Settings
 from ocrwidget import QOcrWidget
 from editor.textwidget import TextWidget, EditorBar
 from utils import get_tesseract_languages
+from utils import settings
 
 class Window(QMainWindow):
     ocrAvailable = True
@@ -355,20 +356,19 @@ class Window(QMainWindow):
 
 ## MAIN
 if __name__ == "__main__":
-    ## Warning: this can cause problem to get_tesseract_languages
-    if (os.path.split(sys.executable)[1]).lower().startswith('python'):
-        logPath = os.path.abspath(os.path.dirname(__file__))
-    else:
-        logPath =  os.path.abspath(os.path.dirname(sys.executable))
-    LOG_FILENAME = os.path.join(logPath, "lector.log")
-    print ('Redirecting stderr/stdout... to %s' % LOG_FILENAME)
-    # TODO: implement setting (where to log)
-    try:
-        logFile = open(os.path.join(LOG_FILENAME),"w")
-        sys.stderr = logFile
-        sys.stdout = logFile
-    except:
-        print "Lector could not open log file! Redirecting will not work."
+    if settings.get('log:errors'):
+        log_filename = settings.get('log:filename')
+        if log_filename:
+            try:
+                log_file = open(log_filename,"w")
+                print ('Redirecting stderr/stdout... to %s' % log_filename) 
+                sys.stderr = log_file
+                sys.stdout = log_file
+            except:
+                print "Lector could not open log file '%s'!\n" % log_filename \
+                      + " Redirecting will not work."
+        else:
+            print "Log file is not set. Pleaase set it in settings."
 
     app = QApplication(sys.argv)
     opts = [str(arg) for arg in app.arguments()[1:]]
@@ -385,5 +385,4 @@ if __name__ == "__main__":
 
     window = Window(scanner)
     window.show()
-
-    sys.exit(app.exec_())
+    app.exec_()

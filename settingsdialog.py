@@ -11,8 +11,11 @@
 
 """
 
-from sys import platform
-from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog
+import os
+import sys
+
+from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog, \
+    QMessageBox, QIcon
 from PyQt4.QtCore import pyqtSignature, pyqtSignal
 
 from ui.ui_settings import Ui_Settings
@@ -79,6 +82,10 @@ class Settings(QDialog):
         self.ui.lnTessExec.setText(tessExec)
         tessData = settings.get('tesseract-ocr:TESSDATA_PREFIX:')
         self.ui.lnTessData.setText(tessData)
+        
+        self.ui.cbLog.setChecked(settings.get('log:errors'))
+        self.ui.lnLog.setText(settings.get('log:filename'))
+
 
     @pyqtSignature('')
     def on_fontButton_clicked(self):
@@ -114,14 +121,13 @@ class Settings(QDialog):
     @pyqtSignature('')
     def on_pbTessExec_clicked(self):
         fileFilter = self.tr("All files (*);;")
-        if platform == "win32":
+        if sys.platform == "win32":
             fileFilter = self.tr("Executables (*.exe);;") + fileFilter
 
         filename = unicode(QFileDialog.getOpenFileName(self,
                 self.tr("Select tesseract-ocr executable..."),
                 self.ui.lnTessExec.text(),
                 fileFilter))
-        print "filename", filename
         if not filename:
             return
         else:
@@ -136,6 +142,25 @@ class Settings(QDialog):
 
         if not dictDir.isEmpty():
             self.ui.lnTessData.setText(dictDir)
+            
+    @pyqtSignature('')
+    def on_pbLog_clicked(self):
+        fileFilter = self.tr("Log files (*.log);;All files (*);;")
+        init_filename = self.ui.lnLog.text()
+        if not init_filename:
+            if (os.path.split(sys.executable)[1]).lower().startswith('python'):
+                    logPath = os.path.abspath(os.path.dirname(__file__))
+            else:
+                logPath =  os.path.abspath(os.path.dirname(sys.executable))
+            init_filename = os.path.join(logPath, "lector.log")
+        filename = unicode(QFileDialog.getOpenFileName(self,
+                self.tr("Select file for log output..."),
+                init_filename,
+                fileFilter))
+        if not filename:
+            return
+        else:
+            self.ui.lnLog.setText(filename)
 
     def accept(self):
         settings.set('scanner:height', self.ui.sbHeight.value())
@@ -155,7 +180,23 @@ class Settings(QDialog):
 
         settings.set('tesseract-ocr:executable', self.ui.lnTessExec.text())
         settings.set('tesseract-ocr:TESSDATA_PREFIX', self.ui.lnTessData.text())
+       
+        if self.ui.cbLog.isChecked():
+            filename = self.ui.lnLog.text()
+            if filename:
+                # TODO(zdposter): check if file is writable
+                pass
+            else:
+                msg = QMessageBox.warning(self, self.tr("Lector"),
+                      self.tr("You did not specified file for logging.\n") + \
+                      self.tr("Logging will be disabled."),
+                      QMessageBox.Ok)
+                self.ui.cbLog.setChecked(0)
 
+
+        settings.set('log:errors', self.ui.cbLog.isChecked())
+        settings.set('log:filename', self.ui.lnLog.text())
+                
         self.settingAccepted.emit()
         QDialog.accept(self)
 

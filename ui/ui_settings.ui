@@ -19,7 +19,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="scanner">
         <attribute name="title">
@@ -328,8 +328,11 @@ p, li { white-space: pre-wrap; }
            <x>130</x>
            <y>45</y>
            <width>221</width>
-           <height>20</height>
+           <height>22</height>
           </rect>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the tessdata directory (without 'tessdata')&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string/>
@@ -376,8 +379,11 @@ p, li { white-space: pre-wrap; }
            <x>130</x>
            <y>10</y>
            <width>221</width>
-           <height>20</height>
+           <height>22</height>
           </rect>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path including executable&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="text">
           <string notr="true"/>
@@ -393,7 +399,7 @@ p, li { white-space: pre-wrap; }
           </rect>
          </property>
          <property name="text">
-          <string notr="true">tesseract executable:</string>
+          <string notr="true">tesseract-ocr:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -431,7 +437,98 @@ p, li { white-space: pre-wrap; }
           </rect>
          </property>
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Note:&lt;/span&gt; If field is blank, Lector will try to use your system settings (Environment variables %path% and %TESSDATA_PREFIX%)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#ff0000;&quot;&gt;Note:&lt;/span&gt; If field is blank, Lector will try to use your system settings (Environment variables &lt;span style=&quot; font-weight:600;&quot;&gt;path&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;TESSDATA_PREFIX&lt;/span&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="misc">
+        <attribute name="title">
+         <string>Misc.</string>
+        </attribute>
+        <widget class="QCheckBox" name="cbLog">
+         <property name="geometry">
+          <rect>
+           <x>7</x>
+           <y>10</y>
+           <width>141</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Log errors to file</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+        <widget class="QLabel" name="lblLog">
+         <property name="geometry">
+          <rect>
+           <x>7</x>
+           <y>40</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string notr="true">Log to file:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="pbLog">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>360</x>
+           <y>40</y>
+           <width>75</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string notr="true">...</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lnLog">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>80</x>
+           <y>40</y>
+           <width>271</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Path to the tessdata directory (without 'tessdata')&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+        <widget class="QLabel" name="lblNote_2">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>80</y>
+           <width>421</width>
+           <height>91</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#000000;&quot;&gt;Note:&lt;/span&gt; Logging will be started after new start of application if this option will be checked.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
