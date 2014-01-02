@@ -1,3 +1,17 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+    Lector utils
+
+    Copyright (C) 2011-2013 Davide Setti, Zdenko Podobný
+    Website: http://code.google.com/p/lector
+
+    This program is released under the GNU GPLv2
+
+"""
+
+from sys import platform
 from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog
 from PyQt4.QtCore import pyqtSignature, pyqtSignal
 
@@ -61,6 +75,11 @@ class Settings(QDialog):
         pwlDict = settings.get('spellchecker:pwlDict')
         self.ui.lineEditPWL.setText(pwlDict)
 
+        tessExec = settings.get('tesseract-ocr:executable')
+        self.ui.lnTessExec.setText(tessExec)
+        tessData = settings.get('tesseract-ocr:TESSDATA_PREFIX:')
+        self.ui.lnTessData.setText(tessData)
+
     @pyqtSignature('')
     def on_fontButton_clicked(self):
         ok = False
@@ -92,6 +111,32 @@ class Settings(QDialog):
         else:
             self.ui.lineEditPWL.setText(filename)
 
+    @pyqtSignature('')
+    def on_pbTessExec_clicked(self):
+        fileFilter = self.tr("All files (*);;")
+        if platform == "win32":
+            fileFilter = self.tr("Executables (*.exe);;") + fileFilter
+
+        filename = unicode(QFileDialog.getOpenFileName(self,
+                self.tr("Select tesseract-ocr executable..."),
+                self.ui.lnTessExec.text(),
+                fileFilter))
+        print "filename", filename
+        if not filename:
+            return
+        else:
+            self.ui.lnTessExec.setText(filename)
+
+    @pyqtSignature('')
+    def on_pbTessData_clicked(self):
+        dictDir = QFileDialog.getExistingDirectory(self,
+                  self.tr("Select Path Prefix To tessdata Directory..."),
+                  self.ui.lnTessData.text(),
+                  QFileDialog.DontResolveSymlinks | QFileDialog.ShowDirsOnly)
+
+        if not dictDir.isEmpty():
+            self.ui.lnTessData.setText(dictDir)
+
     def accept(self):
         settings.set('scanner:height', self.ui.sbHeight.value())
         settings.set('scanner:width', self.ui.sbWidth.value())
@@ -107,7 +152,10 @@ class Settings(QDialog):
         settings.set('spellchecker:directory', self.ui.directoryLine.text())
         settings.set('spellchecker:pwlDict', self.ui.lineEditPWL.text())
         settings.set('spellchecker:pwlLang', self.ui.checkBoxPWL.isChecked())
-        self.settingAccepted.emit()
 
+        settings.set('tesseract-ocr:executable', self.ui.lnTessExec.text())
+        settings.set('tesseract-ocr:TESSDATA_PREFIX', self.ui.lnTessData.text())
+
+        self.settingAccepted.emit()
         QDialog.accept(self)
 

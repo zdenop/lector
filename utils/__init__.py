@@ -4,17 +4,19 @@
 """
     Lector utils
 
-    Copyright (C) 2011 Davide Setti, Zdenko Podobný
+    Copyright (C) 2011-2013 Davide Setti, Zdenko Podobný
     Website: http://code.google.com/p/lector
 
     This program is released under the GNU GPLv2
 
 """
-from PyQt4.QtGui import QImage
-from subprocess import Popen, PIPE
-from glob import glob
-import os
 
+import os
+from glob import glob
+from subprocess import Popen, PIPE
+from PyQt4.QtGui import QImage
+
+from utils import settings
 
 def pilImage2Qt(im):
     if im.mode != 'RGB':
@@ -23,11 +25,10 @@ def pilImage2Qt(im):
 
     qtimage = QImage()
     qtimage.loadFromData(s)
-    return qtimage
 
-    #from PIL import ImageQt
-    #qtimage = ImageQt.ImageQt(im)
-    #return qtimage
+#    from PIL import ImageQt
+#    qtimage = ImageQt.ImageQt(im)
+    return qtimage
 
 
 def extract_tesseract_languages_path(error_message):
@@ -36,25 +37,33 @@ def extract_tesseract_languages_path(error_message):
     ('/usr/share/tesseract-ocr/tessdata', '.unicharset')
     """
     # problem if there is space in path
-    # ensure there is only one line / needed for tesseract 3.02
-    error_message = error_message.splitlines()[0]
     invalid_path = error_message.split()[-1]
     path, invalid_fn = os.path.split(invalid_path)
     _, extension = os.path.splitext(invalid_fn)
     return path, extension
 
-
 def get_tesseract_languages():
     """
     get list of lang
     """
+    tess_exec = settings.get('tesseract-ocr:executable')
+    if not tess_exec:
+        tess_exec = 'tesseract'
+
     try:
-        poTess = Popen(['tesseract', '--list-langs'],
+        poTess = Popen([tess_exec, '--list-langs'],
                        shell=False, stdout=PIPE, stderr=PIPE)
         stdout_message, lTess = poTess.communicate()
-        langlist = lTess.split('\n')
-        if langlist[0].startswith('List of'):
-            del langlist[0]
+        # we need to remove not needed information e.g. OpenCL performamnce
+        out_split = lTess.split('\n')
+        langlist = list()
+        add_lang = False
+        for row in out_split:
+            if row.startswith('List of'):
+                add_lang = True
+            if add_lang:
+                langlist.append(row.strip())
+        if langlist:
             return langlist
         else:
             return get_tesseract_languages_old()
@@ -67,24 +76,29 @@ def get_tesseract_languages_old():
     make a list of installed language data files
     """
 
+    tess_exec = settings.get('tesseract-ocr:executable')
+    if not tess_exec:
+        tess_exec = 'tesseract'
+
     try:
-        poTess = Popen(['tesseract', 'a', 'a', '-l', 'invalid'],
+        poTess = Popen([tess_exec, 'a', 'a', '-l', 'invalid'],
                        shell=False, stdout=PIPE, stderr=PIPE)
         stdout_message, lTess = poTess.communicate()
-        tessdata_path, langdata_ext = extract_tesseract_languages_path(lTess)
+        tess_data_prefix, langdata_ext = \
+                                        extract_tesseract_languages_path(lTess)
     except OSError, ex:
         print "ex", ex
         return None
-
     # env. setting can help to handle path with spaces
-    if os.getenv('TESSDATA_PREFIX'):
-        tessdata_path = os.path.join(os.getenv('TESSDATA_PREFIX'), "tessdata")
+    tess_data_prefix = settings.get('tesseract-ocr:TESSDATA_PREFIX:')
+    if not tess_data_prefix:
+        tess_data_prefix = os.getenv('TESSDATA_PREFIX')
+    tessdata_path = os.path.join(tess_data_prefix, "tessdata")
 
     if not os.path.exists(tessdata_path):
         print "Tesseract data path ('%s') do not exist!" % tessdata_path
         return None
-
-    langdata = glob(tessdata_path + os.path.sep + '*' + langdata_ext)
+    langdata = glob(tess_data_prefix + os.path.sep + '*' + langdata_ext)
     return [os.path.splitext(os.path.split(uc)[1])[0] for uc in langdata]
 
 def get_spellchecker_languages(directory = None):
