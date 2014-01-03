@@ -15,7 +15,7 @@ import os
 import sys
 
 from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog, \
-    QMessageBox, QIcon
+    QMessageBox
 from PyQt4.QtCore import pyqtSignature, pyqtSignal
 
 from ui.ui_settings import Ui_Settings
@@ -70,6 +70,9 @@ class Settings(QDialog):
 
         self.changeFont(QFont(settings.get('editor:font')))
         self.ui.checkBoxClear.setChecked(settings.get('editor:clear'))
+        settings_symbols = settings.get('editor:symbols')
+        if settings_symbols:
+            self.ui.symbolList.setPlainText(settings_symbols)
 
         spellDictDir = settings.get('spellchecker:directory')
         self.ui.directoryLine.setText(spellDictDir)
@@ -82,7 +85,7 @@ class Settings(QDialog):
         self.ui.lnTessExec.setText(tessExec)
         tessData = settings.get('tesseract-ocr:TESSDATA_PREFIX:')
         self.ui.lnTessData.setText(tessData)
-        
+
         self.ui.cbLog.setChecked(settings.get('log:errors'))
         self.ui.lnLog.setText(settings.get('log:filename'))
 
@@ -142,7 +145,7 @@ class Settings(QDialog):
 
         if not dictDir.isEmpty():
             self.ui.lnTessData.setText(dictDir)
-            
+
     @pyqtSignature('')
     def on_pbLog_clicked(self):
         fileFilter = self.tr("Log files (*.log);;All files (*);;")
@@ -171,6 +174,7 @@ class Settings(QDialog):
 
         settings.set('editor:font', self.ui.fontLabel.font())
         settings.set('editor:clear', self.ui.checkBoxClear.isChecked())
+        settings.set('editor:symbols', self.ui.symbolList.toPlainText())
 
         langIdx =  self.ui.dictBox.currentIndex()
         settings.set('spellchecker:lang', self.ui.dictBox.itemText(langIdx))
@@ -180,7 +184,7 @@ class Settings(QDialog):
 
         settings.set('tesseract-ocr:executable', self.ui.lnTessExec.text())
         settings.set('tesseract-ocr:TESSDATA_PREFIX', self.ui.lnTessData.text())
-       
+
         if self.ui.cbLog.isChecked():
             filename = self.ui.lnLog.text()
             if filename:
@@ -196,7 +200,7 @@ class Settings(QDialog):
 
         settings.set('log:errors', self.ui.cbLog.isChecked())
         settings.set('log:filename', self.ui.lnLog.text())
-                
+
         self.settingAccepted.emit()
         QDialog.accept(self)
 

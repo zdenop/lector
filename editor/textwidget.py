@@ -185,10 +185,11 @@ class EditorBar(QToolBar):
 class TextWidget(QtGui.QTextEdit):
     fontFormatSignal = pyqtSignal(QtGui.QTextCharFormat)
     spell = False
+    symbols = [u"…", u"–", u"—"]  # ellipsis, n-dash, m-dash
 
     def __init__(self, parent = None):
         QtGui.QTextEdit.__init__(self)
-        
+
         self.setupEditor()
         state = settings.get('editor:spell')
         if state == "":  # no settings
@@ -312,7 +313,15 @@ class TextWidget(QtGui.QTextEdit):
             QtGui.QTextEdit.keyPressEvent(self, event)
 
     def contextMenuEvent(self, event):
+        """ Creates two context menus:
+            1. no modifier -> spellchecker & clear emnu
+            2. ctrl modifier -> Text change & Insert symbol
+        """
         contextMenu = self.createStandardContextMenu()
+        spellMenu = True
+
+        if (QApplication.keyboardModifiers() & Qt.ControlModifier):
+            spellMenu = False
 
         self.clearAction = QtGui.QAction(self.tr("Clear"), contextMenu)
         contextMenu.addSeparator()
@@ -321,50 +330,59 @@ class TextWidget(QtGui.QTextEdit):
             self.clearAction.setEnabled(False)
         QtCore.QObject.connect(self.clearAction,
                                QtCore.SIGNAL("triggered()"), self.clear)
+        if not spellMenu:
+            textOpsMenu = QMenu(self.tr("Text change..."))
 
-        textOpsMenu = QMenu(self.tr("Text change..."))
+            removeEOLAction = QtGui.QAction(self.tr("Join lines"), textOpsMenu, )
+            textOpsMenu.addAction(removeEOLAction)
+            QtCore.QObject.connect(removeEOLAction,
+                                   QtCore.SIGNAL("triggered()"), self.removeEOL)
 
-        removeEOLAction = QtGui.QAction(self.tr("Join lines"), textOpsMenu, )
-        textOpsMenu.addAction(removeEOLAction)
-        QtCore.QObject.connect(removeEOLAction,
-                               QtCore.SIGNAL("triggered()"), self.removeEOL)
+            textOpsMenu.addSeparator()
 
-        textOpsMenu.addSeparator()
+            toUppercaseAction = QtGui.QAction(self.tr("to UPPERCASE"), textOpsMenu)
+            textOpsMenu.addAction(toUppercaseAction)
+            QtCore.QObject.connect(toUppercaseAction,
+                                   QtCore.SIGNAL("triggered()"), self.toUppercase)
 
-        toUppercaseAction = QtGui.QAction(self.tr("to UPPERCASE"), textOpsMenu)
-        textOpsMenu.addAction(toUppercaseAction)
-        QtCore.QObject.connect(toUppercaseAction,
-                               QtCore.SIGNAL("triggered()"), self.toUppercase)
+            toLowercaseAction = QtGui.QAction(self.tr("to lowercase"), textOpsMenu)
+            textOpsMenu.addAction(toLowercaseAction)
+            QtCore.QObject.connect(toLowercaseAction,
+                                   QtCore.SIGNAL("triggered()"), self.toLowercase)
 
-        toLowercaseAction = QtGui.QAction(self.tr("to lowercase"), textOpsMenu)
-        textOpsMenu.addAction(toLowercaseAction)
-        QtCore.QObject.connect(toLowercaseAction,
-                               QtCore.SIGNAL("triggered()"), self.toLowercase)
+            toTitleAction = QtGui.QAction(self.tr("to Title"), textOpsMenu)
+            textOpsMenu.addAction(toTitleAction)
+            QtCore.QObject.connect(toTitleAction,
+                                   QtCore.SIGNAL("triggered()"), self.toTitlecase)
 
-        toTitleAction = QtGui.QAction(self.tr("to Title"), textOpsMenu)
-        textOpsMenu.addAction(toTitleAction)
-        QtCore.QObject.connect(toTitleAction,
-                               QtCore.SIGNAL("triggered()"), self.toTitlecase)
+            toCapsAction = QtGui.QAction(self.tr("to Capitalize"), textOpsMenu)
+            textOpsMenu.addAction(toCapsAction)
+            QtCore.QObject.connect(toCapsAction,
+                                   QtCore.SIGNAL("triggered()"), self.toCaps)
 
-        toCapsAction = QtGui.QAction(self.tr("to Capitalize"), textOpsMenu)
-        textOpsMenu.addAction(toCapsAction)
-        QtCore.QObject.connect(toCapsAction,
-                               QtCore.SIGNAL("triggered()"), self.toCaps)
+            contextMenu.insertSeparator(contextMenu.actions()[0])
+            contextMenu.insertMenu(contextMenu.actions()[0], textOpsMenu)
 
-        contextMenu.insertSeparator(contextMenu.actions()[0])
-        contextMenu.insertMenu(contextMenu.actions()[0], textOpsMenu)
+            insertSymbolMenu = QMenu(self.tr("Insert symbol..."))
+            settings_symbols = settings.get('editor:symbols')
+            if settings_symbols:
+                self.symbols = settings_symbols.split('\n')
+            for symbol in self.symbols:
+                action = SpellAction(symbol, insertSymbolMenu)
+                action.correct.connect( self.insertSymbol)
+                insertSymbolMenu.addAction(action)
 
-        if not self.textCursor().hasSelection():
-            textOpsMenu.setEnabled(False)
+            contextMenu.insertMenu(contextMenu.actions()[0], insertSymbolMenu)
 
+        if not self.textCursor().hasSelection() and spellMenu:
             # Select the word under the cursor for spellchecker
             cursor = self.textCursor()
             cursor.select(QTextCursor.WordUnderCursor)
 
-            self.setTextCursor(cursor)          
+            self.setTextCursor(cursor)
             text = unicode(self.textCursor().selectedText())
 
-            #TODO: put to configuration list of ignored starting/ending chars          
+            #TODO: put to configuration list of ignored starting/ending chars
             if text.startswith(u"„") or text.startswith(u"“"):  # remove u"„" from selection
                 text = text[1:]
                 selectionEnd = cursor.selectionEnd()
@@ -377,7 +395,7 @@ class TextWidget(QtGui.QTextEdit):
                 cursor.setPosition(selectionEnd - 1, QTextCursor.KeepAnchor)
                 text = text[:-1]
                 self.setTextCursor(cursor)
-            
+
             # Check if the selected word is misspelled and offer spelling
             # suggestions if it is.
             if self.textCursor().hasSelection():
@@ -484,8 +502,8 @@ class TextWidget(QtGui.QTextEdit):
         pos2 = cursor.position()
         cursor.setPosition(pos1);
         cursor.setPosition(pos2, QTextCursor.KeepAnchor)
-        self.setTextCursor(cursor)                
-                
+        self.setTextCursor(cursor)
+
         cursor.endEditBlock()
 
 
@@ -584,6 +602,12 @@ class TextWidget(QtGui.QTextEdit):
         printer.setOutputFileName(fn)
         printer.setOutputFormat(QPrinter.PdfFormat)
         self.document().print_(printer)
+
+    def insertSymbol(self, symbol):
+        """
+        insert symbol
+        """
+        self.insertPlainText(symbol)
 
 def main(args=sys.argv):
     app = QApplication(args)
