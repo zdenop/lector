@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Lector: lector.py
 
@@ -63,7 +64,7 @@ class Window(QMainWindow):
 
         self.setCentralWidget(self.ocrWidget)
 
-        self.statusBar().showMessage(self.tr("Ready"))
+
         QObject.connect(self.ui.actionRotateRight,
             SIGNAL("triggered()"), self.ocrWidget.rotateRight)
         QObject.connect(self.ui.actionRotateLeft,
@@ -155,27 +156,35 @@ class Window(QMainWindow):
         self.ui.actionScan.setEnabled(False)
         if hasScanner:
             self.on_actionChangeDevice_triggered()
+        self.statusBar().showMessage(self.tr("Ready"), 2000)
 
     @pyqtSignature('')
     def on_actionChangeDevice_triggered(self):
         ##SANE
+        message = ''
         try:
             import sane
         except ImportError:
             # sane found no scanner - disable scanning;
-            print "Sane not found!"
+            message = self.tr("Sane not found! Scanning is disabled.")
         else:
+            print "else"
             from scannerselect import ScannerSelect
             sane.init()
             sane_list = sane.get_devices()
-
-            if not sane_list:
-                # sane found scanner
-                return
-
-            ss = ScannerSelect(sane_list, parent=self)
-            QObject.connect(ss, SIGNAL('accepted()'), self.scannerSelected)
-            ss.show()
+            saved_device = settings.get('scanner:device')
+            if saved_device in [x[0] for x in sane_list]:
+                message = self.tr("Sane found configured device...")
+                self.scannerSelected()
+            elif not sane_list:
+                message = self.tr("Sane dit not find any device! "
+                                  "Scanning is disabled.")
+            else:
+                # there is not configured device => run configuration
+                ss = ScannerSelect(sane_list, parent=self)
+                QObject.connect(ss, SIGNAL('accepted()'), self.scannerSelected)
+                ss.show()
+        self.statusBar().showMessage(message, 2000)
 
     def scannerSelected(self):
         self.ui.actionScan.setEnabled(True)
@@ -361,7 +370,7 @@ if __name__ == "__main__":
         if log_filename:
             try:
                 log_file = open(log_filename,"w")
-                print ('Redirecting stderr/stdout... to %s' % log_filename) 
+                print ('Redirecting stderr/stdout... to %s' % log_filename)
                 sys.stderr = log_file
                 sys.stdout = log_file
             except:
