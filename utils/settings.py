@@ -1,12 +1,23 @@
+# -*- coding: utf-8 -*-
+
+""" Functions to access settings
+"""
+
+#pylint: disable-msg=C0103
+
 from PyQt4.QtCore import QSettings, QVariant, QDir
 from PyQt4.QtGui import QFont
 from PyQt4.QtGui import QDesktopServices
 
 def set(name, value):
+    """ Set setting
+    """
     settings = QSettings("Davide Setti", "Lector")
     settings.setValue(name, QVariant(value))
 
 def get(name):
+    """ Retrieve setting and convert result
+    """
     home_dir = QDesktopServices.storageLocation(QDesktopServices.HomeLocation)
     stdPwlDict = unicode(home_dir + QDir.separator() +  "my-dict.txt")
     settings = QSettings("Davide Setti", "Lector")

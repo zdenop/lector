@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Lector - A graphical ocr solution for GNU/Linux based on Python, Qt4 and
 Tesseract OCR.
