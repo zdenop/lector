@@ -3,11 +3,12 @@
 
 """ Lector: lector.py
 
-    Copyright (C) 2011 Davide Setti
+    Copyright (C) 2011-2014 Davide Setti, Zdenko Podobný
     Website: http://code.google.com/p/lector
 
     This program is released under the GNU GPLv2
 """
+#pylint: disable-msg=C0103
 
 ## System
 import sys
@@ -27,6 +28,8 @@ from utils import get_tesseract_languages
 from utils import settings
 
 class Window(QMainWindow):
+    """ MainWindow
+    """
     ocrAvailable = True
     thread = None
 
@@ -83,7 +86,7 @@ class Window(QMainWindow):
 
         try:
             languages = list(get_tesseract_languages())
-        except TypeError: #tesseract is not installed
+        except TypeError:  #tesseract is not installed
             #TODO: replace QMessageBox.warning with QErrorMessage (but we need
             #      to keep state
             #dialog = QErrorMessage(self)
@@ -156,7 +159,8 @@ class Window(QMainWindow):
         self.ui.actionScan.setEnabled(False)
         if hasScanner:
             self.on_actionChangeDevice_triggered()
-        self.statusBar().showMessage(self.tr("Ready"), 2000)
+        if not self.statusBar().currentMessage():
+            self.statusBar().showMessage(self.tr("Ready"), 2000)
 
     @pyqtSignature('')
     def on_actionChangeDevice_triggered(self):
@@ -168,7 +172,6 @@ class Window(QMainWindow):
             # sane found no scanner - disable scanning;
             message = self.tr("Sane not found! Scanning is disabled.")
         else:
-            print "else"
             from scannerselect import ScannerSelect
             sane.init()
             sane_list = sane.get_devices()
@@ -192,7 +195,7 @@ class Window(QMainWindow):
         if self.thread is None:
             from scannerthread import ScannerThread
 
-            self.thread = ScannerThread(self)
+            self.thread = ScannerThread(self, settings.get('scanner:device'))
             QObject.connect(self.thread, SIGNAL("scannedImage()"),
                             self.on_scannedImage)
 
@@ -203,10 +206,10 @@ class Window(QMainWindow):
 
     @pyqtSignature('')
     def on_actionSettings_triggered(self, tabIndex = 0):
-        settings = Settings(self, tabIndex)
-        QObject.connect(settings, SIGNAL('accepted()'),
+        settings_dialog = Settings(self, tabIndex)
+        QObject.connect(settings_dialog, SIGNAL('accepted()'),
                     self.updateTextEditor)
-        settings.show()
+        settings_dialog.show()
 
     def updateTextEditor(self):
         self.textEditor.setEditorFont()
@@ -267,18 +270,20 @@ class Window(QMainWindow):
         self.ocrWidget.scene().changeSelectedAreaType(2)
 
     def readSettings(self):
-        settings = QSettings("Davide Setti", "Lector")
-        pos = settings.value("pos", QVariant(QPoint(50, 50))).toPoint()
-        size = settings.value("size", QVariant(QSize(800, 500))).toSize()
-        self.curDir = settings.value("file_dialog_dir", QVariant('~/')
+        """ Read settings
+        """
+        setting = QSettings("Davide Setti", "Lector")
+        pos = setting.value("pos", QVariant(QPoint(50, 50))).toPoint()
+        size = setting.value("size", QVariant(QSize(800, 500))).toSize()
+        self.curDir = setting.value("file_dialog_dir", QVariant('~/')
                                      ).toString()
         self.resize(size)
         self.move(pos)
-        self.restoreGeometry(settings.value("mainWindowGeometry").toByteArray())
-        self.restoreState(settings.value("mainWindowState").toByteArray())
+        self.restoreGeometry(setting.value("mainWindowGeometry").toByteArray())
+        self.restoreState(setting.value("mainWindowState").toByteArray())
 
         ## load saved language
-        lang = str(settings.value("rbtn/lang", QVariant(QString())).toString())
+        lang = str(setting.value("rbtn/lang", QVariant(QString())).toString())
         try:
             currentIndex = self.ui.rbtn_lang_select.findData(lang)
             self.ui.rbtn_lang_select.setCurrentIndex(currentIndex)
@@ -287,8 +292,8 @@ class Window(QMainWindow):
             pass
 
     def writeSettings(self):
-        from utils import settings
-
+        """ Store settings
+        """
         settings.set("pos", self.pos())
         settings.set("size", self.size())
         settings.set("file_dialog_dir", self.curDir)
@@ -299,6 +304,8 @@ class Window(QMainWindow):
         settings.set("rbtn/lang", self.ocrWidget.language)
 
     def closeEvent(self, event):
+        """ Action before closing app
+        """
         if (not self.ocrWidget.scene().isModified) or self.areYouSureToExit():
             self.writeSettings()
             event.accept()
@@ -325,14 +332,15 @@ class Window(QMainWindow):
     def on_actionSaveImageAs_triggered(self):
         fn = unicode(QFileDialog.getSaveFileName(self,
                         self.tr("Save image"), self.curDir,
-                        self.tr("PNG image (*.png);;TIFF image (*.tif *.tiff);;BMP image (*.bmp)")
+                        self.tr("PNG image (*.png);;"
+                                "TIFF image (*.tif *.tiff);;"
+                                "BMP image (*.bmp)")
                         ))
         if not fn:
             return
 
         self.curDir = os.path.dirname(fn)
         ## TODO: move this to the Scene?
-        ## TODO: if im is a jpeg, will pil convert it?
         self.ocrWidget.scene().im.save(fn)
 
     @pyqtSignature('')
@@ -373,7 +381,7 @@ if __name__ == "__main__":
                 print ('Redirecting stderr/stdout... to %s' % log_filename)
                 sys.stderr = log_file
                 sys.stdout = log_file
-            except:
+            except IOError:
                 print "Lector could not open log file '%s'!\n" % log_filename \
                       + " Redirecting will not work."
         else:

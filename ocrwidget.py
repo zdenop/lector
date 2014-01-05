@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Lector: ocrwidget.py
 
@@ -6,6 +7,7 @@
 
     This program is released under the GNU GPLv2
 """
+#pylint: disable-msg=C0103
 
 import glob
 from PIL import Image
@@ -33,6 +35,14 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.language = lang
         self.statusBar = statusBar
         self.areaType = areaType
+
+        self.resizingArea = None
+        self.resizingAreaPos = None
+        self.resizingAreaRect = None
+        self.resizingEdge = None
+        self.resizingStartingPos = None
+        self.areaBorder = float()
+        self.areaTextSize = float()
 
         self.setCursor(QtCore.Qt.CrossCursor)
         self.scene().isModified = False
@@ -88,7 +98,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                 newWidth = r.width()
                 newX = pos.x()
 
-            item.setRect(0,0, newWidth, newHeight)
+            item.setRect(0, 0, newWidth, newHeight)
             item.setPos(newX, newY)
 
         else: # if not resizing
@@ -316,7 +326,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     print "Tesseract was unabled to process area!"
                     # this can happend if left side of text is blury
             else:
-                region = region.resize((region.size[0]/4,region.size[1]/4))
+                region = region.resize((region.size[0]/4, region.size[1]/4))
                 region.save(filename)
 
                 s = "<img src='%s'>" % filename

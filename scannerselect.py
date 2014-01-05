@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Lector: scannerselect.py
 
-    Copyright (C) 2008-2011 Davide Setti
+    Copyright (C) 2008-2013 Davide Setti, Zdenko Podobný
 
     This program is released under the GNU GPLv2
-""" 
+"""
+#pylint: disable-msg=C0103
 
 from PyQt4.QtGui import QDialog
 from PyQt4.QtCore import SIGNAL
@@ -16,6 +18,8 @@ from utils import settings
 
 
 class ScannerSelect(QDialog):
+    """ Scanner configuration dialog
+    """
     def __init__(self, sane_list, parent = None):
         QDialog.__init__(self, parent)
 
@@ -40,16 +44,19 @@ class ScannerSelect(QDialog):
                      self.updateForm)
 
     def updateForm(self):
+        """ Get data from scanner and present them in dialog
+        """
         selectedScanner = self.sane_list[self.ui.combScanner.currentIndex()][0]
         saneScanner = sane.open(selectedScanner)
 
-        #this is a list with a lot of info
+        # this is a list with a lot of info
         options = saneScanner.get_options()
         saneScanner.close()
 
-        #extract just the info we want and put them in a dict
+        # extract just the info we want and put them in a dict
         dOptions = dict([(opt[1], opt[-1]) for opt in options])
-        #print '\n'.join(["%s: %s" % (k, str(v)) for k, v in sorted(dOptions.items())])
+        # print '\n'.join(["%s: %s" % (k, str(v)) for k, \
+        #    v in sorted(dOptions.items())])
 
         #set max and min, if available
         try:
@@ -82,6 +89,8 @@ class ScannerSelect(QDialog):
             combo.addItems(modes)
 
     def accept(self):
+        """ Store settings on OK
+        """
         settings.set('scanner:height', self.ui.sbHeight.value())
         settings.set('scanner:width', self.ui.sbWidth.value())
         settings.set('scanner:resolution', self.ui.sbResolution.value())

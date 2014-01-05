@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Lector: ocrarea.py
 
-    Copyright (C) 2011 Davide Setti
+    Copyright (C) 2011-2014 Davide Setti, Zdenko Podobný
 
     This program is released under the GNU GPLv2
-""" 
+"""
+#pylint: disable-msg=C0103
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QApplication as qa
@@ -13,7 +15,7 @@ from PyQt4.QtGui import QApplication as qa
 
 class OcrArea(QtGui.QGraphicsRectItem):
     ## static data
-    resizeborder = .0
+    resizeBorder = .0
 
     def __init__(self, pos, size, type_, parent = None, scene = None,
                  areaBorder = 2, index = 0, textSize = 50):
@@ -30,8 +32,8 @@ class OcrArea(QtGui.QGraphicsRectItem):
         self.text = QtGui.QGraphicsTextItem("%d" % index, self)
         self.setTextSize(textSize)
 
-        ## TODO: come creare delle costanti per il tipo?
-        ## (come le costanti nelle Qt) (enum?)
+        ## TODO: How to create constants for the type?
+        ## (such as constants in Qt) (enum?)
         self.type = type_
 
         pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine,
@@ -90,7 +92,7 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
         if self.__type == 1:
             self.color = QtCore.Qt.darkGreen
-        else: ## TODO: else -> elif ... + else raise exception
+        else:  ## TODO: else -> elif ... + else raise exception
             self.color = QtCore.Qt.blue
 
         self.text.setDefaultTextColor(self.color)

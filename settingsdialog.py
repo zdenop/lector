@@ -4,12 +4,13 @@
 """
     Lector utils
 
-    Copyright (C) 2011-2013 Davide Setti, Zdenko Podobný
+    Copyright (C) 2011-2014 Davide Setti, Zdenko Podobný
     Website: http://code.google.com/p/lector
 
     This program is released under the GNU GPLv2
 
 """
+#pylint: disable-msg=C0103
 
 import os
 import sys
@@ -59,7 +60,9 @@ class Settings(QDialog):
             if currentIndex > -1:
                 self.ui.dictBox.setCurrentIndex(currentIndex)
             else:
-                self.ui.spellInfoLabel.setText(self.tr("'%s' was not found in available dictionaries. Using other dictionary." % spellLang ))
+                self.ui.spellInfoLabel.setText(self.tr("'%s' was not found in"
+                    "available dictionaries. Using other dictionary." \
+                    % spellLang ))
 
     def initSettings(self):
         self.ui.sbHeight.setValue(settings.get('scanner:height'))
@@ -93,7 +96,7 @@ class Settings(QDialog):
     @pyqtSignature('')
     def on_fontButton_clicked(self):
         ok = False
-        editorFont, ok=QFontDialog.getFont(self.ui.fontLabel.font(),
+        editorFont, ok = QFontDialog.getFont(self.ui.fontLabel.font(),
                                       self, self.tr("Choose your font..."))
         if ok:
             self.changeFont(editorFont)
@@ -152,7 +155,7 @@ class Settings(QDialog):
         init_filename = self.ui.lnLog.text()
         if not init_filename:
             if (os.path.split(sys.executable)[1]).lower().startswith('python'):
-                    logPath = os.path.abspath(os.path.dirname(__file__))
+                logPath = os.path.abspath(os.path.dirname(__file__))
             else:
                 logPath =  os.path.abspath(os.path.dirname(sys.executable))
             init_filename = os.path.join(logPath, "lector.log")
@@ -183,7 +186,8 @@ class Settings(QDialog):
         settings.set('spellchecker:pwlLang', self.ui.checkBoxPWL.isChecked())
 
         settings.set('tesseract-ocr:executable', self.ui.lnTessExec.text())
-        settings.set('tesseract-ocr:TESSDATA_PREFIX', self.ui.lnTessData.text())
+        settings.set('tesseract-ocr:TESSDATA_PREFIX',
+                     self.ui.lnTessData.text())
 
         if self.ui.cbLog.isChecked():
             filename = self.ui.lnLog.text()
@@ -191,12 +195,10 @@ class Settings(QDialog):
                 # TODO(zdposter): check if file is writable
                 pass
             else:
-                msg = QMessageBox.warning(self, self.tr("Lector"),
-                      self.tr("You did not specified file for logging.\n") + \
-                      self.tr("Logging will be disabled."),
-                      QMessageBox.Ok)
+                QMessageBox.warning(self, self.tr("Lector"),
+                    self.tr("You did not specified file for logging.\n") + \
+                    self.tr("Logging will be disabled."), QMessageBox.Ok)
                 self.ui.cbLog.setChecked(0)
-
 
         settings.set('log:errors', self.ui.cbLog.isChecked())
         settings.set('log:filename', self.ui.lnLog.text())

@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """ Lector: ocrscene.py
 
-    Copyright (C) 2011 Davide Setti
+    Copyright (C) 2011-2014 Davide Setti, Zdenko Podobný
 
     This program is released under the GNU GPLv2
-""" 
+"""
+#pylint: disable-msg=C0103
 
 from PyQt4 import QtCore, QtGui
 from ocrarea import OcrArea
@@ -13,23 +15,24 @@ from ocrarea import OcrArea
 
 class OcrScene(QtGui.QGraphicsScene):
     selectedAreaIdx = None
-    
+
     def __init__(self, _, lang, areaType):
         QtGui.QGraphicsScene.__init__(self)
 
         self.language = lang
         self.areaType = areaType
-        
         self.first = True
-        
         self.areas = []
+        self.ocrImage = None
+        self.isModified = None
 
     def createArea(self, pos, size, type_, areaBorder, areaTextSize):
         item = OcrArea(pos, size, type_, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
 
         self.areas.append(item)
-        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"), self.changedSelection)
+        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"),
+                               self.changedSelection)
         self.setFocusItem(item)
         self.isModified = True
 
@@ -38,7 +41,7 @@ class OcrScene(QtGui.QGraphicsScene):
     def removeArea(self, item):
         if item is None:
             return
-        
+
         idx = self.areas.index(item)
 
         self.areas.remove(item)
@@ -93,7 +96,7 @@ class OcrScene(QtGui.QGraphicsScene):
                 edge += 4
             if dxr < OcrArea.resizeBorder:
                 edge += 8
-            
+
             if not onArea:
                 if ((item.y() + r.height() > pos.y()) and (item.y() < pos.y())
                     and (item.x() + r.width() > pos.x()) and (
@@ -113,16 +116,17 @@ class OcrScene(QtGui.QGraphicsScene):
         from utils import pilImage2Qt
 
         self.ocrImage = pilImage2Qt(self.im)
-    
+
     def drawBackground(self, painter, _):
         ## TODO: set the background to gray
         #painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
-        
+
         #brushBg = painter.background()
         #brushBg.setColor(QtCore.Qt.darkGreen)
         #painter.setBackground(brushBg)
-        
-        if not (hasattr(self, 'ocrImage') and self.ocrImage): return
+
+        if not (hasattr(self, 'ocrImage') and self.ocrImage):
+            return
 
         sceneRect = self.sceneRect()
         painter.drawImage(sceneRect, self.ocrImage)
