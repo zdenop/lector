@@ -371,6 +371,7 @@ class Window(QMainWindow):
             self.ui.rbtn_areato_image.setCheckable(False)
             self.ui.rbtn_areato_image.update()
 
+
 ## MAIN
 if __name__ == "__main__":
     if settings.get('log:errors'):
@@ -395,7 +396,9 @@ if __name__ == "__main__":
         scanner = True
     qsrand(QTime(0, 0, 0).secsTo(QTime.currentTime()))
 
-    locale = QLocale.system().name()
+    locale = settings.get('ui:lang')
+    if not locale:
+        locale = QLocale.system().name()
     qtTranslator = QTranslator()
     if qtTranslator.load(":/translations/ts/lector_" + locale, 'ts'):
         app.installTranslator(qtTranslator)
