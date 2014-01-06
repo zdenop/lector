@@ -24,6 +24,7 @@
   </qresource>
   <qresource prefix="/translations">
     <file>../ts/lector_de_DE.qm</file>
+    <file>../ts/lector_en_GB.qm</file>    
     <file>../ts/lector_sk_SK.qm</file>
     <file>../ts/lector_it_IT.qm</file>
   </qresource>

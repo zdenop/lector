@@ -6,6 +6,13 @@ syntax: glob
 ui/ui_*.py
 ui/resources_*.py
 ts/*.qm
-
+build/*
+tests/*
 # VIM
 *.swp
+*.hgignore
+Makefile
+TODO
+*.orig*
+*.1
+*.log

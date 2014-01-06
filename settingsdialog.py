@@ -17,7 +17,8 @@ import sys
 
 from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog, \
     QMessageBox
-from PyQt4.QtCore import pyqtSignature, pyqtSignal
+from PyQt4.QtCore import pyqtSignature, pyqtSignal, QLocale, QDir, \
+    QDirIterator
 
 from ui.ui_settings import Ui_Settings
 from utils import settings
@@ -64,6 +65,27 @@ class Settings(QDialog):
                     "available dictionaries. Using other dictionary." \
                     % spellLang ))
 
+    def UItranslations(self):
+        """ Get list of available ui translations
+        """
+        # iterate over resource file to find available translations
+        fltr = QDir.Dirs | QDir.Files | QDir.Hidden
+        iterator = QDirIterator(':', fltr, QDirIterator.Subdirectories)
+        while iterator.hasNext():
+            filePath = iterator.next()
+            if '/translations/ts/' in filePath:
+                fileName  = os.path.basename(unicode(filePath[1:]))
+                locale = fileName.replace('lector_','').replace('.qm', '')
+                if locale:
+                    self.ui.cbLang.addItem(locale)
+        locale = settings.get('ui:lang')
+        if not locale:
+            locale = QLocale.system().name()
+        currentIndex = self.ui.cbLang.findText(locale)
+        if currentIndex <= -1:
+            currentIndex = self.ui.cbLang.findText('en_GB')
+        self.ui.cbLang.setCurrentIndex(currentIndex)
+
     def initSettings(self):
         self.ui.sbHeight.setValue(settings.get('scanner:height'))
         self.ui.sbWidth.setValue(settings.get('scanner:width'))
@@ -80,6 +102,7 @@ class Settings(QDialog):
         spellDictDir = settings.get('spellchecker:directory')
         self.ui.directoryLine.setText(spellDictDir)
         self.langList(spellDictDir)
+        self.UItranslations()
         self.ui.checkBoxPWL.setChecked(settings.get('spellchecker:pwlLang'))
         pwlDict = settings.get('spellchecker:pwlDict')
         self.ui.lineEditPWL.setText(pwlDict)
@@ -151,6 +174,8 @@ class Settings(QDialog):
 
     @pyqtSignature('')
     def on_pbLog_clicked(self):
+        """ Select file for logging error/output of Lector
+        """
         fileFilter = self.tr("Log files (*.log);;All files (*);;")
         init_filename = self.ui.lnLog.text()
         if not init_filename:
@@ -169,6 +194,8 @@ class Settings(QDialog):
             self.ui.lnLog.setText(filename)
 
     def accept(self):
+        """ Store all settings
+        """
         settings.set('scanner:height', self.ui.sbHeight.value())
         settings.set('scanner:width', self.ui.sbWidth.value())
         settings.set('scanner:resolution', self.ui.sbResolution.value())
@@ -203,6 +230,26 @@ class Settings(QDialog):
         settings.set('log:errors', self.ui.cbLog.isChecked())
         settings.set('log:filename', self.ui.lnLog.text())
 
+        uiLangIdx =  self.ui.cbLang.currentIndex()
+        uiLocale = self.ui.cbLang.itemText(uiLangIdx)
+        settings.set('ui:lang', uiLocale)
+
         self.settingAccepted.emit()
         QDialog.accept(self)
 
+
+def main():
+    """ Main loop to run text widget as applation
+    """
+    from PyQt4.QtGui import QApplication
+    import ui.resources_rc
+
+    app = QApplication(sys.argv)
+    setting_dialog = Settings()
+    setting_dialog.show()
+
+    return app.exec_()
+
+## MAIN
+if __name__ == '__main__':
+    sys.exit(main())
