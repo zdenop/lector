@@ -1,18 +1,24 @@
 syntax: glob
 # python
+*.hgignore
 *.pyc
 
 # pyqt
 ui/ui_*.py
 ui/resources_*.py
 ts/*.qm
+.tx*
 build/*
 tests/*
+
 # VIM
 *.swp
-*.hgignore
-Makefile
-TODO
 *.orig*
-*.1
+*.html
+*.txt
+*.patch
 *.log
+
+DONE
+TODO
+MANIFEST

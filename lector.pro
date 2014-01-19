@@ -1,14 +1,13 @@
-#TEMPLATE = app
-#TARGET = 
-#DEPENDPATH += .
-#INCLUDEPATH += .
-
-# Input
-SOURCES         += lector.pyw \
-                   ocrarea.py ocrscene.py ocrwidget.py \
-                   scannerselect.py scannerthread.py settingsdialog.py \
-                   editor/textwidget.py editor/spellchecker.py \
-                   utils/settings.py
+SOURCES         += src/lector.py \
+                   src/ocrarea.py \
+                   src/ocrscene.py \
+                   src/ocrwidget.py \
+                   src/scannerselect.py \
+                   src/scannerthread.py \
+                   src/settingsdialog.py \
+                   src/editor/textwidget.py \
+                   src/editor/spellchecker.py \
+                   src/utils/settings.py
 
 FORMS           += ui/ui_lector.ui \
                    ui/ui_settings.ui \

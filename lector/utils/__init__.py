@@ -16,7 +16,7 @@ from glob import glob
 from subprocess import Popen, PIPE
 from PyQt4.QtGui import QImage
 
-from utils import settings
+from lector.utils import settings
 
 def pilImage2Qt(im):
     if im.mode != 'RGB':
