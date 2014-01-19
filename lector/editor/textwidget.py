@@ -21,7 +21,7 @@ from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
 from PyQt4.QtGui import QTextCharFormat, QTextOption
 from PyQt4.QtCore import pyqtSignal, QEvent
 
-from editor.spellchecker import Highlighter, SpellAction
+from lector.editor.spellchecker import Highlighter, SpellAction
 
 # workaroung to run textwidget outside of Lector
 CMD_FOLDER = os.path.dirname(os.path.abspath(__file__))
