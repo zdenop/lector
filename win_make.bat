@@ -1,25 +1,33 @@
 @ECHO OFF
+SET pyinstaller=c:\Python27\Scripts\pyinstaller.exe
 
 :Loop
 IF "%1"=="clean" GOTO clean
 IF "%1"=="build" GOTO build
+IF "%1"=="exe" GOTO exe
 
 :build
 (
   echo Building Lector...
-  CALL pyuic4 ui/ui_lector.ui > ui/ui_lector.py
-  CALL pyuic4 ui/ui_settings.ui > ui/ui_settings.py
-  CALL pyuic4 ui/ui_scanner.ui > ui/ui_scanner.py
   CALL pylupdate4 lector.pro
   CALL lrelease lector.pro
-  CALL pyrcc4 -o ui/resources_rc.py ui/resources.qrc
+  CALL pyrcc4 ui/resources.qrc -o lector/ui/resources_rc.py  
+  CALL pyuic4 ui/ui_lector.ui -o lector/ui/ui_lector.py
+  CALL pyuic4 ui/ui_settings.ui -o lector/ui/ui_settings.py
+  CALL pyuic4 ui/ui_scanner.ui -o lector/ui/ui_scanner.py
   GOTO end
   REM EXIT /B 0
 )
 
 :clean
-  rm -f ui/ui_*.py ui/resources*.py ts/*.qm ts/lector_*.qm *.pyc ui/*.pyc utils/*.pyc ui_*.py resources*.py
-
+  rm -f lector/ui/ui_*.py lector/ui/resources*.py lector/ui/*.pyc
+  rm -f lector/*.pyc lector/editor/*.pyc lector/utils/*.pyc ts/lector_*.qm
+  GOTO end
+  
+:exe
+  %pyinstaller% --onefile "e:\01_old_notebook\usr\projects\lector-ocr-code.devel\lector.pyw"
+  GOTO end
+ 
 :end
   echo Done!
 REM DOC

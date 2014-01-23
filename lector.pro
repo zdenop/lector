@@ -1,13 +1,13 @@
-SOURCES         += src/lector.py \
-                   src/ocrarea.py \
-                   src/ocrscene.py \
-                   src/ocrwidget.py \
-                   src/scannerselect.py \
-                   src/scannerthread.py \
-                   src/settingsdialog.py \
-                   src/editor/textwidget.py \
-                   src/editor/spellchecker.py \
-                   src/utils/settings.py
+SOURCES         += lector/lector.py \
+                   lector/ocrarea.py \
+                   lector/ocrscene.py \
+                   lector/ocrwidget.py \
+                   lector/scannerselect.py \
+                   lector/scannerthread.py \
+                   lector/settingsdialog.py \
+                   lector/editor/textwidget.py \
+                   lector/editor/spellchecker.py \
+                   lector/utils/settings.py
 
 FORMS           += ui/ui_lector.ui \
                    ui/ui_settings.ui \
