@@ -21,17 +21,16 @@ from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
 from PyQt4.QtGui import QTextCharFormat, QTextOption
 from PyQt4.QtCore import pyqtSignal, QEvent
 
-from lector.editor.spellchecker import Highlighter, SpellAction
-
 # workaroung to run textwidget outside of Lector
 CMD_FOLDER = os.path.dirname(os.path.abspath(__file__))
-CMD_FOLDER += "/../"
+CMD_FOLDER += "/../../"
 if CMD_FOLDER not in sys.path:
     sys.path.insert(0, CMD_FOLDER)
 
-import ui.resources_rc
-from utils import settings
-from settingsdialog import Settings
+from lector.ui import resources_rc
+from lector.utils import settings
+from lector.settingsdialog import Settings
+from lector.editor.spellchecker import Highlighter, SpellAction
 
 class EditorBar(QToolBar):
     saveDocAsSignal = pyqtSignal()
