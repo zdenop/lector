@@ -201,7 +201,10 @@ class Window(QMainWindow):
 
     def on_scannedImage(self):
         self.ocrWidget.scene().im = self.thread.im
+        fn = self.tr("Unknown")
+        self.ocrWidget.filename = fn
         self.ocrWidget.prepareDimensions()
+        self.setWindowTitle("Lector: " + fn)
         self.enableActions()
 
     @pyqtSignature('')

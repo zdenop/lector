@@ -143,8 +143,8 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
             self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
-        # creation of a new area
-        elif iArea == -1:
+        # creation of a new area if there is an image
+        elif iArea == -1 and self.filename:
             size = QtCore.QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
@@ -196,7 +196,6 @@ class QOcrWidget(QtGui.QGraphicsView):
 
         #open image
         self.scene().im = Image.open(self.filename)
-
         self.prepareDimensions()
 
 
