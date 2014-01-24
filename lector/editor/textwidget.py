@@ -237,7 +237,8 @@ class TextWidget(QtGui.QTextEdit):
                     return None
 
             spellLang = settings.get('spellchecker:lang')
-            if enchant.dict_exists(spellLang):
+            if spellLang in enchant.list_languages():
+            # enchant.dict_exists(spellLang) do now work for me on linux...
                 self.dict = enchant.Dict(spellLang)
             else:
                 # try dictionary based on the current locale
