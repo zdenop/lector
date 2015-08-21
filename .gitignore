@@ -4,9 +4,9 @@ syntax: glob
 *.pyc
 
 # pyqt
-ui/ui_*.py
-ui/resources_*.py
-ts/*.qm
+*/ui/ui_*.py
+*/ui/resources_*.py
+*ts/*.qm
 .tx*
 build/*
 tests/*
