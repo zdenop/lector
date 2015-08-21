@@ -26,7 +26,7 @@ from distutils.core import setup
 
 setup(name = 'lector',
     description = 'Graphical OCR solution',
-    version = '0.3.0',
+    version = '0.3.1',
     author = 'Davide Setti',
     url = 'http://code.google.com/p/lector/',
     packages = ['lector', 'lector.ui', 'lector.editor', 'lector.utils'],
@@ -37,7 +37,7 @@ setup(name = 'lector',
         on Python, Qt4 and tessaract OCR''',
 
     classifiers=[
-        'Development Status :: 0.3.0',
+        'Development Status :: 0.3.1',
         'Environment :: Win32 (MS Windows)',
         'Environment :: X11 Applications',
         'Intended Audience :: End Users/Desktop',

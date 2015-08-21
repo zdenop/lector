@@ -27,6 +27,9 @@ from editor.textwidget import TextWidget, EditorBar
 from utils import get_tesseract_languages
 from utils import settings
 
+__version__ = "0.3.1"
+
+
 class Window(QMainWindow):
     """ MainWindow
     """
@@ -201,7 +204,10 @@ class Window(QMainWindow):
 
     def on_scannedImage(self):
         self.ocrWidget.scene().im = self.thread.im
+        fn = self.tr("Unknown")
+        self.ocrWidget.filename = fn
         self.ocrWidget.prepareDimensions()
+        self.setWindowTitle("Lector: " + fn)
         self.enableActions()
 
     @pyqtSignature('')
@@ -354,7 +360,9 @@ class Window(QMainWindow):
           "<p><b>Contributors:</b> chopinX04, filip.dominec, zdposter</p>"
           "<p><b>Web site:</b> http://code.google.com/p/lector</p>"
           "<p><b>Source code:</b> "
-          "http://code.google.com/p/lector/source/checkout</p>"))
+          "http://sourceforge.net/projects/lector-ocr/</p>"
+          "<p><b>Version:</b> %s</p>" % __version__)
+          )
 
     def changedSelectedAreaType(self, _type):
         if _type in (1, 2):

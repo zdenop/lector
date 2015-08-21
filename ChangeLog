@@ -1,3 +1,10 @@
+0.3.1
+- improved settings/customizations:
+  * location of log files
+  * location of tesseract
+- fixed linux instalation script
+- project moved to sf.net/projects/lector-ocr
+
 0.3.0
 - editor improvements:
   * spellchecker support

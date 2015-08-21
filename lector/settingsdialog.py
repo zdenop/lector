@@ -184,7 +184,7 @@ class Settings(QDialog):
             else:
                 logPath =  os.path.abspath(os.path.dirname(sys.executable))
             init_filename = os.path.join(logPath, "lector.log")
-        filename = unicode(QFileDialog.getOpenFileName(self,
+        filename = unicode(QFileDialog.getSaveFileName(self,
                 self.tr("Select file for log output..."),
                 init_filename,
                 fileFilter))
