@@ -1,0 +1,1 @@
+What about [Cuneiform OCR](http://www.cuneiform.ru/eng/index.html)? It seems it's now under a BSD-like licence.
