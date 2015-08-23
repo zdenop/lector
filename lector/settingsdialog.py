@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -12,13 +12,12 @@
 """
 #pylint: disable-msg=C0103
 
-import os
 import sys
+import os
 
-from PyQt4.QtGui import QDialog, QFontDialog, QFont, QFileDialog, \
-    QMessageBox
-from PyQt4.QtCore import pyqtSignature, pyqtSignal, QLocale, QDir, \
-    QDirIterator
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, QLocale, QDir, QDirIterator
+from PyQt5.QtWidgets import QDialog, QFontDialog, QFileDialog, QMessageBox
 
 from ui.ui_settings import Ui_Settings
 from utils import settings
@@ -38,7 +37,7 @@ class Settings(QDialog):
 
     def changeFont(self, editorFont):
         self.ui.fontLabel.setFont(editorFont)
-        label = editorFont.family().toAscii().data()
+        label = editorFont.family()
         label += ", %d pt" % editorFont.pointSize()
         self.ui.fontLabel.setText(label)
 
@@ -74,7 +73,7 @@ class Settings(QDialog):
         while iterator.hasNext():
             filePath = iterator.next()
             if '/translations/ts/' in filePath:
-                fileName  = os.path.basename(unicode(filePath[1:]))
+                fileName  = os.path.basename(str(filePath[1:]))
                 locale = fileName.replace('lector_','').replace('.qm', '')
                 if locale:
                     self.ui.cbLang.addItem(locale)
@@ -116,7 +115,7 @@ class Settings(QDialog):
         self.ui.lnLog.setText(settings.get('log:filename'))
 
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_fontButton_clicked(self):
         ok = False
         editorFont, ok = QFontDialog.getFont(self.ui.fontLabel.font(),
@@ -124,7 +123,7 @@ class Settings(QDialog):
         if ok:
             self.changeFont(editorFont)
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_dictDirButton_clicked(self):
         dictDir = QFileDialog.getExistingDirectory(self,
                   self.tr("Choose your dictionary directory..."),
@@ -135,9 +134,9 @@ class Settings(QDialog):
             self.ui.directoryLine.setText(dictDir)
             self.langList(dictDir)
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_pushButtonPWL_clicked(self):
-        filename = unicode(QFileDialog.getSaveFileName(self,
+        filename = str(QFileDialog.getSaveFileName(self,
                 self.tr("Select your private dictionary"),
                 self.ui.lineEditPWL.text(),
                 self.tr("Dictionary (*.txt *.dic);;All files (*);;")
@@ -147,22 +146,25 @@ class Settings(QDialog):
         else:
             self.ui.lineEditPWL.setText(filename)
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_pbTessExec_clicked(self):
         fileFilter = self.tr("All files (*);;")
         if sys.platform == "win32":
             fileFilter = self.tr("Executables (*.exe);;") + fileFilter
 
-        filename = unicode(QFileDialog.getOpenFileName(self,
-                self.tr("Select tesseract-ocr executable..."),
-                self.ui.lnTessExec.text(),
-                fileFilter))
+        getFileName = QFileDialog.getOpenFileName
+        filename = getFileName(self,
+                               self.tr("Select tesseract-ocr executable..."),
+                               self.ui.lnTessExec.text(),
+                               fileFilter)
         if not filename:
             return
         else:
-            self.ui.lnTessExec.setText(filename)
+            print('fileFilter', fileFilter)
+            print('filename', type(filename), filename)
+            self.ui.lnTessExec.setText(filename[0])
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_pbTessData_clicked(self):
         dictDir = QFileDialog.getExistingDirectory(self,
                   self.tr("Select Path Prefix To tessdata Directory..."),
@@ -172,7 +174,7 @@ class Settings(QDialog):
         if not dictDir.isEmpty():
             self.ui.lnTessData.setText(dictDir)
 
-    @pyqtSignature('')
+    @pyqtSlot()
     def on_pbLog_clicked(self):
         """ Select file for logging error/output of Lector
         """
@@ -184,7 +186,7 @@ class Settings(QDialog):
             else:
                 logPath =  os.path.abspath(os.path.dirname(sys.executable))
             init_filename = os.path.join(logPath, "lector.log")
-        filename = unicode(QFileDialog.getSaveFileName(self,
+        filename = str(QFileDialog.getSaveFileName(self,
                 self.tr("Select file for log output..."),
                 init_filename,
                 fileFilter))
@@ -239,10 +241,9 @@ class Settings(QDialog):
 
 
 def main():
-    """ Main loop to run text widget as applation
+    """ Main loop to run widget as application for test purposes
     """
-    from PyQt4.QtGui import QApplication
-    import ui.resources_rc
+    from PyQt5.QtWidgets import QApplication
 
     app = QApplication(sys.argv)
     setting_dialog = Settings()
@@ -250,6 +251,6 @@ def main():
 
     return app.exec_()
 
-## MAIN
 if __name__ == '__main__':
-    sys.exit(main())
+    import sys
+    main()
