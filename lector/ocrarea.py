@@ -10,7 +10,7 @@
 #pylint: disable-msg=C0103
 
 from PyQt5.QtGui import QPen, QFont
-from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import (QApplication as QA, QMenu, QGraphicsItem,
                              QGraphicsTextItem, QGraphicsRectItem)
 
@@ -19,10 +19,12 @@ class OcrArea(QGraphicsRectItem):
     ## static data
     resizeBorder = .0
 
+    isClicked = pyqtSignal()
+
     def __init__(self, pos, size, type_, parent = None, scene = None,
                  areaBorder = 2, index = 0, textSize = 50):
-        QGraphicsRectItem.__init__(self, 0, 0, size.width(),
-                                         size.height(), parent, scene)
+        QGraphicsRectItem.__init__(self, 0, 0, size.width(), size.height(),
+                                   parent)
         self.setPos(pos)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
@@ -41,12 +43,9 @@ class OcrArea(QGraphicsRectItem):
         pen = QPen(self.color, areaBorder, Qt.SolidLine,
                    Qt.RoundCap, Qt.RoundJoin)
         self.setPen(pen)
-        self.setAcceptsHoverEvents(True)
+        # self.setAcceptsHoverEvents(True)  # TODO
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
-        # needed for the emission of a signal
-        self.newEvent = QObject()
-        self.newEvent.area = self
 
     def setIndex(self, idx):
         self.text.setPlainText(str(idx))
@@ -86,8 +85,12 @@ class OcrArea(QGraphicsRectItem):
     # when the area is selected the signal "isClicked()" is raised
     def mousePressEvent(self, event):
         # TODO: check this!
-        self.newEvent.emit("isClicked()")
+        self.isClicked.emit()
         QGraphicsRectItem.mousePressEvent(self, event)
+
+    def handle_trigger(self):
+        # Show that the slot has been called.
+        print("isClicked should be emited")
 
     ## type property
     def _setType(self, type_):

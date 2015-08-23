@@ -17,7 +17,7 @@ from ocrarea import OcrArea
 
 class OcrScene(QGraphicsScene):
     selectedAreaIdx = None
-    changedSelectedAreaType = pyqtSignal()
+    changedSelectedAreaType = pyqtSignal(int)
 
     def __init__(self, _, lang, areaType):
         QGraphicsScene.__init__(self)
@@ -32,9 +32,9 @@ class OcrScene(QGraphicsScene):
     def createArea(self, pos, size, type_, areaBorder, areaTextSize):
         item = OcrArea(pos, size, type_, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
-
+        self.addItem(item)
         self.areas.append(item)
-        item.newEvent.isClicked.connect(self.changedSelection)
+        # item.isClicked.connect(self.changedSelection)
         self.setFocusItem(item)
         self.isModified = True
 
