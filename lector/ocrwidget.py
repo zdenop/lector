@@ -9,12 +9,13 @@
 """
 #pylint: disable-msg=C0103
 
+import os
+import math
 import glob
 from PIL import Image
-import os
 
 from PyQt5.QtGui import QPainter, QTransform, QIcon
-from PyQt5.QtCore import Qt, QSizeF
+from PyQt5.QtCore import Qt, QSizeF, QRectF
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsItem, QProgressDialog
 
 from ocrarea import OcrArea
@@ -180,16 +181,19 @@ class QOcrWidget(QGraphicsView):
 
     def wheelEvent(self, event):
         '''Zoom In/Out with CTRL + mouse wheel'''
-        delta = event.delta()
-        if (event.modifiers() == Qt.ControlModifier and delta > 0):
-            factor = 1.41 ** (event.delta() / 240.0)
-            self.scale(factor, factor)
-        elif (event.modifiers() == Qt.ControlModifier and delta < 0):
-            factor = 1.41 ** (event.delta() / 240.0)
-            self.scale(factor,  factor)
+        if event.modifiers() == Qt.ControlModifier:
+            self.scaleView(math.pow(2.0, -event.angleDelta().y() / 240.0))
         else:
             return QGraphicsView.wheelEvent(self, event)
 
+    def scaleView(self, scaleFactor):
+        factor = self.transform().scale(scaleFactor, scaleFactor). \
+            mapRect(QRectF(0, 0, 1, 1)).width()
+
+        if factor < 0.07 or factor > 100:
+            return
+
+        self.scale(scaleFactor, scaleFactor)
 
     def changeImage(self):
         #delete old OcrArea
@@ -213,7 +217,7 @@ class QOcrWidget(QGraphicsView):
         ih = float(scene.im.size[1])
         ratio = min(vw/iw, vh/ih)
         # TODO: check this - there was QMatrix
-        self.setMatrix(QTransform(.95*ratio, 0., 0., .95*ratio, 0., 0.))
+        # self.setMatrix(QTransform(.95*ratio, 0., 0., .95*ratio, 0., 0.))
 
         OcrArea.resizeBorder = 5 / ratio
         self.areaBorder = 2 / ratio

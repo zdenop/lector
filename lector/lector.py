@@ -212,10 +212,10 @@ class Window(QMainWindow):
 
     @pyqtSlot()
     def on_actionOpen_triggered(self):
-        fn = str(QFileDialog.getOpenFileName(self,
+        fn, _ = QFileDialog.getOpenFileName(self,
                 self.tr("Open image"), self.curDir,
                 self.tr("Images (*.tif *.tiff *.png *.jpg *.xpm)")
-            ))
+             )
         if not fn: return
 
         self.ocrWidget.filename = fn
