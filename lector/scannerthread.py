@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """ Lector: scannerthread.py
@@ -9,8 +10,8 @@
 #pylint: disable-msg=C0103
 
 ## PyQt
-from PyQt4.QtCore import QThread, SIGNAL, QProcess, QObject, Qt
-from PyQt4 import QtGui
+from PyQt4.QtCore import Qt, QThread, QProcess, pyqtSignal
+from PyQt5.QtWidgets import QProgressDialog
 
 from utils import settings
 
@@ -45,6 +46,7 @@ def stripProgress(line):
 class ScannerThread(QThread):
     # keep if the image has been loaded
     loaded = False
+    scannedImage = pyqtSignal()
 
     def __init__(self, parent=None, selectedScanner=None):
         QThread.__init__(self, parent)
@@ -65,13 +67,12 @@ class ScannerThread(QThread):
 
         self.process = ScanimageProcess(self.device, mode, resolution,
                                         (br_x, br_y))
-        QObject.connect(self.process, SIGNAL("finished(int)"),
-                        self.scanned)
-        QObject.connect(self.process, SIGNAL("readyReadStandardError()"),
-                        self.progress)
+        # QObject.connect(self.process, SIGNAL("finished(int)"), self.scanned)
+        self.process.finished.connect(self.scanned(int))
+        self.process.readyReadStandardError.connect(self.progress)
 
         #TODO: manage Abort button
-        progress = QtGui.QProgressDialog(
+        progress = QProgressDialog(
             self.tr("Progress"),
             self.tr("Abort"), 0, 100)
         progress.setWindowTitle(self.tr("Scanning..."))
@@ -94,12 +95,12 @@ class ScannerThread(QThread):
         from PIL import Image
 
         if exit_code:
-            print 'ERROR!'
+            print('ERROR!')
             return #TODO: notify an ERROR!!
         out = self.process.readAllStandardOutput()
 
         self.im = Image.open(StringIO(out))
-        self.emit(SIGNAL("scannedImage()"))
+        self.scannedImage.emit()
 
     def progress(self):
         line = str(self.process.readAllStandardError())
@@ -108,5 +109,4 @@ class ScannerThread(QThread):
 
         #TODO: add a setting to enable/disable this ("fast scanning")
         if progress == 100.:
-            QObject.connect(self.process, SIGNAL("readyReadStandardOutput()"),
-                            self.scanned)
+            self.process.readyReadStandardOutput.connect(self.scanned)

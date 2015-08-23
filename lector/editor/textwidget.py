@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """ Lector: textwidget.py
@@ -9,17 +9,19 @@
 """
 #pylint: disable-msg=C0103
 
-from __future__ import with_statement
 import os
 import sys
 import re
 
-from PyQt4 import QtGui, QtCore
-from PyQt4.Qt import Qt, QMenu, QApplication, QMainWindow, QToolBar
-from PyQt4.Qt import QSize, QAction
-from PyQt4.QtGui import QFont, QFileDialog, QPrinter, QMouseEvent, QTextCursor
-from PyQt4.QtGui import QTextCharFormat, QTextOption
-from PyQt4.QtCore import pyqtSignal, QEvent
+
+from PyQt5.Qt import Qt, QSize
+from PyQt5.QtGui import (QIcon, QFont, QTextCharFormat, QMouseEvent,
+                         QTextCursor, QTextOption, QTextDocumentWriter)
+from PyQt5.QtCore import pyqtSignal, QEvent, QIODevice, QTextStream
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QMenu, QMessageBox,
+                             QToolBar, QFileDialog, QAction, QTextEdit)
+from PyQt5.QtPrintSupport import QPrinter
+
 
 # workaroung to run textwidget outside of Lector
 CMD_FOLDER = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +29,7 @@ CMD_FOLDER += "/../../"
 if CMD_FOLDER not in sys.path:
     sys.path.insert(0, CMD_FOLDER)
 
-from lector.ui import resources_rc
+from lector import resources_rc
 from lector.utils import settings
 from lector.settingsdialog import Settings
 from lector.editor.spellchecker import Highlighter, SpellAction
@@ -44,25 +46,25 @@ class EditorBar(QToolBar):
     superscriptSignal = pyqtSignal(bool)
 
     def __init__(self, parent = None):
-        QtGui.QToolBar.__init__(self,  parent)
+        QToolBar.__init__(self,  parent)
         self.setWindowTitle('EditorBar')
         self.setIconSize(QSize(16, 16))
         self.createActions()
 
     def createActions(self):
         self.settingsAction = QAction(self.tr("Settings"), self)
-        self.settingsAction.setIcon(QtGui.QIcon(":/icons/icons/configure.png"))
+        self.settingsAction.setIcon(QIcon(":/icons/icons/configure.png"))
         self.settingsAction.triggered.connect(self.settings)
         self.addAction(self.settingsAction)
 
         self.saveDocAsAction = QAction(self.tr("Save As"), self)
         self.saveDocAsAction.triggered.connect(self.SaveDocumentAs)
-        self.saveDocAsAction.setIcon(QtGui.QIcon(":/icons/icons/filesave.png"))
+        self.saveDocAsAction.setIcon(QIcon(":/icons/icons/filesave.png"))
         self.addAction(self.saveDocAsAction)
 
         self.spellAction = QAction(self.tr("Spellchecking"), self)
         self.spellAction.setIcon(
-            QtGui.QIcon(":/icons/icons/tools-check-spelling.png"))
+            QIcon(":/icons/icons/tools-check-spelling.png"))
         self.spellAction.setCheckable(True)
         self.spellAction.setChecked(settings.get('editor:spell'))
         self.spellAction.toggled.connect(self.spell)
@@ -71,52 +73,52 @@ class EditorBar(QToolBar):
 
         self.whiteSpaceAction = QAction(self.tr("Show whitespace"), self)
         self.whiteSpaceAction.setIcon(
-            QtGui.QIcon(":/icons/icons/whiteSpace.png"))
+            QIcon(":/icons/icons/whiteSpace.png"))
         self.whiteSpaceAction.setCheckable(True)
         self.whiteSpaceAction.setChecked(settings.get('editor:whiteSpace'))
         self.whiteSpaceAction.toggled.connect(self.whiteSpace)
         self.addAction(self.whiteSpaceAction)
 
-        self.BoldAction = QtGui.QAction(
-                QtGui.QIcon(":/icons/icons/format-text-bold.png"),
+        self.BoldAction = QAction(
+                QIcon(":/icons/icons/format-text-bold.png"),
                 self.tr("&Bold"), self,
-                shortcut=QtCore.Qt.CTRL + QtCore.Qt.Key_B,
+                shortcut=Qt.CTRL + Qt.Key_B,
                 triggered=self.bold, checkable=True)
         self.addAction(self.BoldAction)
 
         self.ItalicAction = QAction(self.tr("Italic"), self)
         self.ItalicAction.setIcon(
-            QtGui.QIcon(":/icons/icons/format-text-italic.png"))
-        self.ItalicAction.setShortcut(QtCore.Qt.CTRL + QtCore.Qt.Key_I)
+            QIcon(":/icons/icons/format-text-italic.png"))
+        self.ItalicAction.setShortcut(Qt.CTRL + Qt.Key_I)
         self.ItalicAction.setCheckable(True)
         self.ItalicAction.triggered.connect(self.italic)
         self.addAction(self.ItalicAction)
 
         self.UnderlineAction = QAction(self.tr("Underline"), self)
         self.UnderlineAction.setIcon(
-            QtGui.QIcon(":/icons/icons/format-text-underline.png"))
+            QIcon(":/icons/icons/format-text-underline.png"))
         self.UnderlineAction.setCheckable(True)
-        self.UnderlineAction.setShortcut(QtCore.Qt.CTRL + QtCore.Qt.Key_U)
+        self.UnderlineAction.setShortcut(Qt.CTRL + Qt.Key_U)
         self.UnderlineAction.triggered.connect(self.underline)
         self.addAction(self.UnderlineAction)
 
         self.StrikethroughAction = QAction(self.tr("Strikethrough"), self)
         self.StrikethroughAction.setIcon(
-            QtGui.QIcon(":/icons/icons/format-text-strikethrough.png"))
+            QIcon(":/icons/icons/format-text-strikethrough.png"))
         self.StrikethroughAction.setCheckable(True)
         self.StrikethroughAction.triggered.connect(self.strikethrough)
         self.addAction(self.StrikethroughAction)
 
         self.SubscriptAction = QAction(self.tr("Subscript"), self)
         self.SubscriptAction.setIcon(
-            QtGui.QIcon(":/icons/icons/format-text-subscript.png"))
+            QIcon(":/icons/icons/format-text-subscript.png"))
         self.SubscriptAction.setCheckable(True)
         self.SubscriptAction.triggered.connect(self.subscript)
         self.addAction(self.SubscriptAction)
 
         self.SuperscriptAction = QAction(self.tr("Superscript"), self)
         self.SuperscriptAction.setIcon(
-            QtGui.QIcon(":/icons/icons/format-text-superscript.png"))
+            QIcon(":/icons/icons/format-text-superscript.png"))
         self.SuperscriptAction.setCheckable(True)
         self.SuperscriptAction.triggered.connect(self.superscript)
         self.addAction(self.SuperscriptAction)
@@ -155,11 +157,11 @@ class EditorBar(QToolBar):
         self.UnderlineAction.setChecked(font.underline())
         self.StrikethroughAction.setChecked(CharFormat.fontStrikeOut())
         if CharFormat.verticalAlignment() == \
-                QtGui.QTextCharFormat.AlignSuperScript:
+                QTextCharFormat.AlignSuperScript:
             self.SubscriptAction.setChecked(False)
             self.SuperscriptAction.setChecked(True)
         elif CharFormat.verticalAlignment() == \
-                QtGui.QTextCharFormat.AlignSubScript:
+                QTextCharFormat.AlignSubScript:
             self.SubscriptAction.setChecked(True)
             self.SuperscriptAction.setChecked(False)
         else:
@@ -191,13 +193,13 @@ class EditorBar(QToolBar):
         self.superscriptSignal.emit(state)
 
 
-class TextWidget(QtGui.QTextEdit):
-    fontFormatSignal = pyqtSignal(QtGui.QTextCharFormat)
+class TextWidget(QTextEdit):
+    fontFormatSignal = pyqtSignal(QTextCharFormat)
     spell = False
     symbols = [u"…", u"–", u"—"]  # ellipsis, n-dash, m-dash
 
     def __init__(self, parent = None):
-        QtGui.QTextEdit.__init__(self)
+        QTextEdit.__init__(self)
 
         self.setupEditor()
         state = settings.get('editor:spell')
@@ -231,9 +233,9 @@ class TextWidget(QtGui.QTextEdit):
                     enchant.set_param("enchant.myspell.dictionary.path",
                                       spellDictDir)
                 else:
-                    print "Your pyenchant version is to old. Please " \
+                    print("Your pyenchant version is to old. Please " \
                           "upgrade to version 1.6.0 or higher, if you want " \
-                          "to use spellchecker."
+                          "to use spellchecker.")
                     return None
 
             spellLang = settings.get('spellchecker:lang')
@@ -251,7 +253,7 @@ class TextWidget(QtGui.QTextEdit):
                 self.usePWL(self.dict)
 
         except:
-            print "can not start spellchecker!!!"
+            print("can not start spellchecker!!!")
             import traceback
             traceback.print_exc()
             return None
@@ -296,10 +298,10 @@ class TextWidget(QtGui.QTextEdit):
             # moved to the location of the pointer.
             event = QMouseEvent(QEvent.MouseButtonPress, event.pos(),
                 Qt.LeftButton, Qt.LeftButton, Qt.NoModifier)
-        QtGui.QTextEdit.mousePressEvent(self, event)
+        QTextEdit.mousePressEvent(self, event)
 
     def setEditorFont(self):
-        self.setFont(QtGui.QFont(settings.get('editor:font')))
+        self.setFont(QFont(settings.get('editor:font')))
 
     def keyPressEvent(self, event):
         if event.modifiers() & Qt.ControlModifier:
@@ -321,12 +323,12 @@ class TextWidget(QtGui.QTextEdit):
                 self.openFile()
                 handled = True
             else:
-                return QtGui.QTextEdit.keyPressEvent(self, event)
+                return QTextEdit.keyPressEvent(self, event)
             if handled:
                 event.accept()
                 return
         else:
-            QtGui.QTextEdit.keyPressEvent(self, event)
+            QTextEdit.keyPressEvent(self, event)
 
     def contextMenuEvent(self, event):
         """ Creates two context menus:
@@ -339,49 +341,38 @@ class TextWidget(QtGui.QTextEdit):
         if (QApplication.keyboardModifiers() & Qt.ControlModifier):
             spellMenu = False
 
-        self.clearAction = QtGui.QAction(self.tr("Clear"), contextMenu)
+        self.clearAction = QAction(self.tr("Clear"), contextMenu)
         contextMenu.addSeparator()
         contextMenu.addAction(self.clearAction)
         if not len(self.toPlainText()):
             self.clearAction.setEnabled(False)
-        QtCore.QObject.connect(self.clearAction,
-                               QtCore.SIGNAL("triggered()"), self.clear)
+        self.clearAction.triggered.connect(self.clear)
         if not spellMenu:
             textOpsMenu = QMenu(self.tr("Text change..."))
 
-            removeEOLAction = QtGui.QAction(self.tr("Join lines"),
+            removeEOLAction = QAction(self.tr("Join lines"),
                                             textOpsMenu, )
             textOpsMenu.addAction(removeEOLAction)
-            QtCore.QObject.connect(removeEOLAction,
-                                   QtCore.SIGNAL("triggered()"),
-                                   self.removeEOL)
-
+            removeEOLAction.triggered.connect(self.removeEOL)
             textOpsMenu.addSeparator()
 
-            toUppercaseAction = QtGui.QAction(self.tr("to UPPERCASE"),
+            toUppercaseAction = QAction(self.tr("to UPPERCASE"),
                                               textOpsMenu)
             textOpsMenu.addAction(toUppercaseAction)
-            QtCore.QObject.connect(toUppercaseAction,
-                                   QtCore.SIGNAL("triggered()"),
-                                   self.toUppercase)
+            toUppercaseAction.triggered.connect(self.toUppercase)
 
-            toLowercaseAction = QtGui.QAction(self.tr("to lowercase"),
+            toLowercaseAction = QAction(self.tr("to lowercase"),
                                               textOpsMenu)
             textOpsMenu.addAction(toLowercaseAction)
-            QtCore.QObject.connect(toLowercaseAction,
-                                   QtCore.SIGNAL("triggered()"),
-                                   self.toLowercase)
+            toLowercaseAction.triggered.connect(self.toLowercase)
 
-            toTitleAction = QtGui.QAction(self.tr("to Title"), textOpsMenu)
+            toTitleAction = QAction(self.tr("to Title"), textOpsMenu)
             textOpsMenu.addAction(toTitleAction)
-            QtCore.QObject.connect(toTitleAction,
-                                   QtCore.SIGNAL("triggered()"),
-                                   self.toTitlecase)
+            toTitleAction.triggered.connect(self.toTitlecase)
 
-            toCapsAction = QtGui.QAction(self.tr("to Capitalize"), textOpsMenu)
+            toCapsAction = QAction(self.tr("to Capitalize"), textOpsMenu)
             textOpsMenu.addAction(toCapsAction)
-            QtCore.QObject.connect(toCapsAction,
-                                   QtCore.SIGNAL("triggered()"), self.toCaps)
+            toCapsAction.triggered.connect(self.toCaps)
 
             contextMenu.insertSeparator(contextMenu.actions()[0])
             contextMenu.insertMenu(contextMenu.actions()[0], textOpsMenu)
@@ -403,7 +394,7 @@ class TextWidget(QtGui.QTextEdit):
             cursor.select(QTextCursor.WordUnderCursor)
 
             self.setTextCursor(cursor)
-            text = unicode(self.textCursor().selectedText())
+            text = self.textCursor().selectedText()
 
             #TODO: put to configuration list of ignored starting/ending chars
             # remove u"„" from selection
@@ -428,9 +419,7 @@ class TextWidget(QtGui.QTextEdit):
                     spell_menu = QMenu(self.tr("Spelling Suggestions"))
                     addWordAcction = QAction(self.tr('Add word...'),
                                              spell_menu)
-                    QtCore.QObject.connect(addWordAcction,
-                               QtCore.SIGNAL("triggered()"), self.addWord)
-                    #addWordAcction.triggered.connect(self.addWord)
+                    addWordAcction.triggered.connect(self.addWord)
                     spell_menu.addAction(addWordAcction)
                     for word in self.dict.suggest(text):
                         action = SpellAction(word, spell_menu)
@@ -488,7 +477,7 @@ class TextWidget(QtGui.QTextEdit):
         self.changeText(self.getSelectedText(), 5)
 
     def getSelectedText(self):
-        return unicode(self.textCursor().selectedText())
+        return self.textCursor().selectedText()
 
     def changeText(self, newText, conversion = 0):
         '''
@@ -519,7 +508,7 @@ class TextWidget(QtGui.QTextEdit):
             newText = ''.join([each.capitalize() for each in rtn])
             #TODO(zdposter): '."' '.\n' ignore after '"' ')'
         if conversion == 5:
-            newText = newText.replace(u"\u2029", ' ')  # unicode "\n"
+            newText = newText.replace("\u2029", ' ')  # unicode "\n"
             newText = re.sub(' +', ' ', newText)  # replace  multiple spaces
 
         cursor.insertText(newText)
@@ -570,17 +559,17 @@ class TextWidget(QtGui.QTextEdit):
         else:
             self.curDir = settings.get("file_dialog_dir")
 
-        filename = unicode(QFileDialog.getSaveFileName(self,
+        filename = QFileDialog.getSaveFileName(self,
                 self.tr("Save document"), self.curDir,
                 self.tr("ODT document (*.odt);;Text file (*.txt);;"
                         "HTML file (*.html);;PDF file(*.pdf)")
-                ))
+                )
         if not filename: return
 
         self.curDir = os.path.dirname(filename)
         settings.set("file_dialog_dir", self.curDir)
 
-        dw = QtGui.QTextDocumentWriter()
+        dw = QTextDocumentWriter()
         dw.setFormat('ODF')  # Default format
 
         # Check for alternative output format
@@ -599,29 +588,29 @@ class TextWidget(QtGui.QTextEdit):
             self.curDir = '~/'
         else:
             self.curDir = settings.get("file_dialog_dir")
-        fn = unicode(QFileDialog.getOpenFileName(self,
+        fn = QFileDialog.getOpenFileName(self,
                 self.tr("Open File..."), self.curDir,
-                self.tr("HTML-Files (*.htm *.html);;All Files (*)")))
-        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+                self.tr("HTML-Files (*.htm *.html);;All Files (*)"))
+        QApplication.setOverrideCursor(Qt.WaitCursor)
         if fn:
             self.lastFolder = os.path.dirname(fn)
             if os.path.exists(fn):
                 if os.path.isfile(fn):
-                    f = QtCore.QFile(fn)
-                    if not f.open(QtCore.QIODevice.ReadOnly |
-                                  QtCore.QIODevice.Text):
+                    f = QFile(fn)
+                    if not f.open(QIODevice.ReadOnly |
+                                  QIODevice.Text):
                         QtGui.QMessageBox.information(self.parent(),
                         self.tr("Error - Lector"),
                         self.tr("Can't open '%s.'" % fn))
                     else:
-                        stream = QtCore.QTextStream(f)
-                        text = unicode(stream.readAll())
+                        stream = QTextStream(f)
+                        text = stream.readAll()
                         self.setText(text)
                 else:
-                    QtGui.QMessageBox.information(self.parent(),
+                    QMessageBox.information(self.parent(),
                     self.tr("Error - Lector"),
                     self.tr("'%s' is not a file." % fn))
-        QtGui.QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
 
     def filePrintPdf(self, fn):
         printer = QPrinter(QPrinter.HighResolution)

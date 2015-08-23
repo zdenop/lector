@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """ Lector: ocrscene.py
@@ -9,15 +9,18 @@
 """
 #pylint: disable-msg=C0103
 
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QGraphicsScene
+
 from ocrarea import OcrArea
 
 
-class OcrScene(QtGui.QGraphicsScene):
+class OcrScene(QGraphicsScene):
     selectedAreaIdx = None
+    changedSelectedAreaType = pyqtSignal(int)
 
     def __init__(self, _, lang, areaType):
-        QtGui.QGraphicsScene.__init__(self)
+        QGraphicsScene.__init__(self)
 
         self.language = lang
         self.areaType = areaType
@@ -29,10 +32,9 @@ class OcrScene(QtGui.QGraphicsScene):
     def createArea(self, pos, size, type_, areaBorder, areaTextSize):
         item = OcrArea(pos, size, type_, None, self, areaBorder,
                 len(self.areas) + 1, areaTextSize)
-
+        self.addItem(item)
         self.areas.append(item)
-        QtCore.QObject.connect(item.newEvent, QtCore.SIGNAL("isClicked()"),
-                               self.changedSelection)
+        # item.isClicked.connect(self.changedSelection)
         self.setFocusItem(item)
         self.isModified = True
 
@@ -146,7 +148,7 @@ class OcrScene(QtGui.QGraphicsScene):
         self.__emitChangedSelection(area.type)
 
     def __emitChangedSelection(self, _type):
-        self.emit(QtCore.SIGNAL("changedSelectedAreaType(int)"), _type)
+        self.changedSelectedAreaType.emit(_type)
 
     def changeSelectedAreaType(self, _type):
         try:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Lector - A graphical ocr solution for GNU/Linux based on Python, Qt4 and
