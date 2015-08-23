@@ -162,7 +162,7 @@ class Window(QMainWindow):
         ##SANE
         message = ''
         try:
-            import pyinsane
+            import sane
         except ImportError:
             # sane found no scanner - disable scanning;
             message = self.tr("Sane not found! Scanning is disabled.")
