@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """ Lector: ocrwidget.py
@@ -13,22 +13,25 @@ import glob
 from PIL import Image
 import os
 
-from PyQt4 import QtCore, QtGui
+from PyQt5.QtGui import QPainter, QTransform, QIcon
+from PyQt5.QtCore import Qt, QSizeF
+from PyQt5.QtWidgets import QGraphicsView, QGraphicsItem, QProgressDialog
+
 from ocrarea import OcrArea
 from ocrscene import OcrScene
 from utils import settings
 
-class QOcrWidget(QtGui.QGraphicsView):
+class QOcrWidget(QGraphicsView):
     def __init__(self, lang, areaType, statusBar):
-        QtGui.QGraphicsView.__init__(self)
+        QGraphicsView.__init__(self)
 
         self.ocrscene = OcrScene(self, lang, areaType)
         self.setScene(self.ocrscene)
 
-        self.setCacheMode(QtGui.QGraphicsView.CacheBackground)
-        self.setRenderHint(QtGui.QPainter.Antialiasing)
-        self.setTransformationAnchor(QtGui.QGraphicsView.AnchorUnderMouse)
-        self.setResizeAnchor(QtGui.QGraphicsView.AnchorViewCenter)
+        self.setCacheMode(QGraphicsView.CacheBackground)
+        self.setRenderHint(QPainter.Antialiasing)
+        self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setResizeAnchor(QGraphicsView.AnchorViewCenter)
 
         self.setMinimumSize(200, 200)
 
@@ -44,7 +47,7 @@ class QOcrWidget(QtGui.QGraphicsView):
         self.areaBorder = float()
         self.areaTextSize = float()
 
-        self.setCursor(QtCore.Qt.CrossCursor)
+        self.setCursor(Qt.CrossCursor)
         self.scene().isModified = False
         self.bResizing = False
         Image.init()
@@ -108,22 +111,22 @@ class QOcrWidget(QtGui.QGraphicsView):
 
             edge = ret % 100
             iArea = ret / 100
-            cursors = {0:QtCore.Qt.SizeAllCursor,
-                1: QtCore.Qt.SizeVerCursor,
-                2: QtCore.Qt.SizeVerCursor,
-                4: QtCore.Qt.SizeHorCursor,
-                5: QtCore.Qt.SizeFDiagCursor,
-                6: QtCore.Qt.SizeBDiagCursor,
-                8: QtCore.Qt.SizeHorCursor,
-                9: QtCore.Qt.SizeBDiagCursor,
-                10: QtCore.Qt.SizeFDiagCursor}
+            cursors = {0:Qt.SizeAllCursor,
+                1: Qt.SizeVerCursor,
+                2: Qt.SizeVerCursor,
+                4: Qt.SizeHorCursor,
+                5: Qt.SizeFDiagCursor,
+                6: Qt.SizeBDiagCursor,
+                8: Qt.SizeHorCursor,
+                9: Qt.SizeBDiagCursor,
+                10: Qt.SizeFDiagCursor}
 
             if iArea:
                 self.setCursor(cursors[edge])
             else: # mouse not over an area
-                self.setCursor(QtCore.Qt.CrossCursor)
+                self.setCursor(Qt.CrossCursor)
 
-        QtGui.QGraphicsView.mouseMoveEvent(self, event)
+        QGraphicsView.mouseMoveEvent(self, event)
 
 
     def mousePressEvent(self, event):
@@ -142,10 +145,10 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingStartingPos = sp
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
-            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+            self.resizingArea.setFlag(QGraphicsItem.ItemIsMovable, False)
         # creation of a new area if there is an image
         elif iArea == -1 and self.filename:
-            size = QtCore.QSizeF(0, 0)
+            size = QSizeF(0, 0)
             newArea = self.scene().createArea(sp,
                 size, self.areaType, self.areaBorder,
                 self.areaTextSize)
@@ -156,9 +159,9 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingStartingPos = sp
             self.resizingAreaRect = self.resizingArea.rect()
             self.resizingAreaPos = self.resizingArea.pos()
-            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable, False)
+            self.resizingArea.setFlag(QGraphicsItem.ItemIsMovable, False)
 
-        QtGui.QGraphicsView.mousePressEvent(self, event)
+        QGraphicsView.mousePressEvent(self, event)
 
     def mouseReleaseEvent(self, event):
         if self.bResizing: ## stop resizing
@@ -169,23 +172,23 @@ class QOcrWidget(QtGui.QGraphicsView):
             self.resizingArea.setRect(0, 0, max(r.width(),
                 2*OcrArea.resizeBorder), max(r.height(),
                 2*OcrArea.resizeBorder))
-            self.resizingArea.setFlag(QtGui.QGraphicsItem.ItemIsMovable,
+            self.resizingArea.setFlag(QGraphicsItem.ItemIsMovable,
                 True)
 
-        QtGui.QGraphicsView.mouseReleaseEvent(self, event)
+        QGraphicsView.mouseReleaseEvent(self, event)
 
 
     def wheelEvent(self, event):
         '''Zoom In/Out with CTRL + mouse wheel'''
         delta = event.delta()
-        if (event.modifiers() == QtCore.Qt.ControlModifier and delta > 0):
+        if (event.modifiers() == Qt.ControlModifier and delta > 0):
             factor = 1.41 ** (event.delta() / 240.0)
             self.scale(factor, factor)
-        elif (event.modifiers() == QtCore.Qt.ControlModifier and delta < 0):
+        elif (event.modifiers() == Qt.ControlModifier and delta < 0):
             factor = 1.41 ** (event.delta() / 240.0)
             self.scale(factor,  factor)
         else:
-            return QtGui.QGraphicsView.wheelEvent(self, event)
+            return QGraphicsView.wheelEvent(self, event)
 
 
     def changeImage(self):
@@ -209,8 +212,8 @@ class QOcrWidget(QtGui.QGraphicsView):
         iw = float(scene.im.size[0])
         ih = float(scene.im.size[1])
         ratio = min(vw/iw, vh/ih)
-
-        self.setMatrix(QtGui.QMatrix(.95*ratio, 0., 0., .95*ratio, 0., 0.))
+        # TODO: check this - there was QMatrix
+        self.setMatrix(QTransform(.95*ratio, 0., 0., .95*ratio, 0., 0.))
 
         OcrArea.resizeBorder = 5 / ratio
         self.areaBorder = 2 / ratio
@@ -269,12 +272,12 @@ class QOcrWidget(QtGui.QGraphicsView):
         for oldOutPut in glob.glob('/tmp/out.[0-9]*.txt'):
             os.remove(oldOutPut)
 
-        progress = QtGui.QProgressDialog(self.tr("Processing images..."),
+        progress = QProgressDialog(self.tr("Processing images..."),
                                          self.tr("Abort"), 0, numItems)
         progress.setWindowTitle(self.tr("Processing images..."))
-        progress.setWindowModality(QtCore.Qt.WindowModal)
+        progress.setWindowModality(Qt.WindowModal)
         # on MS Windows dialog has no icon
-        progress.setWindowIcon(QtGui.QIcon(":/icons/icons/L.png"))
+        progress.setWindowIcon(QIcon(":/icons/icons/L.png"))
         progress.setMinimumDuration(0)
         progress.setValue(0)
         progress.setAutoClose(True)
@@ -322,7 +325,7 @@ class QOcrWidget(QtGui.QGraphicsView):
                     ## TODO: tesseract failed.
                     ## 1. process/print error message
                     ## 2. mark area as problematic
-                    print "Tesseract was unabled to process area!"
+                    print("Tesseract was unabled to process area!")
                     # this can happend if left side of text is blury
             else:
                 region = region.resize((region.size[0]/4, region.size[1]/4))
@@ -335,11 +338,11 @@ class QOcrWidget(QtGui.QGraphicsView):
 
 
     def keyReleaseEvent(self, event):
-        if event.key() == QtCore.Qt.Key_Delete:
+        if event.key() == Qt.Key_Delete:
             item = self.scene().focusItem()
             self.scene().removeArea(item)
-        #elif event.key() == QtCore.Qt.Key_Escape:
+        #elif event.key() == Qt.Key_Escape:
         #    self.first = True
 
-        QtGui.QGraphicsView.keyReleaseEvent(self, event)
+        QGraphicsView.keyReleaseEvent(self, event)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """ Lector: ocrarea.py
@@ -9,58 +9,60 @@
 """
 #pylint: disable-msg=C0103
 
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QApplication as qa
+from PyQt5.QtGui import QPen, QFont
+from PyQt5.QtCore import Qt, QObject
+from PyQt5.QtWidgets import (QApplication as QA, QMenu, QGraphicsItem,
+                             QGraphicsTextItem, QGraphicsRectItem)
 
 
-class OcrArea(QtGui.QGraphicsRectItem):
+class OcrArea(QGraphicsRectItem):
     ## static data
     resizeBorder = .0
 
     def __init__(self, pos, size, type_, parent = None, scene = None,
                  areaBorder = 2, index = 0, textSize = 50):
-        QtGui.QGraphicsRectItem.__init__(self, 0, 0, size.width(),
+        QGraphicsRectItem.__init__(self, 0, 0, size.width(),
                                          size.height(), parent, scene)
         self.setPos(pos)
 
         #self.setAcceptedMouseButtons(QtCore.Qt.NoButton)
-        self.setFlags(QtGui.QGraphicsItem.ItemIsMovable |
-            QtGui.QGraphicsItem.ItemIsFocusable |
-            QtGui.QGraphicsItem.ItemIsSelectable)
+        self.setFlags(QGraphicsItem.ItemIsMovable |
+            QGraphicsItem.ItemIsFocusable |
+            QGraphicsItem.ItemIsSelectable)
 
         ## set index label
-        self.text = QtGui.QGraphicsTextItem("%d" % index, self)
+        self.text = QGraphicsTextItem("%d" % index, self)
         self.setTextSize(textSize)
 
         ## TODO: How to create constants for the type?
         ## (such as constants in Qt) (enum?)
         self.type = type_
 
-        pen = QtGui.QPen(self.color, areaBorder, QtCore.Qt.SolidLine,
-                         QtCore.Qt.RoundCap, QtCore.Qt.RoundJoin)
+        pen = QPen(self.color, areaBorder, Qt.SolidLine,
+                   Qt.RoundCap, Qt.RoundJoin)
         self.setPen(pen)
         self.setAcceptsHoverEvents(True)
 
         # self.text.setFlag(QtGui.QGraphicsItem.ItemIgnoresTransformations)
         # needed for the emission of a signal
-        self.newEvent = QtCore.QObject()
+        self.newEvent = QObject()
         self.newEvent.area = self
 
     def setIndex(self, idx):
         self.text.setPlainText(str(idx))
 
     def setTextSize(self, size):
-        font = QtGui.QFont()
+        font = QFont()
         font.setPointSizeF(size)
         self.text.setFont(font)
 
     def contextMenuEvent(self, event):
-        menu = QtGui.QMenu()
-        removeAction = menu.addAction(qa.translate('QOcrWidget', "Remove"))
+        menu = QMenu()
+        removeAction = menu.addAction(QA.translate('QOcrWidget', "Remove"))
         #Action = menu.addAction(self.scene().tr("Remove"))
         menu.addSeparator()
-        textAction = menu.addAction(qa.translate('QOcrWidget', "Text"))
-        graphicsAction = menu.addAction(qa.translate('QOcrWidget', "Graphics"))
+        textAction = menu.addAction(QA.translate('QOcrWidget', "Text"))
+        graphicsAction = menu.addAction(QA.translate('QOcrWidget', "Graphics"))
 
         ## verification of the type of the selection and
         ## setting a check box near the type that is in use
@@ -83,17 +85,18 @@ class OcrArea(QtGui.QGraphicsRectItem):
 
     # when the area is selected the signal "isClicked()" is raised
     def mousePressEvent(self, event):
-        self.newEvent.emit(QtCore.SIGNAL("isClicked()"))
-        QtGui.QGraphicsRectItem.mousePressEvent(self, event)
+        # TODO: check this!
+        self.newEvent.emit("isClicked()")
+        QGraphicsRectItem.mousePressEvent(self, event)
 
     ## type property
     def _setType(self, type_):
         self.__type = type_
 
         if self.__type == 1:
-            self.color = QtCore.Qt.darkGreen
+            self.color = Qt.darkGreen
         else:  ## TODO: else -> elif ... + else raise exception
-            self.color = QtCore.Qt.blue
+            self.color = Qt.blue
 
         self.text.setDefaultTextColor(self.color)
 

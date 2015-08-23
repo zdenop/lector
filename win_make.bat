@@ -9,12 +9,12 @@ IF "%1"=="exe" GOTO exe
 :build
 (
   echo Building Lector...
-  CALL pylupdate4 lector.pro
+  CALL pylupdate5 lector.pro
   CALL lrelease lector.pro
-  CALL pyrcc4 ui/resources.qrc -o lector/ui/resources_rc.py  
-  CALL pyuic4 ui/ui_lector.ui -o lector/ui/ui_lector.py
-  CALL pyuic4 ui/ui_settings.ui -o lector/ui/ui_settings.py
-  CALL pyuic4 ui/ui_scanner.ui -o lector/ui/ui_scanner.py
+  CALL pyrcc5 ui/resources.qrc -o lector/ui/resources_rc.py
+  CALL pyuic5 ui/ui_lector.ui -o lector/ui/ui_lector.py
+  CALL pyuic5 ui/ui_settings.ui -o lector/ui/ui_settings.py
+  CALL pyuic5 ui/ui_scanner.ui -o lector/ui/ui_scanner.py
   GOTO end
   REM EXIT /B 0
 )
@@ -25,7 +25,7 @@ IF "%1"=="exe" GOTO exe
   GOTO end
   
 :exe
-  %pyinstaller% --onefile "e:\01_old_notebook\usr\projects\lector-ocr-code.devel\lector.pyw"
+  %pyinstaller% --onefile "lector.pyw"
   GOTO end
  
 :end
