@@ -34,7 +34,7 @@ class OcrScene(QGraphicsScene):
                 len(self.areas) + 1, areaTextSize)
         self.addItem(item)
         self.areas.append(item)
-        # item.isClicked.connect(self.changedSelection)
+        item.newEvent.isClicked.connect(self.changedSelection)
         self.setFocusItem(item)
         self.isModified = True
 
