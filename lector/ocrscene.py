@@ -145,13 +145,13 @@ class OcrScene(QGraphicsScene):
     def changedSelection(self):
         area = self.sender().area
         self.selectedAreaIdx = self.areas.index(area)
-        self.__emitChangedSelection(area.type)
+        self.__emitChangedSelection(area.kind)
 
     def __emitChangedSelection(self, _type):
         self.changedSelectedAreaType.emit(_type)
 
     def changeSelectedAreaType(self, _type):
         try:
-            self.areas[self.selectedAreaIdx].type = _type
+            self.areas[self.selectedAreaIdx].kind = _type
         except TypeError:
             pass

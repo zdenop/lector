@@ -136,7 +136,7 @@ class QOcrWidget(QGraphicsView):
         ret = self.scene().areaAt(sp)
 
         edge = ret % 100
-        iArea = ret / 100 - 1
+        iArea = int(ret / 100) - 1
 
         # resizing/moving the area if it exists
         if edge:
@@ -308,7 +308,7 @@ class QOcrWidget(QGraphicsView):
 
             region = self.scene().im.crop(box)
 
-            if item.type == 1:
+            if item.kind == 1:
                 # Improve quality of text for tesseract
                 # TODO: put it as option for OCR because of longer duration
                 nx, ny = rect.width(), rect.height()

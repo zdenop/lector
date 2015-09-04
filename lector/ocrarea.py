@@ -48,7 +48,7 @@ class OcrArea(QGraphicsRectItem):
 
         ## TODO: How to create constants for the type?
         ## (such as constants in Qt) (enum?)
-        self.type = type_
+        self.kind = type_
 
         pen = QPen(self.color, areaBorder, Qt.SolidLine,
                    Qt.RoundCap, Qt.RoundJoin)
@@ -78,9 +78,9 @@ class OcrArea(QGraphicsRectItem):
         textAction.setCheckable(True)
         graphicsAction.setCheckable(True)
 
-        if self.type == 1:
+        if self.kind == 1:
             textAction.setChecked(True)
-        elif self.type == 2:
+        elif self.kind == 2:
             graphicsAction.setChecked(True)
 
         selectedAction = menu.exec_(event.screenPos())
@@ -88,16 +88,16 @@ class OcrArea(QGraphicsRectItem):
         if selectedAction == removeAction:
             self.scene().removeArea(self)
         elif selectedAction == textAction:
-            self.type = 1
+            self.kind = 1
         elif selectedAction == graphicsAction:
-            self.type = 2
+            self.kind = 2
 
     # when the area is selected the signal "isClicked()" is raised
     def mousePressEvent(self, event):
         self.newEvent.isClicked.emit()
         QGraphicsRectItem.mousePressEvent(self, event)
 
-    ## type property
+    # type property
     def _setType(self, type_):
         self.__type = type_
 
@@ -115,6 +115,5 @@ class OcrArea(QGraphicsRectItem):
     def _type(self):
         return self.__type
 
-    type = property(fget=_type, fset=_setType)
-
+    kind = property(fget=_type, fset=_setType)
 
