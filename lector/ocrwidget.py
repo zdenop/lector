@@ -51,6 +51,7 @@ class QOcrWidget(QGraphicsView):
         self.setCursor(Qt.CrossCursor)
         self.scene().isModified = False
         self.bResizing = False
+        self.filename = None
         Image.init()
 
     def mouseMoveEvent(self, event):
@@ -332,7 +333,8 @@ class QOcrWidget(QGraphicsView):
                     print("Tesseract was unabled to process area!")
                     # this can happend if left side of text is blury
             else:
-                region = region.resize((region.size[0]/4, region.size[1]/4))
+                region = region.resize((int(region.size[0]/4),
+                                        int(region.size[1]/4)))
                 region.save(filename)
 
                 s = "<img src='%s'>" % filename
